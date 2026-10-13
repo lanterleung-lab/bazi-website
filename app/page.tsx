@@ -69,8 +69,8 @@ export default function Home() {
             <div className="text-sm text-stone-500">客戶好評率</div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-emerald-400 font-serif mb-1">15+</div>
-            <div className="text-sm text-stone-500">年實戰經驗</div>
+            <div className="text-3xl font-bold text-emerald-400 font-serif mb-1">10+</div>
+            <div className="text-sm text-stone-500">年評價實戰經驗</div>
           </div>
           <div>
             <div className="text-3xl font-bold text-emerald-400 font-serif mb-1 flex items-center justify-center gap-1">
@@ -89,7 +89,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold font-serif text-stone-100 mb-4">改變人生的指引</h2>
-            <p className="text-stone-400">聽聽那些在迷惘中找到方向的真實聲音</p>
+            <p className="text-stone-400">在迷惘中找到方向的真實聲音</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

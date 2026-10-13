@@ -153,7 +153,7 @@ export default function MasterProfilePage({ params }: { params: Promise<{ id: st
             <section className="space-y-4">
               <h3 className="text-xl font-medium text-stone-900 flex items-center gap-2">
                 <ScrollText className="w-5 h-5 text-stone-400" />
-                大師簡介
+                導師簡介
               </h3>
               <p className="text-stone-600 leading-relaxed font-light whitespace-pre-wrap">
                 {master.bio}
@@ -193,7 +193,7 @@ export default function MasterProfilePage({ params }: { params: Promise<{ id: st
                   ))
                 ) : (
                   <div className="p-4 bg-stone-50 border border-stone-100 rounded-2xl text-center text-stone-500 text-sm">
-                    此大師提供基礎單次諮詢服務，費用為 HK$ {master.price}。
+                    此導師提供基礎單次諮詢服務，費用為 HK$ {master.price}。
                   </div>
                 )}
               </div>
@@ -201,7 +201,7 @@ export default function MasterProfilePage({ params }: { params: Promise<{ id: st
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-xl font-medium text-stone-900">真實結緣回饋</h3>
+            <h3 className="text-xl font-medium text-stone-900">真實結緣返饋</h3>
             <div className="space-y-4">
               {master.recentReviews.map((review: any) => (
                 <div key={review.id} className="bg-white p-4 rounded-2xl border border-stone-100 shadow-sm">

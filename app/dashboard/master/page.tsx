@@ -11,6 +11,8 @@ import {
   LayoutDashboard, CreditCard, CalendarDays, Eye, ShieldCheck, Star, Plus, Trash2, Clock, ScrollText, Check,
   ClipboardList, UserSearch, CalendarClock, Phone, Edit3
 } from 'lucide-react';
+// 新增這行：匯入評價管理組件 (請確認相對路徑 ../components 正確)
+import ReviewManager from '../../components/ReviewManager';
 
 const createImage = (url: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {
@@ -400,6 +402,7 @@ export default function MasterDashboard() {
              <button type="button" onClick={() => setActiveTab('profile')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${activeTab === 'profile' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}><LayoutDashboard className="w-4 h-4" /> 個人門面</button>
             <button type="button" onClick={() => setActiveTab('services')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${activeTab === 'services' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}><CreditCard className="w-4 h-4" /> 服務報價</button>
             <button type="button" onClick={() => setActiveTab('schedule')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${activeTab === 'schedule' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}><CalendarDays className="w-4 h-4" /> 檔期管理</button>
+            <button type="button" onClick={() => setActiveTab('reviews')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${activeTab === 'reviews' ? 'bg-white text-stone-900 shadow-sm' : 'text-stone-500 hover:text-stone-700'}`}><Star className="w-4 h-4" /> 評價管理</button>
           </div>
           
           <button type="button" onClick={handleLogout} className="flex items-center gap-2 px-4 py-2 text-stone-500 hover:bg-rose-50 hover:text-rose-600 rounded-xl transition-all text-sm"><LogOut className="w-4 h-4" /> 登出</button>
@@ -482,7 +485,15 @@ export default function MasterDashboard() {
               </div>
             )}
 
-            {activeTab !== 'orders' && (
+           {/* 👇 新增這塊：Tab 4 評價管理 👇 */}
+            {activeTab === 'reviews' && (
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <ReviewManager />
+              </div>
+            )}
+
+            {/* 修改：排除 reviews 標籤，不顯示接單狀態 */}
+            {activeTab !== 'orders' && activeTab !== 'reviews' && (
               <div className="mb-8 flex items-center justify-between p-4 bg-stone-50 border border-stone-100 rounded-2xl">
                 <div><h3 className="font-medium text-stone-900">接單狀態</h3><p className="text-sm text-stone-500">關閉後，前台將顯示您為「休息中」，並隱藏預約按鈕。</p></div>
                 <button type="button" onClick={() => setMasterData({ ...masterData, is_accepting_orders: !masterData.is_accepting_orders })} className={`w-14 h-8 flex items-center rounded-full p-1 transition-colors duration-300 ${masterData.is_accepting_orders ? 'bg-emerald-500' : 'bg-stone-300'}`}>
@@ -491,7 +502,8 @@ export default function MasterDashboard() {
               </div>
             )}
 
-            <form onSubmit={handleSave} className={activeTab === 'orders' ? 'hidden' : 'space-y-8'}>
+            {/* 修改：排除 reviews 標籤，隱藏大師資料主表單 */}
+            <form onSubmit={handleSave} className={activeTab === 'orders' || activeTab === 'reviews' ? 'hidden' : 'space-y-8'}>
               {/* Tab 1: 個人門面 */}
               {activeTab === 'profile' && (
                 <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
