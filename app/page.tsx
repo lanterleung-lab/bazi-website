@@ -92,15 +92,35 @@ export default function Home() {
             <p className="text-stone-400">在迷惘中找到方向的真實聲音</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {reviews.map((review) => (
-              <div key={review.id} className="bg-stone-900/60 p-8 rounded-3xl border border-stone-800 relative hover:border-emerald-500/30 transition-colors backdrop-blur-sm flex flex-col h-full">
-                <Quote className="absolute top-6 right-6 w-8 h-8 text-stone-800" />
-                <div className="flex gap-1 mb-4">
-                  {[...Array(review.rating)].map((_, j) => <Star key={j} className="w-4 h-4 fill-emerald-500 text-emerald-500" />)}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+           {reviews.map((review) => (
+              <div key={review.id} className="bg-stone-900/60 p-6 md:p-8 rounded-3xl border border-stone-800 relative hover:border-emerald-500/30 transition-all duration-300 backdrop-blur-sm flex flex-col group overflow-hidden">
+                <Quote className="absolute top-6 right-6 w-8 h-8 text-stone-800/50 z-0" />
+                
+                <div className="flex gap-1 mb-5 relative z-10">
+                  {[...Array(review.rating || 5)].map((_, j) => <Star key={j} className="w-4 h-4 fill-emerald-500 text-emerald-500" />)}
                 </div>
-                <p className="text-stone-300 leading-relaxed mb-6 flex-grow">"{review.content}"</p>
-                <div className="font-medium text-emerald-400 text-sm">
+
+                {/* 👇 新增這段：如果有圖片，就顯示截圖 👇 */}
+                {review.image_url && (
+                  <div className="w-full relative mb-6 rounded-xl overflow-hidden border border-stone-700/50 shadow-lg bg-stone-800">
+                    <img 
+                      src={review.image_url} 
+                      alt={`Review by ${review.client_name}`} 
+                      className="w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      style={{ maxHeight: '350px', objectPosition: 'top' }}
+                    />
+                  </div>
+                )}
+
+                {/* 👇 修改這段：如果沒有圖片，或者內容不是預設字眼，才顯示文字 👇 */}
+                {(!review.image_url || (review.content && review.content !== '見截圖對話')) && (
+                  <p className="text-stone-300 leading-relaxed mb-6 flex-grow relative z-10">
+                    "{review.content}"
+                  </p>
+                )}
+
+                <div className="font-medium text-emerald-400 text-sm mt-auto relative z-10 pt-5 border-t border-stone-800/50">
                   — {review.client_name} {review.role && <span className="text-stone-500">({review.role})</span>}
                 </div>
               </div>
