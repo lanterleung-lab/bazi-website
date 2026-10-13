@@ -8,6 +8,8 @@ import { supabase } from '../lib/supabase'; // 確保路徑正確指向你的 su
 
 export default function Home() {
   const [reviews, setReviews] = useState<any[]>([]);
+  // 新增這行：用來記錄目前被點擊要放大的圖片網址
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   // 網頁載入時，從 Supabase 抓取最新的 3 筆評價
   useEffect(() => {
@@ -102,8 +104,12 @@ export default function Home() {
                 </div>
 
                 {/* 👇 新增這段：如果有圖片，就顯示截圖 👇 */}
+                {/* 🌟 修改這段：加上 onClick 和 cursor-zoom-in 👇 */}
                 {review.image_url && (
-                  <div className="w-full relative mb-6 rounded-xl overflow-hidden border border-stone-700/50 shadow-lg bg-stone-800">
+                  <div 
+                    onClick={() => setSelectedImage(review.image_url)}
+                    className="w-full relative mb-6 rounded-xl overflow-hidden border border-stone-700/50 shadow-lg bg-stone-800 cursor-zoom-in"
+                  >
                     <img 
                       src={review.image_url} 
                       alt={`Review by ${review.client_name}`} 
@@ -128,6 +134,23 @@ export default function Home() {
           </div>
         </div>
       </section>
+      {/* 👇 新增這段：點擊放大的全螢幕燈箱 (Lightbox) 👇 */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 z-[200] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out animate-in fade-in duration-300"
+          onClick={() => setSelectedImage(null)}
+        >
+          <div className="relative max-w-4xl max-h-[90vh] w-full flex justify-center">
+            <img 
+              src={selectedImage} 
+              alt="Enlarged review" 
+              className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl"
+            />
+            {/* 提示關閉的文字 */}
+            <p className="absolute -bottom-8 text-stone-400 text-sm">點擊任意空白處關閉</p>
+          </div>
+        </div>
+      )}
       
     </main>
   );
