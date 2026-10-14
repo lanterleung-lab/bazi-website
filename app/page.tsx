@@ -39,11 +39,11 @@ export default function Home() {
     }, 100);
   };
 
-  // 🌟 升級版：加上代理服務完美解決防盜鏈的塔羅牌庫
+  // 🌟 換回乾淨的直連網址
   const TAROT_DECK = [
     { 
       name: '愚者 (The Fool)', 
-      image: 'https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/en/9/90/RWS_Tarot_00_Fool.jpg',
+      image: 'https://upload.wikimedia.org/wikipedia/en/9/90/RWS_Tarot_00_Fool.jpg',
       quote: '「每一次勇敢的躍下，都是學會飛翔的開始。」',
       meaning: '這是一張代表無限可能性與全新開始的牌。今天非常適合大膽跳出舒適圈，不要被過去的經驗綁架，請相信你最初的直覺。',
       love: '暗示一段輕鬆無負擔的新關係即將展開，或是現有關係中會出現令人驚喜的新火花。',
@@ -51,7 +51,7 @@ export default function Home() {
     },
     { 
       name: '魔術師 (The Magician)', 
-      image: 'https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/en/d/de/RWS_Tarot_01_Magician.jpg',
+      image: 'https://upload.wikimedia.org/wikipedia/en/d/de/RWS_Tarot_01_Magician.jpg',
       quote: '「你已經具備了創造奇蹟的所有元素。」',
       meaning: '宇宙正在為你敞開大門。你擁有足夠的資源、智慧與行動力，現在是化夢想為現實的最佳時機，請主動出擊。',
       love: '你的個人魅力正處於高峰，善用溝通技巧能輕易拉近彼此的距離。',
@@ -59,7 +59,7 @@ export default function Home() {
     },
     { 
       name: '女祭司 (The High Priestess)', 
-      image: 'https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/en/8/88/RWS_Tarot_02_High_Priestess.jpg',
+      image: 'https://upload.wikimedia.org/wikipedia/en/8/88/RWS_Tarot_02_High_Priestess.jpg',
       quote: '「向外看的人在做夢，向內看的人終將覺醒。」',
       meaning: '這是一個向內尋求答案的時刻。比起向外盲目行動，現在更需要靜下心來，傾聽潛意識的聲音，它會為你指明正確的方向。',
       love: '感情中需要更多的精神交流。比起言語，請試著用心去感受對方的弦外之音。',
@@ -67,7 +67,7 @@ export default function Home() {
     },
     { 
       name: '命運之輪 (Wheel of Fortune)', 
-      image: 'https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/en/3/3c/RWS_Tarot_10_Wheel_of_Fortune.jpg',
+      image: 'https://upload.wikimedia.org/wikipedia/en/3/3c/RWS_Tarot_10_Wheel_of_Fortune.jpg',
       quote: '「萬物皆有定時，順應生命之流。」',
       meaning: '命運的齒輪正在轉動，這預示著一個無法預期但必然發生的轉機。無論現在是低谷還是高峰，一切都在朝著更好的方向演進。',
       love: '可能會出現命中注定的相遇，或是關係迎來一個自然而然的重要轉折點。',
@@ -75,7 +75,7 @@ export default function Home() {
     },
     { 
       name: '星星 (The Star)', 
-      image: 'https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/en/c/cd/RWS_Tarot_17_Star.jpg',
+      image: 'https://upload.wikimedia.org/wikipedia/en/c/cd/RWS_Tarot_17_Star.jpg',
       quote: '「在最深的黑夜裡，星星的光芒最為璀璨。」',
       meaning: '在經歷了黑暗與混亂之後，星星為你帶來了療癒、平靜與希望。你的身心正在恢復平衡，靈感也將源源不絕。',
       love: '關係將回歸寧靜與純粹，誤會得以冰釋。單身者有望遇到精神契合的對象。',
@@ -83,7 +83,7 @@ export default function Home() {
     },
     { 
       name: '太陽 (The Sun)', 
-      image: 'https://wsrv.nl/?url=https://upload.wikimedia.org/wikipedia/en/1/17/RWS_Tarot_19_Sun.jpg',
+      image: 'https://upload.wikimedia.org/wikipedia/en/1/17/RWS_Tarot_19_Sun.jpg',
       quote: '「讓光芒灑滿每一個角落，所有的陰霾都將散去。」',
       meaning: '這是一張充滿活力、光明與極度正向的牌！所有的困難都已成為過去，接下來迎接你的將是成功、喜悅與豐盛。',
       love: '感情關係明朗且充滿熱情，彼此坦誠相待。是非常適合孕育新生命或步入婚姻的時刻。',
@@ -101,7 +101,6 @@ export default function Home() {
     }, 1800);
   };
 
-  // 🌟 升級版：多維度生命靈數解讀
   const calculateLifePath = () => {
     if (!birthDateStr) return;
     const digits = birthDateStr.replace(/\D/g, '');
@@ -208,7 +207,6 @@ export default function Home() {
                   </div>
                 )}
 
-                {/* 🌟 升級版：塔羅渲染區 */}
                 {activeTool === 'tarot' && (
                   <div className="bg-stone-900/60 border border-stone-800 rounded-3xl p-8 md:p-12 text-center backdrop-blur-sm animate-in zoom-in-95 duration-300 relative overflow-hidden">
                     <Moon className="w-12 h-12 text-indigo-400 mx-auto mb-4" />
@@ -231,12 +229,16 @@ export default function Home() {
                       <div className="max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
                         <div className="flex flex-col md:flex-row gap-8 items-start bg-stone-800/50 border border-indigo-500/20 rounded-3xl p-6 md:p-8 text-left">
                           
-                          {/* 左側：真實牌圖 */}
+                          {/* 🌟 隱身斗篷加上了！ referrerPolicy="no-referrer" */}
                           <div className="w-full md:w-1/3 flex justify-center shrink-0">
-                            <img src={drawnCard.image} alt={drawnCard.name} className="w-48 rounded-xl shadow-2xl shadow-indigo-900/30 border border-stone-700" />
+                            <img 
+                              src={drawnCard.image} 
+                              alt={drawnCard.name} 
+                              referrerPolicy="no-referrer"
+                              className="w-48 rounded-xl shadow-2xl shadow-indigo-900/30 border border-stone-700" 
+                            />
                           </div>
 
-                          {/* 右側：多維度解讀 */}
                           <div className="w-full md:w-2/3 space-y-5">
                             <div>
                               <div className="text-indigo-400 text-sm font-medium tracking-widest mb-1 uppercase">Today's Guidance</div>
@@ -263,7 +265,6 @@ export default function Home() {
                           </div>
                         </div>
 
-                        {/* 溫和的引流按鈕 */}
                         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
                           <button onClick={handleDrawTarot} className="px-6 py-3 text-stone-400 hover:text-white bg-stone-800 hover:bg-stone-700 rounded-full transition-colors flex items-center justify-center gap-2 font-medium">
                             <RefreshCcw className="w-4 h-4" /> 重新抽牌
@@ -277,7 +278,6 @@ export default function Home() {
                   </div>
                 )}
 
-                {/* 🌟 升級版：靈數渲染區 */}
                 {activeTool === 'numerology' && (
                   <div className="bg-stone-900/60 border border-stone-800 rounded-3xl p-8 md:p-12 text-center backdrop-blur-sm animate-in zoom-in-95 duration-300">
                     <h3 className="text-2xl font-serif text-stone-100 mb-2">生命靈數計算</h3>
