@@ -15,6 +15,7 @@ interface ServiceItem {
   name: string;
   duration: number;
   price: number;
+  serviceType?: 'online' | 'offline' | 'both';
 }
 
 interface TimeSlot {
@@ -212,12 +213,27 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
                         className="p-4 bg-white border border-stone-200 rounded-2xl cursor-pointer hover:border-emerald-500 hover:shadow-md transition-all group relative overflow-hidden"
                       >
                         <div className="flex justify-between items-start mb-1">
-                          <h4 className="font-bold text-stone-900 text-lg">{service.name}</h4>
+                          <h4 className="font-bold text-stone-900 text-lg flex items-center gap-2">
+                            {service.name}
+                          </h4>
                           <span className="font-bold text-emerald-700">HK$ {service.price}</span>
                         </div>
-                        <p className="text-sm text-stone-500 flex items-center gap-1">
-                          <Clock className="w-3 h-3" /> {service.duration} 分鐘
-                        </p>
+                        
+                        <div className="flex items-center gap-3 mt-2">
+                          <p className="text-sm text-stone-500 flex items-center gap-1">
+                            <Clock className="w-3.5 h-3.5" /> {service.duration} 分鐘
+                          </p>
+                          
+                          {/* 👇 新增這段：線上/線下標籤 👇 */}
+                          {service.serviceType === 'offline' ? (
+                            <span className="text-xs px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-md">🏠 線下面測</span>
+                          ) : service.serviceType === 'both' ? (
+                            <span className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-md">🔄 線上/線下皆可</span>
+                          ) : (
+                            <span className="text-xs px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md">🟢 線上諮詢</span>
+                          )}
+                        </div>
+
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-all">
                           <ChevronRight className="w-5 h-5 text-emerald-600" />
                         </div>
