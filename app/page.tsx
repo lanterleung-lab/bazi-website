@@ -10,16 +10,13 @@ export default function Home() {
   const [reviews, setReviews] = useState<any[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   
-  // 核心導航狀態
   const [activeTab, setActiveTab] = useState<'guidance' | 'tools'>('guidance');
   const [activeTool, setActiveTool] = useState<'bazi' | 'tarot' | 'numerology'>('bazi');
   const [selectedKeyword, setSelectedKeyword] = useState<string>('ALL');
 
-  // 塔羅牌狀態
   const [isDrawingTarot, setIsDrawingTarot] = useState(false);
   const [drawnCard, setDrawnCard] = useState<any>(null);
 
-  // 生命靈數狀態
   const [birthDateStr, setBirthDateStr] = useState('');
   const [lifePath, setLifePath] = useState<number | null>(null);
 
@@ -42,14 +39,56 @@ export default function Home() {
     }, 100);
   };
 
-  // --- 塔羅牌資料與邏輯 ---
+  // 🌟 升級版：包含圖片與深度解讀的塔羅牌庫
   const TAROT_DECK = [
-    { name: '愚者 (The Fool)', keyword: '冒險', desc: '這是一張代表無限可能性與全新開始的牌。今天適合大膽跳出舒適圈，相信你的直覺。' },
-    { name: '魔術師 (The Magician)', keyword: '創造', desc: '你已經具備了成功所需的所有資源。發揮你的溝通與創造力，化夢想為現實。' },
-    { name: '女祭司 (The High Priestess)', keyword: '直覺', desc: '向內尋求答案的時刻。靜下心來，傾聽潛意識的聲音，它會為你指明方向。' },
-    { name: '命運之輪 (Wheel of Fortune)', keyword: '轉機', desc: '命運的齒輪正在轉動，順應變化，迎接命中注定的機會與好運。' },
-    { name: '星星 (The Star)', keyword: '希望', desc: '在黑暗中指引方向的星光。代表療癒、平靜、以及靈感與希望的湧現。' },
-    { name: '太陽 (The Sun)', keyword: '喜悅', desc: '充滿活力與光明的一天！所有的陰霾都會散去，迎接成功與熱情的時刻。' },
+    { 
+      name: '愚者 (The Fool)', 
+      image: 'https://upload.wikimedia.org/wikipedia/en/9/90/RWS_Tarot_00_Fool.jpg',
+      quote: '「每一次勇敢的躍下，都是學會飛翔的開始。」',
+      meaning: '這是一張代表無限可能性與全新開始的牌。今天非常適合大膽跳出舒適圈，不要被過去的經驗綁架，請相信你最初的直覺。',
+      love: '暗示一段輕鬆無負擔的新關係即將展開，或是現有關係中會出現令人驚喜的新火花。',
+      career: '事業上適合嘗試全新的領域或跳脫常規的提案，不要害怕未知的挑戰。'
+    },
+    { 
+      name: '魔術師 (The Magician)', 
+      image: 'https://upload.wikimedia.org/wikipedia/en/d/de/RWS_Tarot_01_Magician.jpg',
+      quote: '「你已經具備了創造奇蹟的所有元素。」',
+      meaning: '宇宙正在為你敞開大門。你擁有足夠的資源、智慧與行動力，現在是化夢想為現實的最佳時機，請主動出擊。',
+      love: '你的個人魅力正處於高峰，善用溝通技巧能輕易拉近彼此的距離。',
+      career: '絕佳的表現機會！你的專業能力將被看見，適合談判、簽約或啟動新專案。'
+    },
+    { 
+      name: '女祭司 (The High Priestess)', 
+      image: 'https://upload.wikimedia.org/wikipedia/en/8/88/RWS_Tarot_02_High_Priestess.jpg',
+      quote: '「向外看的人在做夢，向內看的人終將覺醒。」',
+      meaning: '這是一個向內尋求答案的時刻。比起向外盲目行動，現在更需要靜下心來，傾聽潛意識的聲音，它會為你指明正確的方向。',
+      love: '感情中需要更多的精神交流。比起言語，請試著用心去感受對方的弦外之音。',
+      career: '適合進修、研究或從事策劃工作。遇到決策時，相信你的「第六感」。'
+    },
+    { 
+      name: '命運之輪 (Wheel of Fortune)', 
+      image: 'https://upload.wikimedia.org/wikipedia/en/3/3c/RWS_Tarot_10_Wheel_of_Fortune.jpg',
+      quote: '「萬物皆有定時，順應生命之流。」',
+      meaning: '命運的齒輪正在轉動，這預示著一個無法預期但必然發生的轉機。無論現在是低谷還是高峰，一切都在朝著更好的方向演進。',
+      love: '可能會出現命中注定的相遇，或是關係迎來一個自然而然的重要轉折點。',
+      career: '大環境的變化將為你帶來意想不到的好運，請保持彈性，順勢而為。'
+    },
+    { 
+      name: '星星 (The Star)', 
+      image: 'https://upload.wikimedia.org/wikipedia/en/c/cd/RWS_Tarot_17_Star.jpg',
+      quote: '「在最深的黑夜裡，星星的光芒最為璀璨。」',
+      meaning: '在經歷了黑暗與混亂之後，星星為你帶來了療癒、平靜與希望。你的身心正在恢復平衡，靈感也將源源不絕。',
+      love: '關係將回歸寧靜與純粹，誤會得以冰釋。單身者有望遇到精神契合的對象。',
+      career: '充滿創意的時期，你的才華將如星光般閃耀，適合藝術、療癒或遠景規劃的工作。'
+    },
+    { 
+      name: '太陽 (The Sun)', 
+      image: 'https://upload.wikimedia.org/wikipedia/en/1/17/RWS_Tarot_19_Sun.jpg',
+      quote: '「讓光芒灑滿每一個角落，所有的陰霾都將散去。」',
+      meaning: '這是一張充滿活力、光明與極度正向的牌！所有的困難都已成為過去，接下來迎接你的將是成功、喜悅與豐盛。',
+      love: '感情關係明朗且充滿熱情，彼此坦誠相待。是非常適合孕育新生命或步入婚姻的時刻。',
+      career: '無往不利！你的努力將獲得豐碩的成果與眾人的肯定，盡情展現你的光芒吧。'
+    },
   ];
 
   const handleDrawTarot = () => {
@@ -59,10 +98,10 @@ export default function Home() {
       const randomCard = TAROT_DECK[Math.floor(Math.random() * TAROT_DECK.length)];
       setDrawnCard(randomCard);
       setIsDrawingTarot(false);
-    }, 1500);
+    }, 1800);
   };
 
-  // --- 生命靈數邏輯 ---
+  // 🌟 升級版：多維度生命靈數解讀
   const calculateLifePath = () => {
     if (!birthDateStr) return;
     const digits = birthDateStr.replace(/\D/g, '');
@@ -77,19 +116,19 @@ export default function Home() {
     setLifePath(sum);
   };
 
-  const LIFE_PATH_DESC: Record<number, string> = {
-    1: '創始數：天生的領導者，充滿自信與獨立精神，喜歡開創與創新。',
-    2: '協調數：溫和、體貼，擅長傾聽與溝通，是團隊中最棒的調停者。',
-    3: '表達數：充滿活力與創意，樂觀開朗，天生具有藝術與表達的天賦。',
-    4: '穩定數：務實、可靠，重視秩序與安全感，是值得信賴的基石。',
-    5: '自由數：熱愛自由與冒險，適應力強，喜歡體驗生活中的各種變化。',
-    6: '奉獻數：充滿愛心與責任感，重視家庭與和諧，樂於照顧他人。',
-    7: '真理數：理性、善於分析，喜歡探索事物背後的真相與哲理。',
-    8: '權威數：具備強大的商業頭腦與執行力，追求世俗的成功與財富。',
-    9: '大愛數：充滿人道主義精神，富有同情心，具有寬闊的視野與智慧。',
-    11: '卓越數(靈感)：直覺極強，充滿靈性，能啟發他人的心靈導師。',
-    22: '卓越數(建設)：擁有將偉大夢想化為現實的強大力量，是大師級的建造者。',
-    33: '卓越數(奉獻)：充滿無私的愛與治癒能量，極度稀有的奉獻者。'
+  const LIFE_PATH_DESC: Record<number, { title: string, traits: string, love: string, career: string }> = {
+    1: { title: '創始數', traits: '天生的領導者，充滿自信與獨立精神。你擁有強大的意志力，不喜歡被世俗規則束縛，總是渴望開創屬於自己的道路。', love: '在關係中習慣佔據主導權。你需要一位能給予你足夠自由，同時又能並肩作戰的伴侶。', career: '極度適合創業、自由工作者或擔任團隊的管理職。創新與挑戰是你動力的來源。' },
+    2: { title: '協調數', traits: '你是天生的和平使者，溫和、體貼且極具同理心。你非常善於察言觀色，是團隊中最棒的調停者與支持者。', love: '極度重視伴侶關係，渴望深刻的情感連結與陪伴。有時容易為了迎合對方而委屈自己。', career: '適合公關、人資、諮商輔導等需要高度溝通與協調的工作。' },
+    3: { title: '表達數', traits: '充滿活力與創意的樂天派！你天生具有藝術感與強大的表達天賦，總能輕易成為人群中的開心果。', love: '喜歡輕鬆愉快、充滿新鮮感的戀愛。對於太過沉重或束縛的關係容易感到窒息。', career: '演藝、設計、文字工作或任何能展現個人創意的舞台，都是你的天下。' },
+    4: { title: '穩定數', traits: '務實、可靠、有紀律。你就像是一座堅固的堡壘，重視秩序與安全感，是所有人眼中最值得信賴的基石。', love: '對待感情認真且專一，渴望建立穩定且長久的家庭。偶爾可以試著給伴侶一點小浪漫。', career: '適合財務、工程、行政等需要嚴謹邏輯與架構規劃的專業領域。' },
+    5: { title: '自由數', traits: '熱愛自由、熱心冒險！你擁有極強的適應力與好奇心，喜歡體驗生活中的各種變化，討厭一成不變的日子。', love: '愛情對你來說是一場刺激的探險。伴侶必須能跟上你的節奏，並給你足夠的個人空間。', career: '旅遊、業務、媒體等需要頻繁走動與接觸新事物的工作最適合你。' },
+    6: { title: '奉獻數', traits: '充滿母性/父性光輝的照顧者。你極度重視家庭與和諧，富有同情心，總是將他人的需求放在自己之前。', love: '在感情中是個完美的照顧者，但也容易因為付出太多而失去自我。請記得也要好好愛自己。', career: '醫療、教育、服務業或任何與「療癒」、「照顧」相關的產業。' },
+    7: { title: '真理數', traits: '你是理性的思想家與探求者。善於分析，擁有敏銳的洞察力，喜歡獨處並探索事物背後的深層真相與哲理。', love: '對於伴侶有著極高的精神契合度要求。你需要的是靈魂伴侶，而非世俗的柴米油鹽。', career: '適合研究員、分析師、學者或玄學/神祕學領域的探索。' },
+    8: { title: '權威數', traits: '具備強大的商業頭腦與執行力。你對於世俗的成功、財富與權力有著強烈的渴望，並且有能力將其實現。', love: '在感情中也帶有幾分霸總氣息。你願意為伴侶提供豐厚的物質基礎，但也渴望絕對的忠誠。', career: '企業家、金融投資、高階主管。你是天生做大事的人。' },
+    9: { title: '大愛數', traits: '擁有老靈魂的智者。你充滿人道主義精神，富有同情心，具有寬闊的視野與無私的大愛。', love: '感情觀極具包容力，但也容易因為過度理想化而對現實中的伴侶感到失望。', career: '公益事業、跨國交流、藝術創作或任何能為全人類帶來啟發的工作。' },
+    11: { title: '靈感大師數', traits: '直覺極強，充滿靈性，能輕易感知他人的情緒與能量。你是能啟發他人的心靈導師。', love: '極度敏感，需要一位能完全包容你情緒起伏與精神世界的伴侶。', career: '心理諮商、身心靈療癒、藝術家、精神領袖。' },
+    22: { title: '建設大師數', traits: '擁有將偉大夢想化為現實的強大力量。你結合了4號的務實與11號的靈感，是大師級的建造者。', love: '需要一位能與你共同築夢、腳踏實地的靈魂伴侶。', career: '建築、大型專案管理、政治家、改變社會結構的推動者。' },
+    33: { title: '奉獻大師數', traits: '極度稀有的純粹能量。你充滿無私的愛與治癒力，猶如人間的菩薩，願意為成就大愛而犧牲自我。', love: '你的愛超越了個人的情愛，伴侶必須能理解並支持你的宏大願景。', career: '慈善家、精神導師、拯救者角色的極致展現。' }
   };
 
   const guidanceTopics = [
@@ -102,7 +141,6 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-stone-950 text-stone-100 font-sans selection:bg-emerald-500 selection:text-stone-950 overflow-hidden relative">
       
-      {/* 背景裝飾 */}
       <div className="absolute -top-40 -right-40 w-[800px] h-[800px] pointer-events-none opacity-[0.07] flex items-center justify-center z-0">
         <div className="w-full h-full text-stone-300" style={{ animation: 'spin 240s linear infinite' }}>
           <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
@@ -119,7 +157,6 @@ export default function Home() {
       </div>
       <div className="absolute inset-0 opacity-[0.15] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] pointer-events-none z-0"></div>
 
-      {/* 核心互動區 */}
       <section className="relative pt-32 pb-20 px-4 md:px-8 z-10 border-b border-stone-900 min-h-[85vh] flex flex-col justify-center">
         <div className="max-w-7xl mx-auto w-full">
           
@@ -153,7 +190,6 @@ export default function Home() {
               </div>
             ) : (
               <div className="animate-in fade-in slide-in-from-bottom-4 max-w-4xl mx-auto">
-                {/* 🌟 工具箱切換列 */}
                 <div className="flex flex-wrap justify-center gap-3 mb-10">
                   <button onClick={() => setActiveTool('bazi')} className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${activeTool === 'bazi' ? 'bg-emerald-900/30 text-emerald-400 border border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.15)]' : 'bg-stone-900/50 text-stone-500 border border-stone-800 hover:text-stone-300'}`}>
                     ☯️ 八字排盤
@@ -166,14 +202,13 @@ export default function Home() {
                   </button>
                 </div>
 
-                {/* 1. 八字排盤器 */}
                 {activeTool === 'bazi' && (
                   <div className="animate-in zoom-in-95 duration-300">
                     <BaziCalculator onActionClick={() => handleGuidanceClick('八字')} actionText="尋找八字大師詳批" />
                   </div>
                 )}
 
-                {/* 2. 每日塔羅一抽 */}
+                {/* 🌟 升級版：塔羅渲染區 */}
                 {activeTool === 'tarot' && (
                   <div className="bg-stone-900/60 border border-stone-800 rounded-3xl p-8 md:p-12 text-center backdrop-blur-sm animate-in zoom-in-95 duration-300 relative overflow-hidden">
                     <Moon className="w-12 h-12 text-indigo-400 mx-auto mb-4" />
@@ -181,26 +216,60 @@ export default function Home() {
                     <p className="text-stone-400 mb-8 max-w-md mx-auto text-sm">深呼吸，在心中默念你近期的困惑，然後憑直覺點擊一張牌。</p>
                     
                     {!drawnCard ? (
-                      <div className="flex justify-center gap-4 mb-8">
+                      <div className="flex justify-center gap-4 md:gap-8 mb-8">
                         {[1, 2, 3].map(i => (
                           <div 
                             key={i} 
                             onClick={isDrawingTarot ? undefined : handleDrawTarot}
-                            className={`w-24 h-36 md:w-32 md:h-48 bg-stone-800 border border-stone-600 rounded-xl shadow-lg flex items-center justify-center cursor-pointer transition-all duration-500 ${isDrawingTarot ? 'animate-pulse scale-95 border-indigo-500' : 'hover:-translate-y-4 hover:shadow-indigo-500/30 hover:border-indigo-400'}`}
+                            className={`w-24 h-36 md:w-32 md:h-48 bg-stone-800 border-2 border-stone-600 rounded-xl shadow-lg flex items-center justify-center cursor-pointer transition-all duration-500 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] ${isDrawingTarot ? 'animate-pulse scale-95 border-indigo-500' : 'hover:-translate-y-4 hover:shadow-indigo-500/30 hover:border-indigo-400'}`}
                           >
-                            <Star className={`w-6 h-6 text-stone-600 ${isDrawingTarot ? 'animate-spin text-indigo-400' : ''}`} />
+                            <Star className={`w-8 h-8 text-stone-600 ${isDrawingTarot ? 'animate-spin text-indigo-400' : ''}`} />
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <div className="max-w-md mx-auto bg-stone-800/80 border border-indigo-500/30 rounded-2xl p-6 mb-8 animate-in fade-in slide-in-from-bottom-4">
-                        <div className="text-indigo-400 text-sm font-medium mb-1">今日指引</div>
-                        <h4 className="text-2xl font-bold text-stone-100 mb-3">{drawnCard.name}</h4>
-                        <p className="text-stone-300 text-sm leading-relaxed mb-6">{drawnCard.desc}</p>
-                        <div className="flex gap-3 justify-center">
-                          <button onClick={handleDrawTarot} className="p-2 text-stone-400 hover:text-white bg-stone-700 hover:bg-stone-600 rounded-full transition-colors"><RefreshCcw className="w-4 h-4" /></button>
-                          <button onClick={() => handleGuidanceClick('塔羅')} className="px-6 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full font-medium transition-all shadow-lg active:scale-95 flex items-center gap-2">
-                            <Sparkles className="w-4 h-4" /> 找塔羅師解牌
+                      <div className="max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
+                        <div className="flex flex-col md:flex-row gap-8 items-start bg-stone-800/50 border border-indigo-500/20 rounded-3xl p-6 md:p-8 text-left">
+                          
+                          {/* 左側：真實牌圖 */}
+                          <div className="w-full md:w-1/3 flex justify-center shrink-0">
+                            <img src={drawnCard.image} alt={drawnCard.name} className="w-48 rounded-xl shadow-2xl shadow-indigo-900/30 border border-stone-700" />
+                          </div>
+
+                          {/* 右側：多維度解讀 */}
+                          <div className="w-full md:w-2/3 space-y-5">
+                            <div>
+                              <div className="text-indigo-400 text-sm font-medium tracking-widest mb-1 uppercase">Today's Guidance</div>
+                              <h4 className="text-3xl font-bold text-stone-100 mb-2">{drawnCard.name}</h4>
+                              <p className="text-stone-400 italic text-sm border-l-2 border-indigo-500 pl-3 py-1">{drawnCard.quote}</p>
+                            </div>
+                            
+                            <div className="space-y-3 pt-2">
+                              <div>
+                                <h5 className="text-stone-300 font-medium flex items-center gap-2 mb-1"><Sparkles className="w-4 h-4 text-indigo-400"/> 牌面啟示</h5>
+                                <p className="text-stone-400 text-sm leading-relaxed">{drawnCard.meaning}</p>
+                              </div>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                                <div className="bg-stone-900/50 p-4 rounded-xl border border-stone-800">
+                                  <h5 className="text-rose-400 text-xs font-bold mb-1 flex items-center gap-1"><Heart className="w-3 h-3"/> 感情指引</h5>
+                                  <p className="text-stone-400 text-xs leading-relaxed">{drawnCard.love}</p>
+                                </div>
+                                <div className="bg-stone-900/50 p-4 rounded-xl border border-stone-800">
+                                  <h5 className="text-blue-400 text-xs font-bold mb-1 flex items-center gap-1"><Briefcase className="w-3 h-3"/> 事業指引</h5>
+                                  <p className="text-stone-400 text-xs leading-relaxed">{drawnCard.career}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 溫和的引流按鈕 */}
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+                          <button onClick={handleDrawTarot} className="px-6 py-3 text-stone-400 hover:text-white bg-stone-800 hover:bg-stone-700 rounded-full transition-colors flex items-center justify-center gap-2 font-medium">
+                            <RefreshCcw className="w-4 h-4" /> 重新抽牌
+                          </button>
+                          <button onClick={() => handleGuidanceClick('塔羅')} className="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full font-medium transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2">
+                            <Moon className="w-4 h-4" /> 需要更針對性的解答？尋找專屬塔羅師
                           </button>
                         </div>
                       </div>
@@ -208,7 +277,7 @@ export default function Home() {
                   </div>
                 )}
 
-                {/* 3. 生命靈數計算 */}
+                {/* 🌟 升級版：靈數渲染區 */}
                 {activeTool === 'numerology' && (
                   <div className="bg-stone-900/60 border border-stone-800 rounded-3xl p-8 md:p-12 text-center backdrop-blur-sm animate-in zoom-in-95 duration-300">
                     <h3 className="text-2xl font-serif text-stone-100 mb-2">生命靈數計算</h3>
@@ -228,14 +297,40 @@ export default function Home() {
                       </button>
                     </div>
 
-                    {lifePath && (
-                      <div className="max-w-md mx-auto bg-stone-800/80 border border-amber-500/30 rounded-2xl p-6 animate-in fade-in slide-in-from-bottom-4">
-                        <div className="text-amber-500 font-medium mb-1">您的主命數是</div>
-                        <h4 className="text-5xl font-serif font-bold text-stone-100 mb-4">{lifePath}</h4>
-                        <p className="text-stone-300 text-sm leading-relaxed mb-6">{LIFE_PATH_DESC[lifePath] || '充滿神祕能量的獨特數字。'}</p>
-                        <button onClick={() => handleGuidanceClick('靈數')} className="px-6 py-2.5 bg-stone-700 hover:bg-stone-600 text-white rounded-full font-medium transition-all active:scale-95 flex items-center justify-center gap-2 mx-auto">
-                          找靈數大師深入解析 <Compass className="w-4 h-4" />
-                        </button>
+                    {lifePath && LIFE_PATH_DESC[lifePath] && (
+                      <div className="max-w-2xl mx-auto bg-stone-800/50 border border-amber-500/20 rounded-3xl p-6 md:p-8 text-left animate-in fade-in slide-in-from-bottom-8 duration-700">
+                        <div className="flex items-center gap-6 mb-6 border-b border-stone-700/50 pb-6">
+                          <div className="w-20 h-20 rounded-full bg-amber-900/30 border border-amber-500/30 flex items-center justify-center shrink-0">
+                            <span className="text-4xl font-serif font-bold text-amber-400">{lifePath}</span>
+                          </div>
+                          <div>
+                            <div className="text-amber-500 text-sm font-medium tracking-widest mb-1">YOUR LIFE PATH</div>
+                            <h4 className="text-2xl font-bold text-stone-100">{LIFE_PATH_DESC[lifePath].title}</h4>
+                          </div>
+                        </div>
+
+                        <div className="space-y-5 mb-8">
+                          <div>
+                            <h5 className="text-stone-200 font-medium flex items-center gap-2 mb-2"><Star className="w-4 h-4 text-amber-400"/> 天賦特質</h5>
+                            <p className="text-stone-400 text-sm leading-relaxed">{LIFE_PATH_DESC[lifePath].traits}</p>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                            <div className="bg-stone-900/50 p-4 rounded-xl border border-stone-800">
+                              <h5 className="text-rose-400 text-xs font-bold mb-1 flex items-center gap-1"><Heart className="w-3 h-3"/> 感情模式</h5>
+                              <p className="text-stone-400 text-xs leading-relaxed">{LIFE_PATH_DESC[lifePath].love}</p>
+                            </div>
+                            <div className="bg-stone-900/50 p-4 rounded-xl border border-stone-800">
+                              <h5 className="text-blue-400 text-xs font-bold mb-1 flex items-center gap-1"><Briefcase className="w-3 h-3"/> 適合事業</h5>
+                              <p className="text-stone-400 text-xs leading-relaxed">{LIFE_PATH_DESC[lifePath].career}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex justify-center">
+                          <button onClick={() => handleGuidanceClick('靈數')} className="px-8 py-3 bg-stone-700 hover:bg-stone-600 text-white rounded-full font-medium transition-all active:scale-95 flex items-center gap-2">
+                            <Compass className="w-4 h-4" /> 探索流年運勢？尋找靈數專家解析
+                          </button>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -246,7 +341,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 數據統計與評論區 */}
       <section className="py-12 border-b border-stone-800/50 bg-stone-900/40 relative z-10 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-stone-800/80">
           <div><div className="text-3xl font-bold text-emerald-400 font-serif mb-1">10k+</div><div className="text-sm text-stone-500">累積諮詢人次</div></div>
