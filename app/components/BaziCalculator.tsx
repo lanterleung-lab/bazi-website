@@ -3,27 +3,48 @@
 import React, { useState } from 'react';
 import { Loader2, Sparkles, Compass, ArrowRight } from 'lucide-react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts';
-import { Solar, Lunar } from 'lunar-javascript';
+import { Solar } from 'lunar-javascript';
 
 interface BaziCalculatorProps {
   onActionClick: () => void;
   actionText: string;
 }
 
-const DEFAULT_CHART_DATA = [
-  { subject: '金 (決斷)', A: 50, fullMark: 100 },
-  { subject: '木 (生機)', A: 50, fullMark: 100 },
-  { subject: '水 (智慧)', A: 50, fullMark: 100 },
-  { subject: '火 (熱情)', A: 50, fullMark: 100 },
-  { subject: '土 (包容)', A: 50, fullMark: 100 },
-];
+interface LiuNian {
+  year: number;
+  age: number;
+  gan: string;
+  zhi: string;
+}
 
-const DEFAULT_BAZI_DATA = [
-  { pillar: '年柱', stem: '甲', stemElement: '木', branch: '辰', branchElement: '土', hiddenStems: ['戊', '乙', '癸'] },
-  { pillar: '月柱', stem: '丙', stemElement: '火', branch: '寅', branchElement: '木', hiddenStems: ['甲', '丙', '戊'] },
-  { pillar: '日柱', stem: '戊', stemElement: '土', branch: '申', branchElement: '金', hiddenStems: ['庚', '壬', '戊'] },
-  { pillar: '時柱', stem: '丁', stemElement: '火', branch: '巳', branchElement: '火', hiddenStems: ['丙', '庚', '戊'] },
-];
+interface DaYun {
+  startYear: number;
+  startAge: number;
+  gan: string;
+  zhi: string;
+  liuNians: LiuNian[];
+}
+
+interface BaziPillar {
+  pillar: string;
+  stem: string;
+  stemElement: string;
+  branch: string;
+  branchElement: string;
+  hiddenStems: string[];
+}
+
+// 輔助函數：將天干地支轉換為五行字元
+const getWuXingChar = (char: string): string => {
+  const wuxingMap: Record<string, string> = {
+    '甲': '木', '乙': '木', '寅': '木', '卯': '木',
+    '丙': '火', '丁': '火', '巳': '火', '午': '火',
+    '戊': '土', '己': '土', '辰': '土', '戌': '土', '丑': '土', '未': '土',
+    '庚': '金', '辛': '金', '申': '金', '酉': '金',
+    '壬': '水', '癸': '水', '亥': '水', '子': '水'
+  };
+  return wuxingMap[char] || '';
+};
 
 const getElementColor = (element: string) => {
   switch(element) {
@@ -36,6 +57,7 @@ const getElementColor = (element: string) => {
   }
 };
 
+// 🌟 修正型別為 any，解決 recharts 升級後的 TickProp 型別不相容問題
 const renderCustomTick = ({ payload, x, y }: any) => {
   let color = '#a8a29e'; 
   if (payload.value.includes('木')) color = '#34d399';
@@ -55,11 +77,54 @@ const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
 const months = Array.from({ length: 12 }, (_, i) => i + 1);
 
+// 預設資料產生器
+const generateDefaultData = () => {
+  const solar = Solar.fromYmdHms(1991, 6, 2, 12, 0, 0);
+  const baZi = solar.getLunar().getEightChar();
+  const yun = baZi.getYun(0);
+  const daYunArr: DaYun[] = yun.getDaYun().map((dy: any) => ({
+    startYear: dy.getStartYear(),
+    startAge: dy.getStartAge(),
+    gan: dy.getGan(),
+    zhi: dy.getZhi(),
+    liuNians: dy.getLiuNian().map((ln: any) => ({
+      year: ln.getYear(),
+      age: ln.getAge(),
+      gan: ln.getGan(),
+      zhi: ln.getZhi()
+    }))
+  }));
+
+  return {
+    bazi: [
+      { pillar: '年柱', stem: baZi.getYearGan(), stemElement: '金', branch: baZi.getYearZhi(), branchElement: '火', hiddenStems: baZi.getYearHideGan() },
+      { pillar: '月柱', stem: baZi.getMonthGan(), stemElement: '水', branch: baZi.getMonthZhi(), branchElement: '火', hiddenStems: baZi.getMonthHideGan() },
+      { pillar: '日柱', stem: baZi.getDayGan(), stemElement: '土', branch: baZi.getDayZhi(), branchElement: '水', hiddenStems: baZi.getDayHideGan() },
+      { pillar: '時柱', stem: baZi.getTimeGan(), stemElement: '土', branch: baZi.getTimeZhi(), branchElement: '火', hiddenStems: baZi.getTimeHideGan() },
+    ] as BaziPillar[],
+    chart: [
+      { subject: '金 (決斷)', A: 35, fullMark: 100 },
+      { subject: '木 (生機)', A: 20, fullMark: 100 },
+      { subject: '水 (智慧)', A: 50, fullMark: 100 },
+      { subject: '火 (熱情)', A: 65, fullMark: 100 },
+      { subject: '土 (包容)', A: 50, fullMark: 100 },
+    ],
+    daYuns: daYunArr
+  };
+};
+
+const defaultData = generateDefaultData();
+
 export default function BaziCalculator({ onActionClick, actionText }: BaziCalculatorProps) {
   const [isCalculating, setIsCalculating] = useState(false);
   const [birthData, setBirthData] = useState({ year: '1991', month: '6', day: '2', time: '12:00', gender: 'F' });
-  const [chartData, setChartData] = useState(DEFAULT_CHART_DATA);
-  const [baziResult, setBaziResult] = useState(DEFAULT_BAZI_DATA);
+  
+  const [chartData, setChartData] = useState(defaultData.chart);
+  const [baziResult, setBaziResult] = useState<BaziPillar[]>(defaultData.bazi);
+  const [daYuns, setDaYuns] = useState<DaYun[]>(defaultData.daYuns);
+  
+  const [activeTab, setActiveTab] = useState<'chart' | 'dayun'>('chart');
+  const [selectedDaYunIndex, setSelectedDaYunIndex] = useState(1);
 
   const daysInMonth = new Date(parseInt(birthData.year), parseInt(birthData.month), 0).getDate();
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
@@ -78,7 +143,7 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
       const lunar = solar.getLunar();
       const baZi = lunar.getEightChar();
 
-      const newBazi = [
+      const newBazi: BaziPillar[] = [
         { 
           pillar: '年柱', 
           stem: baZi.getYearGan(), stemElement: baZi.getYearWuXing().charAt(0),
@@ -119,10 +184,25 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
         { subject: '土 (包容)', A: 20 + (elementsCount['土'] * 15), fullMark: 100 },
       ];
 
+      const yun = baZi.getYun(birthData.gender === 'M' ? 1 : 0);
+      const parsedDaYuns: DaYun[] = yun.getDaYun().map((dy: any) => ({
+        startYear: dy.getStartYear(),
+        startAge: dy.getStartAge(),
+        gan: dy.getGan(),
+        zhi: dy.getZhi(),
+        liuNians: dy.getLiuNian().map((ln: any) => ({
+          year: ln.getYear(),
+          age: ln.getAge(),
+          gan: ln.getGan(),
+          zhi: ln.getZhi()
+        }))
+      }));
+
       setBaziResult(newBazi);
       setChartData(newChart);
-
-      localStorage.setItem('userBaziData', JSON.stringify({ bazi: newBazi, chart: newChart }));
+      setDaYuns(parsedDaYuns);
+      setSelectedDaYunIndex(1);
+      setActiveTab('dayun');
       setIsCalculating(false);
     }, 800);
   };
@@ -130,7 +210,6 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
   return (
     <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
       
-      {/* 左側表單說明區 */}
       <div className="lg:col-span-6 space-y-8 text-center lg:text-left">
         <div className="space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-800/50 text-emerald-400 text-xs font-medium tracking-widest uppercase shadow-[0_0_20px_rgba(16,185,129,0.15)] backdrop-blur-md">
@@ -180,14 +259,13 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
               </div>
             </div>
           </div>
-          <button type="submit" disabled={isCalculating} className="w-full py-4 mt-6 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white rounded-xl font-medium hover:from-emerald-500 hover:to-emerald-400 transition-all shadow-[0_0_25px_rgba(16,185,129,0.3)] flex items-center justify-center gap-2 text-base relative z-10">
+          <button type="submit" disabled={isCalculating} className="w-full py-4 mt-6 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white rounded-xl font-medium hover:from-emerald-500 hover:to-emerald-400 transition-all shadow-[0_0_25px_rgba(16,185,129,0.3)] flex items-center justify-center gap-2 text-base relative z-10 active:scale-95">
             {isCalculating ? <Loader2 className="w-5 h-5 animate-spin" /> : <Compass className="w-5 h-5" />}
             {isCalculating ? '推演天機中...' : '洞察專屬命盤'}
           </button>
         </form>
       </div>
 
-      {/* 右側命盤與雷達圖展示區 */}
       <div className="lg:col-span-6 bg-stone-900/60 backdrop-blur-xl border border-stone-800 rounded-[2rem] p-6 md:p-8 shadow-2xl relative overflow-hidden">
         {isCalculating && (
           <div className="absolute inset-0 bg-stone-950/80 backdrop-blur-md flex flex-col items-center justify-center z-20">
@@ -195,12 +273,13 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
             <p className="text-sm font-bold text-stone-300 tracking-widest">窺探天機中...</p>
           </div>
         )}
-        <div className="text-center mb-6">
+        
+        <div className="text-center mb-5">
           <h3 className="font-bold text-xl text-stone-100 tracking-wider font-serif">先天命格分佈</h3>
           <div className="w-12 h-0.5 bg-emerald-600 mx-auto mt-2"></div>
         </div>
         
-        <div className="bg-stone-950/60 rounded-2xl p-4 border border-stone-800/80 flex justify-between gap-3 text-center mb-6 shadow-inner relative z-10">
+        <div className="bg-stone-950/60 rounded-2xl p-4 border border-stone-800/80 flex justify-between gap-2 md:gap-3 text-center mb-6 shadow-inner relative z-10">
           {baziResult.map((item, i) => (
             <div key={i} className="flex-1 flex flex-col gap-1.5">
               <span className="text-[10px] text-stone-500 font-medium mb-1 tracking-widest">{item.pillar}</span>
@@ -210,7 +289,7 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
               <div className="w-full bg-stone-900 border border-stone-700/50 rounded-xl py-3 shadow-sm flex flex-col items-center justify-center min-h-[75px]">
                 <span className={`text-xl font-bold font-serif mb-1 ${getElementColor(item.branchElement)}`}>{item.branch}</span>
                 <div className="flex gap-1 mt-1 justify-center flex-wrap">
-                  {item.hiddenStems.map((hs, idx) => (
+                  {item.hiddenStems.map((hs: string, idx: number) => (
                     <span key={idx} className="text-[9px] text-stone-400 bg-stone-950 px-1.5 py-0.5 rounded border border-stone-800">{hs}</span>
                   ))}
                 </div>
@@ -219,17 +298,77 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
           ))}
         </div>
 
-        <div className="h-[200px] w-full -ml-2 relative z-10">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-emerald-900/20 rounded-full blur-3xl pointer-events-none"></div>
-          <ResponsiveContainer width="100%" height="100%">
-            <RadarChart cx="50%" cy="50%" outerRadius="65%" data={chartData}>
-              <PolarGrid stroke="#292524" strokeDasharray="3 3" />
-              <PolarAngleAxis dataKey="subject" tick={renderCustomTick} />
-              <Radar name="五行" dataKey="A" stroke="#10b981" strokeWidth={2} fill="#34d399" fillOpacity={0.15} />
-            </RadarChart>
-          </ResponsiveContainer>
+        <div className="flex bg-stone-950/80 p-1 rounded-xl mb-5 border border-stone-800 relative z-10">
+          <button onClick={() => setActiveTab('chart')} className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${activeTab === 'chart' ? 'bg-stone-800 text-stone-200 shadow' : 'text-stone-500 hover:text-stone-300'}`}>
+            五行強弱
+          </button>
+          <button onClick={() => setActiveTab('dayun')} className={`flex-1 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${activeTab === 'dayun' ? 'bg-stone-800 text-stone-200 shadow' : 'text-stone-500 hover:text-stone-300'}`}>
+            大運與流年
+          </button>
         </div>
-        <div className="pt-4 mt-2 border-t border-stone-800 relative z-10">
+
+        <div className="relative z-10 min-h-[220px]">
+          {activeTab === 'chart' && (
+            <div className="h-[220px] w-full -ml-2 animate-in fade-in zoom-in-95 duration-300">
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-emerald-900/20 rounded-full blur-3xl pointer-events-none"></div>
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart cx="50%" cy="50%" outerRadius="65%" data={chartData}>
+                  <PolarGrid stroke="#292524" strokeDasharray="3 3" />
+                  <PolarAngleAxis dataKey="subject" tick={renderCustomTick} />
+                  <Radar name="五行" dataKey="A" stroke="#10b981" strokeWidth={2} fill="#34d399" fillOpacity={0.15} />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+
+          {activeTab === 'dayun' && (
+            <div className="animate-in fade-in zoom-in-95 duration-300">
+              <div className="flex overflow-x-auto pb-3 gap-2 snap-x scrollbar-hide mb-2">
+                {daYuns.slice(1, 10).map((dy, idx) => {
+                  const actualIndex = idx + 1;
+                  const isSelected = selectedDaYunIndex === actualIndex;
+                  return (
+                    <div 
+                      key={actualIndex} 
+                      onClick={() => setSelectedDaYunIndex(actualIndex)}
+                      className={`shrink-0 snap-start w-16 py-2.5 rounded-xl border flex flex-col items-center cursor-pointer transition-all ${
+                        isSelected
+                        ? 'bg-emerald-900/20 border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.15)] transform scale-105'
+                        : 'bg-stone-900/50 border-stone-800 hover:border-stone-600 hover:bg-stone-800'
+                      }`}
+                    >
+                      <span className="text-[9px] text-stone-500 mb-1">{dy.startAge}歲</span>
+                      <span className={`text-lg font-serif font-bold leading-tight ${getElementColor(getWuXingChar(dy.gan))}`}>{dy.gan}</span>
+                      <span className={`text-lg font-serif font-bold leading-tight ${getElementColor(getWuXingChar(dy.zhi))}`}>{dy.zhi}</span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="bg-stone-950/60 p-4 rounded-2xl border border-stone-800/80">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-medium text-emerald-500/80 tracking-widest">
+                    【{daYuns[selectedDaYunIndex]?.gan}{daYuns[selectedDaYunIndex]?.zhi}大運】流年走勢
+                  </span>
+                </div>
+                <div className="grid grid-cols-5 gap-2">
+                  {daYuns[selectedDaYunIndex]?.liuNians.map((ln, i) => (
+                    <div key={i} className="flex flex-col items-center py-2 rounded-lg bg-stone-900/80 border border-stone-800/50 shadow-sm">
+                      <span className="text-[9px] text-stone-500 mb-1">{ln.year}</span>
+                      <div className="flex gap-0.5">
+                        <span className={`text-sm font-serif font-bold ${getElementColor(getWuXingChar(ln.gan))}`}>{ln.gan}</span>
+                        <span className={`text-sm font-serif font-bold ${getElementColor(getWuXingChar(ln.zhi))}`}>{ln.zhi}</span>
+                      </div>
+                      <span className="text-[9px] text-stone-500 mt-1">{ln.age}歲</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="pt-5 mt-4 border-t border-stone-800 relative z-10">
           <button onClick={onActionClick} className="w-full py-4 bg-stone-100 text-stone-900 rounded-xl font-bold hover:bg-white transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] flex items-center justify-center gap-2">
             {actionText} <ArrowRight className="w-4 h-4" />
           </button>
