@@ -37,7 +37,7 @@ async function getCroppedImg(imageSrc: string, pixelCrop: any): Promise<Blob | n
   return new Promise((resolve) => canvas.toBlob((blob) => resolve(blob), 'image/jpeg'));
 }
 
-interface ServiceItem { id: string; name: string; duration: number; price: number; }
+interface ServiceItem { id: string; name: string; duration: number; price: number; serviceType: 'online' | 'offline' | 'both'; }
 interface TimeSlot { start: string; end: string; }
 interface DaySchedule { isActive: boolean; slots: TimeSlot[]; }
 type WeeklySchedule = Record<string, DaySchedule>;
@@ -274,7 +274,7 @@ export default function MasterDashboard() {
 
   const handleLogout = async () => { await supabase.auth.signOut(); router.push('/login'); };
 
-  const handleAddService = () => setMasterData({ ...masterData, services: [...masterData.services, { id: Math.random().toString(36).substr(2, 9), name: '', duration: 30, price: 0 }] });
+  const handleAddService = () => setMasterData({ ...masterData, services: [...masterData.services, { id: Math.random().toString(36).substr(2, 9), name: '', duration: 30, price: 0, serviceType: 'online' }] });
   const handleRemoveService = (id: string) => setMasterData({ ...masterData, services: masterData.services.filter(s => s.id !== id) });
   const handleUpdateService = (id: string, field: keyof ServiceItem, value: any) => setMasterData({ ...masterData, services: masterData.services.map(s => (s.id === id ? { ...s, [field]: value } : s)) });
 
@@ -569,18 +569,33 @@ export default function MasterDashboard() {
                      <div className="space-y-4">
                        {masterData.services.map((service) => (
                          <div key={service.id} className="p-4 bg-stone-50 border border-stone-200 rounded-xl flex items-start gap-4 shadow-sm">
-                            <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
-                              <div className="md:col-span-3">
+                            <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-4">
+                              <div className="md:col-span-4">
                                  <label className="text-xs font-medium text-stone-500 mb-1 block">服務名稱</label>
-                                 <input type="text" value={service.name} onChange={(e) => handleUpdateService(service.id, 'name', e.target.value)} className="w-full px-3 py-2 rounded-lg border border-stone-200" required />
+                                 <input type="text" value={service.name} onChange={(e) => handleUpdateService(service.id, 'name', e.target.value)} className="w-full px-3 py-2 rounded-lg border border-stone-200 focus:ring-2 focus:ring-emerald-500 outline-none" required />
                               </div>
-                              <div>
-                                 <label className="text-xs font-medium text-stone-500 mb-1 block">時長 (分鐘)</label>
-                                 <input type="number" value={service.duration} onChange={(e) => handleUpdateService(service.id, 'duration', Number(e.target.value))} className="w-full px-3 py-2 rounded-lg border border-stone-200" required />
-                              </div>
+                              
+                              {/* 👇 新增的線上/線下選項 👇 */}
                               <div className="md:col-span-2">
-                                 <label className="text-xs font-medium text-stone-500 mb-1 block">費用 (HK$)</label>
-                                 <input type="number" value={service.price} onChange={(e) => handleUpdateService(service.id, 'price', Number(e.target.value))} className="w-full px-3 py-2 rounded-lg border border-stone-200" required />
+                                 <label className="text-xs font-medium text-stone-500 mb-1 block">服務形式</label>
+                                 <select 
+                                   value={service.serviceType || 'online'} 
+                                   onChange={(e) => handleUpdateService(service.id, 'serviceType', e.target.value)}
+                                   className="w-full px-3 py-2 rounded-lg border border-stone-200 bg-white focus:ring-2 focus:ring-emerald-500 outline-none"
+                                 >
+                                   <option value="online">🟢 純線上 (視訊/語音/文字)</option>
+                                   <option value="offline">🏠 純線下 (工作室面測)</option>
+                                   <option value="both">🔄 線上 / 線下皆可</option>
+                                 </select>
+                              </div>
+
+                              <div className="md:col-span-1">
+                                 <label className="text-xs font-medium text-stone-500 mb-1 block">時長(分鐘)</label>
+                                 <input type="number" value={service.duration} onChange={(e) => handleUpdateService(service.id, 'duration', Number(e.target.value))} className="w-full px-3 py-2 rounded-lg border border-stone-200 focus:ring-2 focus:ring-emerald-500 outline-none" required />
+                              </div>
+                              <div className="md:col-span-1">
+                                 <label className="text-xs font-medium text-stone-500 mb-1 block">費用(HK$)</label>
+                                 <input type="number" value={service.price} onChange={(e) => handleUpdateService(service.id, 'price', Number(e.target.value))} className="w-full px-3 py-2 rounded-lg border border-stone-200 focus:ring-2 focus:ring-emerald-500 outline-none" required />
                               </div>
                             </div>
                             <button type="button" onClick={() => handleRemoveService(service.id)} className="p-2 text-stone-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg mt-6"><Trash2 className="w-5 h-5" /></button>
