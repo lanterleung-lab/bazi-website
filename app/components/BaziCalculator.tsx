@@ -234,13 +234,13 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
       <div className="lg:col-span-6 space-y-8 text-center lg:text-left">
         <div className="space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-800/50 text-emerald-400 text-xs font-medium tracking-widest uppercase shadow-[0_0_20px_rgba(16,185,129,0.15)] backdrop-blur-md">
-            <Sparkles className="w-3.5 h-3.5" /> 正統命理 × 現代心理
+            <Sparkles className="w-3.5 h-3.5" /> 命盤如車 大運如路
           </div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-br from-stone-100 via-stone-200 to-stone-400 font-serif">
-            洞悉先天宿命
+            瞭解先天命盤
           </h2>
           <p className="text-stone-400 text-base md:text-lg max-w-lg mx-auto lg:mx-0 font-light leading-relaxed">
-            嚴謹推算天干地支，結合專業心理分析，為您的先天命格與人生十字路口提供最深度的指引。
+            輸入你的出生資料，取得命盤為您的先天命格與人生十字路口提供最深度的指引。
           </p>
         </div>
 
@@ -363,7 +363,7 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
 
           {activeTab === 'dayun' && (
             <div className="animate-in fade-in zoom-in-95 duration-300">
-              <div className="flex overflow-x-auto pb-3 gap-2 snap-x scrollbar-hide mb-2">
+              <div className="flex overflow-x-auto py-2 px-1 gap-3 snap-x mb-4 scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                 {daYuns.slice(1, 10).map((dy, idx) => {
                   const actualIndex = idx + 1;
                   const isSelected = selectedDaYunIndex === actualIndex;
