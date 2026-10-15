@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import MasterShowcase from './components/MasterShowcase';
 import BaziCalculator from './components/BaziCalculator';
 import { Star, Quote, Compass, Sparkles, Heart, Briefcase, MapIcon, Sun, Moon, RefreshCcw } from 'lucide-react';
@@ -357,15 +358,16 @@ export default function Home() {
                       <div className="max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
                         <div className="flex flex-col md:flex-row gap-8 items-start bg-stone-800/50 border border-indigo-500/20 rounded-3xl p-6 md:p-8 text-left">
                           
-                          {/* 🌟 隱身斗篷加上了！ referrerPolicy="no-referrer" */}
-                          <div className="w-full md:w-1/3 flex justify-center shrink-0">
-                            <img 
-                              src={drawnCard.image} 
-                              alt={drawnCard.name} 
-                              referrerPolicy="no-referrer"
-                              className="w-48 rounded-xl shadow-2xl shadow-indigo-900/30 border border-stone-700" 
-                            />
-                          </div>
+                         <div className="w-full md:w-1/3 flex justify-center shrink-0">
+  <Image 
+    src={drawnCard.image} 
+    alt={drawnCard.name} 
+    width={200}
+    height={350}
+    priority={true}
+    className="w-48 h-auto rounded-xl shadow-2xl shadow-indigo-900/30 border border-stone-700" 
+  />
+</div>
 
                           <div className="w-full md:w-2/3 space-y-5">
                             <div>
