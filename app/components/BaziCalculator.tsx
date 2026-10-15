@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { Loader2, Sparkles, Compass, ArrowRight, Layers } from 'lucide-react';
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer, Legend } from 'recharts';
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts';
 import { Solar } from 'lunar-javascript';
 
 interface BaziCalculatorProps {
