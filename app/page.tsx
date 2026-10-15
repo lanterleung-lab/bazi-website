@@ -42,182 +42,28 @@ export default function Home() {
 
   // 🌟 完整 22 張大阿爾克那牌庫 (PNG 本地圖片版)
   const TAROT_DECK = [
-    { 
-      name: '0. 愚者 (The Fool)', 
-      image: '/tarot/0.png',
-      quote: '「每一次勇敢的躍下，都是學會飛翔的開始。」',
-      meaning: '這是一張代表無限可能性與全新開始的牌。今天非常適合大膽跳出舒適圈，不要被過去的經驗綁架，請相信你最初的直覺。',
-      love: '暗示一段輕鬆無負擔的新關係即將展開，或是現有關係中會出現令人驚喜的新火花。',
-      career: '事業上適合嘗試全新的領域或跳脫常規的提案，不要害怕未知的挑戰。'
-    },
-    { 
-      name: 'I. 魔術師 (The Magician)', 
-      image: '/tarot/1.png',
-      quote: '「你已經具備了創造奇蹟的所有元素。」',
-      meaning: '宇宙正在為你敞開大門。你擁有足夠的資源、智慧與行動力，現在是化夢想為現實的最佳時機，請主動出擊。',
-      love: '你的個人魅力正處於高峰，善用溝通技巧能輕易拉近彼此的距離。',
-      career: '絕佳的表現機會！你的專業能力將被看見，適合談判、簽約或啟動新專案。'
-    },
-    { 
-      name: 'II. 女祭司 (The High Priestess)', 
-      image: '/tarot/2.png',
-      quote: '「向外看的人在做夢，向內看的人終將覺醒。」',
-      meaning: '這是一個向內尋求答案的時刻。比起向外盲目行動，現在更需要靜下心來，傾聽潛意識的聲音，它會為你指明正確的方向。',
-      love: '感情中需要更多的精神交流。比起言語，請試著用心去感受對方的弦外之音。',
-      career: '適合進修、研究或從事策劃工作。遇到決策時，相信你的「第六感」。'
-    },
-    { 
-      name: 'III. 皇后 (The Empress)', 
-      image: '/tarot/3.png',
-      quote: '「愛與豐盛，正在你的生命中溫柔綻放。」',
-      meaning: '代表豐饒、孕育與無條件的愛。今天是個適合善待自己與他人的日子，放慢腳步，去感受生活中的美好與豐盛。',
-      love: '感情甜蜜且充滿包容，是非常適合孕育新生命或讓關係更進一步的時刻。',
-      career: '創意湧現，能獲得豐富的資源支持。適合發展藝術、設計或與女性相關的產業。'
-    },
-    { 
-      name: 'IV. 皇帝 (The Emperor)', 
-      image: '/tarot/4.png',
-      quote: '「建立秩序，掌握你人生的主導權。」',
-      meaning: '代表穩定、權威與結構。現在需要你展現自律與責任感，用理性的頭腦去組織混亂的局面，建立長遠的根基。',
-      love: '關係穩固且充滿安全感，雖然稍顯缺乏浪漫，但卻是能互相扶持的堅實後盾。',
-      career: '展現領導力的時刻！適合創業、制定長遠計畫或接手管理職務。'
-    },
-    { 
-      name: 'V. 教皇 (The Hierophant)', 
-      image: '/tarot/5.png',
-      quote: '「尋求智慧的指引，回歸精神的信仰。」',
-      meaning: '代表傳統、學習與心靈導師。在迷惘時，不妨尋求長輩、專業人士的建議，或是從傳統智慧與書本中尋找解答。',
-      love: '走向傳統穩定的關係（如論及婚嫁），或是雙方在精神價值觀上達到高度契合。',
-      career: '適合進修、考取證照，或在體制內穩健發展，跟隨前輩的腳步能避開風險。'
-    },
-    { 
-      name: 'VI. 戀人 (The Lovers)', 
-      image: '/tarot/6.png',
-      quote: '「傾聽內心的聲音，做出靈魂的選擇。」',
-      meaning: '除了代表愛情，這也是一張關於「選擇與契合」的牌。請遵循你內心最真實的渴望，做出讓靈魂感到共鳴的決定。',
-      love: '浪漫的相遇，感情迅速升溫，或是面臨關係中重要的承諾與抉擇。',
-      career: '遇到志同道合的合作夥伴，或是面臨重要的事業岔路，請選擇你真正熱愛的路。'
-    },
-    { 
-      name: 'VII. 戰車 (The Chariot)', 
-      image: '/tarot/7.png',
-      quote: '「堅定信念，你將克服一切阻礙。」',
-      meaning: '代表意志力、勝利與行動。只要你保持專注，不被外在的衝突與內在的矛盾干擾，你就能駕馭目前的局勢，取得勝利。',
-      love: '關係進展迅速，需要積極主動爭取，但也要注意控制自己的脾氣與佔有慾。',
-      career: '充滿挑戰但能取得重大成功，適合出差、推動新專案或跨越目前的事業瓶頸。'
-    },
-    { 
-      name: 'VIII. 力量 (Strength)', 
-      image: '/tarot/8.png',
-      quote: '「真正的強大，來自於內心的柔軟與包容。」',
-      meaning: '這不是以暴制暴的武力，而是以柔克剛的內在力量。面對困難或恐懼，請用耐心、溫柔與愛去安撫它、轉化它。',
-      love: '用包容與溫柔化解關係中的衝突，你們有足夠的愛去度過目前的磨合期。',
-      career: '展現高情商的時刻，你能順利說服難搞的客戶，或優雅地解決棘手的人事問題。'
-    },
-    { 
-      name: 'IX. 隱者 (The Hermit)', 
-      image: '/tarot/9.png',
-      quote: '「在孤獨中點亮明燈，向內尋找智慧。」',
-      meaning: '代表反思、沉澱與尋求內在真理。現在不是向外衝刺的時候，你需要給自己一段獨處的時光，釐清真正的目標。',
-      love: '需要個人空間，適合先理清自己的需求再進入關係。有伴者需注意精神上的疏離。',
-      career: '暫緩腳步，重新評估職涯方向，適合獨立作業或進行深度的專業研究。'
-    },
-    { 
-      name: 'X. 命運之輪 (Wheel of Fortune)', 
-      image: '/tarot/10.png',
-      quote: '「萬物皆有定時，順應生命之流。」',
-      meaning: '命運的齒輪正在轉動，這預示著一個無法預期但必然發生的轉機。無論現在是低谷還是高峰，一切都在朝著更好的方向演進。',
-      love: '可能會出現命中注定的相遇，或是關係迎來一個自然而然的重要轉折點。',
-      career: '大環境的變化將為你帶來意想不到的好運，請保持彈性，順勢而為。'
-    },
-    { 
-      name: 'XI. 正義 (Justice)', 
-      image: '/tarot/11.png',
-      quote: '「種下什麼因，便收穫什麼果。」',
-      meaning: '代表公平、決策與因果法則。你需要保持客觀與理性，用更高的道德標準來衡量目前的局勢，做出最公正的裁決。',
-      love: '關係需要平衡與誠實，適合解開誤會，或雙方開誠佈公地討論未來的責任分擔。',
-      career: '簽署合約、談判或法律事務將得到公平的結果，所有的努力都會獲得應有的回報。'
-    },
-    { 
-      name: 'XII. 倒吊人 (The Hanged Man)', 
-      image: '/tarot/12.png',
-      quote: '「換個角度看世界，學會放手的智慧。」',
-      meaning: '代表犧牲、暫停與視角的轉換。當事情無法推進時，與其焦慮掙扎，不如試著停下來，用完全不同的觀點來審視僵局。',
-      love: '感情處於停滯期，需要換位思考，或是暫時放下自己的執著，給彼此喘息的空間。',
-      career: '欲速則不達，目前的等待與讓步是為了醞釀更大的突破，請耐心蟄伏。'
-    },
-    { 
-      name: 'XIII. 死神 (Death)', 
-      image: '/tarot/13.png',
-      quote: '「結束，只是另一場新生的開始。」',
-      meaning: '不要害怕這張牌！它代表深刻的轉變、割捨與重生。勇敢放下已經不再適合你的人事物，才能騰出空間迎接新的美好。',
-      love: '揮別不適合的舊關係，或是現有關係迎來徹底的蛻變，進入全新的相處模式。',
-      career: '勇敢結束沒有前景的項目，這是轉職、跳槽或大破大立的最佳時機。'
-    },
-    { 
-      name: 'XIV. 節制 (Temperance)', 
-      image: '/tarot/14.png',
-      quote: '「在極端之間找到平衡，讓能量自然流動。」',
-      meaning: '代表協調、淨化與恰到好處的融合。你需要結合對立的觀點，在工作與生活、理性與感性之間找到完美的動態平衡。',
-      love: '雙方溝通順暢，情感在平淡中細水長流，是心靈契合度極高的一段時期。',
-      career: '跨部門協調順利，適合進行資源整合與跨界合作，穩紮穩打將帶來長遠效益。'
-    },
-    { 
-      name: 'XV. 惡魔 (The Devil)', 
-      image: '/tarot/15.png',
-      quote: '「直面內心的慾望，打破自我設限的枷鎖。」',
-      meaning: '代表誘惑、物質執著與陰暗面。你是否被恐懼、成癮或有害的關係給困住了？意識到這些束縛，是你重獲自由的第一步。',
-      love: '充滿強烈吸引力但可能帶有危險或過度依賴的關係，需注意情緒勒索。',
-      career: '有獲得豐厚利潤的機會，但需小心職場權力鬥爭、不當誘惑或過勞的風險。'
-    },
-    { 
-      name: 'XVI. 高塔 (The Tower)', 
-      image: '/tarot/16.png',
-      quote: '「摧毀建立在流沙上的幻象，迎接真相之光。」',
-      meaning: '代表突如其來的改變、震撼與信仰崩塌。雖然過程可能伴隨驚嚇，但這道閃電是為了擊碎不真實的幻象，讓你建立更穩固的根基。',
-      love: '隱藏的問題將爆發，這是徹底清理關係中未爆彈的契機，不破不立。',
-      career: '組織重組或突發狀況，請保持彈性，這是危機也是重建事業地基的轉機。'
-    },
-    { 
-      name: 'XVII. 星星 (The Star)', 
-      image: '/tarot/17.png',
-      quote: '「在最深的黑夜裡，星星的光芒最為璀璨。」',
-      meaning: '在經歷了黑暗與混亂之後，星星為你帶來了療癒、平靜與希望。你的身心正在恢復平衡，靈感也將源源不絕。',
-      love: '關係將回歸寧靜與純粹，誤會得以冰釋。單身者有望遇到精神契合的對象。',
-      career: '充滿創意的時期，你的才華將如星光般閃耀，適合藝術、療癒或遠景規劃的工作。'
-    },
-    { 
-      name: 'XVIII. 月亮 (The Moon)', 
-      image: '/tarot/18.png',
-      quote: '「穿越迷霧與恐懼，跟隨直覺的微光前行。」',
-      meaning: '代表不安、潛意識與隱藏的真相。在未知的迷霧中，恐懼容易被放大。請傾聽直覺而非盲目恐慌，等待真相浮出水面。',
-      love: '關係中充滿猜忌、敏感或不確定感，請給予彼此更多的安全感與透明度。',
-      career: '局勢未明，避免在此時做重大決策，小心隱藏的風險或職場中的小人。'
-    },
-    { 
-      name: 'XIX. 太陽 (The Sun)', 
-      image: '/tarot/19.png',
-      quote: '「讓光芒灑滿每一個角落，所有的陰霾都將散去。」',
-      meaning: '這是一張充滿活力、光明與極度正向的牌！所有的困難都已成為過去，接下來迎接你的將是成功、喜悅與豐盛。',
-      love: '感情關係明朗且充滿熱情，彼此坦誠相待。是非常適合孕育新生命或步入婚姻的時刻。',
-      career: '無往不利！你的努力將獲得豐碩的成果與眾人的肯定，盡情展現你的光芒吧。'
-    },
-    { 
-      name: 'XX. 審判 (Judgement)', 
-      image: '/tarot/20.png',
-      quote: '「回應靈魂的呼喚，迎接覺醒的時刻。」',
-      meaning: '代表覆盤、重生與內在的呼喚。這是一個清算過去、原諒自己與他人的時刻。聽從你內心深處的召喚，邁向新的人生階段。',
-      love: '舊情復燃的可能，或是現有關係經過深刻的反思後，迎來決定性的升華。',
-      career: '過去的努力終於得到公正的評價與回報，適合重拾曾經放棄的夢想與專案。'
-    },
-    { 
-      name: 'XXI. 世界 (The World)', 
-      image: '/tarot/21.png',
-      quote: '「完美的旅程已達終點，下一個循環即將展開。」',
-      meaning: '代表圓滿、成功與整體的達成。你已經學會了這個階段的所有課題，享受這份充滿喜悅的成就感吧，世界就在你的腳下。',
-      love: '感情修成正果，步入完美的下一個階段（如婚姻），或是享受深刻的靈魂伴侶關係。',
-      career: '專案圓滿落幕，獲得巨大成功。極度適合拓展海外、跨國市場或進行遠程旅行。'
-    }
+    { name: '0. 愚者 (The Fool)', image: '/tarot/0.png', quote: '「每一次勇敢的躍下，都是學會飛翔的開始。」', meaning: '這是一張代表無限可能性與全新開始的牌。今天非常適合大膽跳出舒適圈，不要被過去的經驗綁架，請相信你最初的直覺。', love: '暗示一段輕鬆無負擔的新關係即將展開，或是現有關係中會出現令人驚喜的新火花。', career: '事業上適合嘗試全新的領域或跳脫常規的提案，不要害怕未知的挑戰。' },
+    { name: 'I. 魔術師 (The Magician)', image: '/tarot/1.png', quote: '「你已經具備了創造奇蹟的所有元素。」', meaning: '宇宙正在為你敞開大門。你擁有足夠的資源、智慧與行動力，現在是化夢想為現實的最佳時機，請主動出擊。', love: '你的個人魅力正處於高峰，善用溝通技巧能輕易拉近彼此的距離。', career: '絕佳的表現機會！你的專業能力將被看見，適合談判、簽約或啟動新專案。' },
+    { name: 'II. 女祭司 (The High Priestess)', image: '/tarot/2.png', quote: '「向外看的人在做夢，向內看的人終將覺醒。」', meaning: '這是一個向內尋求答案的時刻。比起向外盲目行動，現在更需要靜下心來，傾聽潛意識的聲音，它會為你指明正確的方向。', love: '感情中需要更多的精神交流。比起言語，請試著用心去感受對方的弦外之音。', career: '適合進修、研究或從事策劃工作。遇到決策時，相信你的「第六感」。' },
+    { name: 'III. 皇后 (The Empress)', image: '/tarot/3.png', quote: '「愛與豐盛，正在你的生命中溫柔綻放。」', meaning: '代表豐饒、孕育與無條件的愛。今天是個適合善待自己與他人的日子，放慢腳步，去感受生活中的美好與豐盛。', love: '感情甜蜜且充滿包容，是非常適合孕育新生命或讓關係更進一步的時刻。', career: '創意湧現，能獲得豐富的資源支持。適合發展藝術、設計或與女性相關的產業。' },
+    { name: 'IV. 皇帝 (The Emperor)', image: '/tarot/4.png', quote: '「建立秩序，掌握你人生的主導權。」', meaning: '代表穩定、權威與結構。現在需要你展現自律與責任感，用理性的頭腦去組織混亂的局面，建立長遠的根基。', love: '關係穩固且充滿安全感，雖然稍顯缺乏浪漫，但卻是能互相扶持的堅實後盾。', career: '展現領導力的時刻！適合創業、制定長遠計畫或接手管理職務。' },
+    { name: 'V. 教皇 (The Hierophant)', image: '/tarot/5.png', quote: '「尋求智慧的指引，回歸精神的信仰。」', meaning: '代表傳統、學習與心靈導師。在迷惘時，不妨尋求長輩、專業人士的建議，或是從傳統智慧與書本中尋找解答。', love: '走向傳統穩定的關係（如論及婚嫁），或是雙方在精神價值觀上達到高度契合。', career: '適合進修、考取證照，或在體制內穩健發展，跟隨前輩的腳步能避開風險。' },
+    { name: 'VI. 戀人 (The Lovers)', image: '/tarot/6.png', quote: '「傾聽內心的聲音，做出靈魂的選擇。」', meaning: '除了代表愛情，這也是一張關於「選擇與契合」的牌。請遵循你內心最真實的渴望，做出讓靈魂感到共鳴的決定。', love: '浪漫的相遇，感情迅速升溫，或是面臨關係中重要的承諾與抉擇。', career: '遇到志同道合的合作夥伴，或是面臨重要的事業岔路，請選擇你真正熱愛的路。' },
+    { name: 'VII. 戰車 (The Chariot)', image: '/tarot/7.png', quote: '「堅定信念，你將克服一切阻礙。」', meaning: '代表意志力、勝利與行動。只要你保持專注，不被外在的衝突與內在的矛盾干擾，你就能駕馭目前的局勢，取得勝利。', love: '關係進展迅速，需要積極主動爭取，但也要注意控制自己的脾氣與佔有慾。', career: '充滿挑戰但能取得重大成功，適合出差、推動新專案或跨越目前的事業瓶頸。' },
+    { name: 'VIII. 力量 (Strength)', image: '/tarot/8.png', quote: '「真正的強大，來自於內心的柔軟與包容。」', meaning: '這不是以暴制暴的武力，而是以柔克剛的內在力量。面對困難或恐懼，請用耐心、溫柔與愛去安撫它、轉化它。', love: '用包容與溫柔化解關係中的衝突，你們有足夠的愛去度過目前的磨合期。', career: '展現高情商的時刻，你能順利說服難搞的客戶，或優雅地解決棘手的人事問題。' },
+    { name: 'IX. 隱者 (The Hermit)', image: '/tarot/9.png', quote: '「在孤獨中點亮明燈，向內尋找智慧。」', meaning: '代表反思、沉澱與尋求內在真理。現在不是向外衝刺的時候，你需要給自己一段獨處的時光，釐清真正的目標。', love: '需要個人空間，適合先理清自己的需求再進入關係。有伴者需注意精神上的疏離。', career: '暫緩腳步，重新評估職涯方向，適合獨立作業或進行深度的專業研究。' },
+    { name: 'X. 命運之輪 (Wheel of Fortune)', image: '/tarot/10.png', quote: '「萬物皆有定時，順應生命之流。」', meaning: '命運的齒輪正在轉動，這預示著一個無法預期但必然發生的轉機。無論現在是低谷還是高峰，一切都在朝著更好的方向演進。', love: '可能會出現命中注定的相遇，或是關係迎來一個自然而然的重要轉折點。', career: '大環境的變化將為你帶來意想不到的好運，請保持彈性，順勢而為。' },
+    { name: 'XI. 正義 (Justice)', image: '/tarot/11.png', quote: '「種下什麼因，便收穫什麼果。」', meaning: '代表公平、決策與因果法則。你需要保持客觀與理性，用更高的道德標準來衡量目前的局勢，做出最公正的裁決。', love: '關係需要平衡與誠實，適合解開誤會，或雙方開誠佈公地討論未來的責任分擔。', career: '簽署合約、談判或法律事務將得到公平的結果，所有的努力都會獲得應有的回報。' },
+    { name: 'XII. 倒吊人 (The Hanged Man)', image: '/tarot/12.png', quote: '「換個角度看世界，學會放手的智慧。」', meaning: '代表犧牲、暫停與視角的轉換。當事情無法推進時，與其焦慮掙扎，不如試著停下來，用完全不同的觀點來審視僵局。', love: '感情處於停滯期，需要換位思考，或是暫時放下自己的執著，給彼此喘息的空間。', career: '欲速則不達，目前的等待與讓步是為了醞釀更大的突破，請耐心蟄伏。' },
+    { name: 'XIII. 死神 (Death)', image: '/tarot/13.png', quote: '「結束，只是另一場新生的開始。」', meaning: '不要害怕這張牌！它代表深刻的轉變、割捨與重生。勇敢放下已經不再適合你的人事物，才能騰出空間迎接新的美好。', love: '揮別不適合的舊關係，或是現有關係迎來徹底的蛻變，進入全新的相處模式。', career: '勇敢結束沒有前景的項目，這是轉職、跳槽或大破大立的最佳時機。' },
+    { name: 'XIV. 節制 (Temperance)', image: '/tarot/14.png', quote: '「在極端之間找到平衡，讓能量自然流動。」', meaning: '代表協調、淨化與恰到好處的融合。你需要結合對立的觀點，在工作與生活、理性與感性之間找到完美的動態平衡。', love: '雙方溝通順暢，情感在平淡中細水長流，是心靈契合度極高的一段時期。', career: '跨部門協調順利，適合進行資源整合與跨界合作，穩紮穩打將帶來長遠效益。' },
+    { name: 'XV. 惡魔 (The Devil)', image: '/tarot/15.png', quote: '「直面內心的慾望，打破自我設限的枷鎖。」', meaning: '代表誘惑、物質執著與陰暗面。你是否被恐懼、成癮或有害的關係給困住了？意識到這些束縛，是你重獲自由的第一步。', love: '充滿強烈吸引力但可能帶有危險或過度依賴的關係，需注意情緒勒索。', career: '有獲得豐厚利潤的機會，但需小心職場權力鬥爭、不當誘惑或過勞的風險。' },
+    { name: 'XVI. 高塔 (The Tower)', image: '/tarot/16.png', quote: '「摧毀建立在流沙上的幻象，迎接真相之光。」', meaning: '代表突如其來的改變、震撼與信仰崩塌。雖然過程可能伴隨驚嚇，但這道閃電是為了擊碎不真實的幻象，讓你建立更穩固的根基。', love: '隱藏的問題將爆發，這是徹底清理關係中未爆彈的契機，不破不立。', career: '組織重組或突發狀況，請保持彈性，這是危機也是重建事業地基的轉機。' },
+    { name: 'XVII. 星星 (The Star)', image: '/tarot/17.png', quote: '「在最深的黑夜裡，星星的光芒最為璀璨。」', meaning: '在經歷了黑暗與混亂之後，星星為你帶來了療癒、平靜與希望。你的身心正在恢復平衡，靈感也將源源不絕。', love: '關係將回歸寧靜與純粹，誤會得以冰釋。單身者有望遇到精神契合的對象。', career: '充滿創意的時期，你的才華將如星光般閃耀，適合藝術、療癒或遠景規劃的工作。' },
+    { name: 'XVIII. 月亮 (The Moon)', image: '/tarot/18.png', quote: '「穿越迷霧與恐懼，跟隨直覺的微光前行。」', meaning: '代表不安、潛意識與隱藏的真相。在未知的迷霧中，恐懼容易被放大。請傾聽直覺而非盲目恐慌，等待真相浮出水面。', love: '關係中充滿猜忌、敏感或不確定感，請給予彼此更多的安全感與透明度。', career: '局勢未明，避免在此時做重大決策，小心隱藏的風險或職場中的小人。' },
+    { name: 'XIX. 太陽 (The Sun)', image: '/tarot/19.png', quote: '「讓光芒灑滿每一個角落，所有的陰霾都將散去。」', meaning: '這是一張充滿活力、光明與極度正向的牌！所有的困難都已成為過去，接下來迎接你的將是成功、喜悅與豐盛。', love: '感情關係明朗且充滿熱情，彼此坦誠相待。是非常適合孕育新生命或步入婚姻的時刻。', career: '無往不利！你的努力將獲得豐碩的成果與眾人的肯定，盡情展現你的光芒吧。' },
+    { name: 'XX. 審判 (Judgement)', image: '/tarot/20.png', quote: '「回應靈魂的呼喚，迎接覺醒的時刻。」', meaning: '代表覆盤、重生與內在的呼喚。這是一個清算過去、原諒自己與他人的時刻。聽從你內心深處的召喚，邁向新的人生階段。', love: '舊情復燃的可能，或是現有關係經過深刻的反思後，迎來決定性的升華。', career: '過去的努力終於得到公正的評價與回報，適合重拾曾經放棄的夢想與專案。' },
+    { name: 'XXI. 世界 (The World)', image: '/tarot/21.png', quote: '「完美的旅程已達終點，下一個循環即將展開。」', meaning: '代表圓滿、成功與整體的達成。你已經學會了這個階段的所有課題，享受這份充滿喜悅的成就感吧，世界就在你的腳下。', love: '感情修成正果，步入完美的下一個階段（如婚姻），或是享受深刻的靈魂伴侶關係。', career: '專案圓滿落幕，獲得巨大成功。極度適合拓展海外、跨國市場或進行遠程旅行。' }
   ];
 
   const handleDrawTarot = () => {
@@ -267,40 +113,33 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#09090b] text-zinc-200 font-sans selection:bg-amber-500 selection:text-zinc-950 overflow-x-hidden relative">
+    <main className="min-h-screen bg-[#050508] text-zinc-200 font-sans selection:bg-amber-500 selection:text-zinc-950 overflow-x-hidden relative">
       
-      {/* 🌟 1. 東方琉璃環境光 (Glassmorphism Ambient Orbs) */}
-      <div className="absolute top-[-15%] left-[-10%] w-[600px] h-[600px] bg-emerald-900/10 rounded-full blur-[120px] pointer-events-none mix-blend-screen z-0"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[700px] h-[700px] bg-amber-900/15 rounded-full blur-[150px] pointer-events-none mix-blend-screen z-0"></div>
-      <div className="absolute top-[40%] left-[50%] -translate-x-1/2 w-[800px] h-[400px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none mix-blend-screen z-0"></div>
+      {/* 🌟 1. 增強版琉璃環境光 */}
+      <div className="absolute top-[-10%] left-[-5%] w-[600px] h-[600px] bg-emerald-700/20 rounded-full blur-[120px] pointer-events-none mix-blend-screen"></div>
+      <div className="absolute bottom-[-10%] right-[-5%] w-[700px] h-[700px] bg-amber-600/20 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
+      <div className="absolute top-[40%] left-[50%] -translate-x-1/2 w-[800px] h-[400px] bg-indigo-700/15 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
 
-      {/* 🌟 2. 升級版星盤：琥珀金發光全息投影 */}
-      <div className="absolute top-[-150px] right-[-200px] w-[900px] h-[900px] pointer-events-none opacity-[0.25] flex items-center justify-center z-0">
-        {/* 加入 drop-shadow 產生神祕發光感 */}
-        <div className="w-full h-full text-amber-500/80 drop-shadow-[0_0_15px_rgba(245,158,11,0.4)]" style={{ animation: 'spin 240s linear infinite' }}>
+      {/* 🌟 2. 終極發光星盤 */}
+      <div className="absolute top-[-150px] right-[-200px] w-[900px] h-[900px] pointer-events-none opacity-[0.8] flex items-center justify-center">
+        <div className="w-full h-full text-amber-500 drop-shadow-[0_0_25px_rgba(245,158,11,0.8)]" style={{ animation: 'spin 240s linear infinite' }}>
           <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
             <g transform="translate(50,50)">
-              {/* 外圈 */}
-              <circle r="49" fill="none" stroke="currentColor" strokeWidth="0.15" />
-              {/* 刻度圈 */}
-              <circle r="47" fill="none" stroke="currentColor" strokeWidth="0.1" strokeDasharray="1 2.5" />
-              {/* 內圈 */}
-              <circle r="35" fill="none" stroke="currentColor" strokeWidth="0.15" opacity="0.8"/>
-              {/* 十字定位線 */}
-              <path d="M -49 0 L 49 0 M 0 -49 L 0 49" stroke="currentColor" strokeWidth="0.1" opacity="0.5"/>
-              {/* 星位標記 */}
-              <circle cx="0" cy="-35" r="1.2" fill="currentColor" opacity="0.9" />
-              <circle cx="35" cy="0" r="1.2" fill="currentColor" opacity="0.9" />
-              <circle cx="-24.7" cy="24.7" r="0.8" fill="currentColor" opacity="0.6" />
+              <circle r="49" fill="none" stroke="currentColor" strokeWidth="0.25" />
+              <circle r="47" fill="none" stroke="currentColor" strokeWidth="0.2" strokeDasharray="1 2.5" />
+              <circle r="35" fill="none" stroke="currentColor" strokeWidth="0.25" />
+              <path d="M -49 0 L 49 0 M 0 -49 L 0 49" stroke="currentColor" strokeWidth="0.15" />
+              <circle cx="0" cy="-35" r="1.5" fill="currentColor" />
+              <circle cx="35" cy="0" r="1.5" fill="currentColor" />
+              <circle cx="-24.7" cy="24.7" r="1.2" fill="currentColor" />
             </g>
           </svg>
         </div>
       </div>
       
-      {/* 星塵紋理疊加 */}
-      <div className="absolute inset-0 opacity-[0.2] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] pointer-events-none z-0 mix-blend-overlay"></div>
+      {/* 🌟 星塵紋理疊加 */}
+      <div className="absolute inset-0 opacity-[0.4] bg-[url(https://www.transparenttextures.com/patterns/stardust.png)] pointer-events-none mix-blend-overlay"></div>
 
-      {/* 內容區塊保持原本的 section ... */}
       <section className="relative pt-32 pb-20 px-4 md:px-8 z-10 border-b border-zinc-900/50 min-h-[85vh] flex flex-col justify-center">
         <div className="max-w-7xl mx-auto w-full">
           
@@ -374,16 +213,16 @@ export default function Home() {
                       <div className="max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
                         <div className="flex flex-col md:flex-row gap-8 items-start bg-stone-800/50 border border-indigo-500/20 rounded-3xl p-6 md:p-8 text-left">
                           
-                         <div className="w-full md:w-1/3 flex justify-center shrink-0">
-  <Image 
-    src={drawnCard.image} 
-    alt={drawnCard.name} 
-    width={200}
-    height={350}
-    priority={true}
-    className="w-48 h-auto rounded-xl shadow-2xl shadow-indigo-900/30 border border-stone-700" 
-  />
-</div>
+                          <div className="w-full md:w-1/3 flex justify-center shrink-0">
+                            <Image 
+                              src={drawnCard.image} 
+                              alt={drawnCard.name} 
+                              width={200}
+                              height={350}
+                              priority={true}
+                              className="w-48 h-auto rounded-xl shadow-2xl shadow-indigo-900/30 border border-stone-700" 
+                            />
+                          </div>
 
                           <div className="w-full md:w-2/3 space-y-5">
                             <div>
@@ -424,7 +263,6 @@ export default function Home() {
                   </div>
                 )}
 
-                {/* 🌟 升級版：靈數渲染區 (優化輸入與雷達圖) */}
                 {activeTool === 'numerology' && (
                   <div className="bg-stone-900/60 border border-stone-800 rounded-3xl p-8 md:p-12 text-center backdrop-blur-sm animate-in zoom-in-95 duration-300">
                     <h3 className="text-2xl font-serif text-stone-100 mb-2">生命靈數計算</h3>
