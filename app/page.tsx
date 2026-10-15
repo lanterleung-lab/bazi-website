@@ -408,57 +408,93 @@ export default function Home() {
                   </div>
                 )}
 
+                {/* 🌟 升級版：靈數渲染區 (優化輸入與雷達圖) */}
                 {activeTool === 'numerology' && (
                   <div className="bg-stone-900/60 border border-stone-800 rounded-3xl p-8 md:p-12 text-center backdrop-blur-sm animate-in zoom-in-95 duration-300">
                     <h3 className="text-2xl font-serif text-stone-100 mb-2">生命靈數計算</h3>
                     <p className="text-stone-400 mb-8 max-w-md mx-auto text-sm">輸入您的西元出生年月日，探索您靈魂的隱藏天賦與人生課題。</p>
                     
-                    <div className="max-w-sm mx-auto space-y-4 mb-8">
-                      <input 
-                        type="text" 
-                        placeholder="例如：19950520" 
-                        value={birthDateStr}
-                        onChange={(e) => setBirthDateStr(e.target.value)}
-                        className="w-full px-4 py-3 bg-stone-800 border border-stone-700 rounded-xl text-center text-stone-100 text-lg tracking-widest focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all"
-                        maxLength={8}
-                      />
-                      <button onClick={calculateLifePath} className="w-full py-3 bg-amber-600 hover:bg-amber-500 text-white rounded-xl font-medium transition-all active:scale-95">
-                        計算我的命運數
+                    <div className="max-w-md mx-auto space-y-6 mb-8">
+                       <div className="grid grid-cols-3 gap-3">
+                          <select 
+                             value={birthDateStr.substring(0, 4) || '1990'} 
+                             onChange={(e) => {
+                               const year = e.target.value;
+                               const month = birthDateStr.substring(4, 6) || '01';
+                               const day = birthDateStr.substring(6, 8) || '01';
+                               setBirthDateStr(`${year}${month}${day}`);
+                             }}
+                             className="w-full px-3 py-3.5 bg-stone-800 border border-stone-700 hover:border-amber-500/50 rounded-xl focus:outline-none focus:border-amber-500 text-stone-200 text-sm text-center appearance-none cursor-pointer transition-all"
+                          >
+                             {Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i).map(y => <option key={y} value={y}>{y} 年</option>)}
+                          </select>
+                          <select 
+                             value={birthDateStr.substring(4, 6) || '01'} 
+                             onChange={(e) => {
+                               const year = birthDateStr.substring(0, 4) || '1990';
+                               const month = e.target.value.padStart(2, '0');
+                               const day = birthDateStr.substring(6, 8) || '01';
+                               setBirthDateStr(`${year}${month}${day}`);
+                             }}
+                             className="w-full px-3 py-3.5 bg-stone-800 border border-stone-700 hover:border-amber-500/50 rounded-xl focus:outline-none focus:border-amber-500 text-stone-200 text-sm text-center appearance-none cursor-pointer transition-all"
+                          >
+                             {Array.from({ length: 12 }, (_, i) => i + 1).map(m => <option key={m} value={String(m).padStart(2, '0')}>{m} 月</option>)}
+                          </select>
+                          <select 
+                             value={birthDateStr.substring(6, 8) || '01'} 
+                             onChange={(e) => {
+                               const year = birthDateStr.substring(0, 4) || '1990';
+                               const month = birthDateStr.substring(4, 6) || '01';
+                               const day = e.target.value.padStart(2, '0');
+                               setBirthDateStr(`${year}${month}${day}`);
+                             }}
+                             className="w-full px-3 py-3.5 bg-stone-800 border border-stone-700 hover:border-amber-500/50 rounded-xl focus:outline-none focus:border-amber-500 text-stone-200 text-sm text-center appearance-none cursor-pointer transition-all"
+                          >
+                             {Array.from({ length: 31 }, (_, i) => i + 1).map(d => <option key={d} value={String(d).padStart(2, '0')}>{d} 日</option>)}
+                          </select>
+                       </div>
+                      <button onClick={calculateLifePath} className="w-full py-3.5 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white rounded-xl font-medium transition-all shadow-[0_0_20px_rgba(245,158,11,0.2)] active:scale-95 flex items-center justify-center gap-2">
+                        <Sparkles className="w-4 h-4" /> 啟動靈魂密碼
                       </button>
                     </div>
 
                     {lifePath && LIFE_PATH_DESC[lifePath] && (
-                      <div className="max-w-2xl mx-auto bg-stone-800/50 border border-amber-500/20 rounded-3xl p-6 md:p-8 text-left animate-in fade-in slide-in-from-bottom-8 duration-700">
-                        <div className="flex items-center gap-6 mb-6 border-b border-stone-700/50 pb-6">
-                          <div className="w-20 h-20 rounded-full bg-amber-900/30 border border-amber-500/30 flex items-center justify-center shrink-0">
-                            <span className="text-4xl font-serif font-bold text-amber-400">{lifePath}</span>
+                      <div className="max-w-2xl mx-auto bg-stone-800/50 border border-amber-500/20 rounded-3xl p-6 md:p-8 text-left animate-in fade-in slide-in-from-bottom-8 duration-700 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
+                        
+                        <div className="flex items-center gap-6 mb-6 border-b border-stone-700/50 pb-6 relative z-10">
+                          <div className="w-20 h-20 rounded-full bg-stone-900 border-2 border-amber-500/40 shadow-[0_0_20px_rgba(245,158,11,0.2)] flex items-center justify-center shrink-0">
+                            <span className="text-4xl font-serif font-bold text-amber-400 drop-shadow-md">{lifePath}</span>
                           </div>
                           <div>
-                            <div className="text-amber-500 text-sm font-medium tracking-widest mb-1">YOUR LIFE PATH</div>
-                            <h4 className="text-2xl font-bold text-stone-100">{LIFE_PATH_DESC[lifePath].title}</h4>
+                            <div className="text-amber-500 text-xs font-bold tracking-widest mb-1 uppercase">Your Life Path</div>
+                            <h4 className="text-2xl md:text-3xl font-bold text-stone-100 tracking-wide">{LIFE_PATH_DESC[lifePath].title}</h4>
                           </div>
                         </div>
 
-                        <div className="space-y-5 mb-8">
-                          <div>
-                            <h5 className="text-stone-200 font-medium flex items-center gap-2 mb-2"><Star className="w-4 h-4 text-amber-400"/> 天賦特質</h5>
-                            <p className="text-stone-400 text-sm leading-relaxed">{LIFE_PATH_DESC[lifePath].traits}</p>
+                        <div className="space-y-6 mb-8 relative z-10">
+                          <div className="bg-stone-900/40 p-5 rounded-2xl border border-stone-700/50">
+                            <h5 className="text-amber-400 font-medium flex items-center gap-2 mb-2"><Star className="w-4 h-4"/> 天賦特質</h5>
+                            <p className="text-stone-300 text-sm leading-relaxed">{LIFE_PATH_DESC[lifePath].traits}</p>
                           </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                            <div className="bg-stone-900/50 p-4 rounded-xl border border-stone-800">
-                              <h5 className="text-rose-400 text-xs font-bold mb-1 flex items-center gap-1"><Heart className="w-3 h-3"/> 感情模式</h5>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="bg-stone-900/50 p-5 rounded-2xl border border-stone-700/50 hover:border-rose-500/30 transition-colors">
+                              <h5 className="text-rose-400 text-sm font-bold mb-2 flex items-center gap-1.5"><Heart className="w-4 h-4"/> 感情模式</h5>
                               <p className="text-stone-400 text-xs leading-relaxed">{LIFE_PATH_DESC[lifePath].love}</p>
                             </div>
-                            <div className="bg-stone-900/50 p-4 rounded-xl border border-stone-800">
-                              <h5 className="text-blue-400 text-xs font-bold mb-1 flex items-center gap-1"><Briefcase className="w-3 h-3"/> 適合事業</h5>
+                            <div className="bg-stone-900/50 p-5 rounded-2xl border border-stone-700/50 hover:border-blue-500/30 transition-colors">
+                              <h5 className="text-blue-400 text-sm font-bold mb-2 flex items-center gap-1.5"><Briefcase className="w-4 h-4"/> 適合事業</h5>
                               <p className="text-stone-400 text-xs leading-relaxed">{LIFE_PATH_DESC[lifePath].career}</p>
                             </div>
                           </div>
                         </div>
 
-                        <div className="flex justify-center">
-                          <button onClick={() => handleGuidanceClick('靈數')} className="px-8 py-3 bg-stone-700 hover:bg-stone-600 text-white rounded-full font-medium transition-all active:scale-95 flex items-center gap-2">
-                            <Compass className="w-4 h-4" /> 探索流年運勢？尋找靈數專家解析
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center relative z-10 mt-2">
+                          <button onClick={() => handleGuidanceClick('塔羅')} className="flex-1 py-3.5 bg-stone-900 border border-indigo-500/30 hover:border-indigo-500/60 hover:bg-stone-800 text-indigo-300 rounded-xl font-medium transition-all active:scale-95 flex items-center justify-center gap-2 text-sm">
+                            <Moon className="w-4 h-4" /> 感情困惑？尋找專屬塔羅師
+                          </button>
+                          <button onClick={() => handleGuidanceClick('八字')} className="flex-1 py-3.5 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white rounded-xl font-medium transition-all shadow-[0_0_15px_rgba(16,185,129,0.2)] active:scale-95 flex items-center justify-center gap-2 text-sm">
+                            <Compass className="w-4 h-4" /> 探索流年？尋找八字大師詳批
                           </button>
                         </div>
                       </div>
