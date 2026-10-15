@@ -76,7 +76,7 @@ const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 100 }, (_, i) => currentYear - i);
 const months = Array.from({ length: 12 }, (_, i) => i + 1);
 
-// 預設資料產生器
+// 🌟 修正點 1：使用 getGanZhi().charAt(0) 與 charAt(1)
 const generateDefaultData = () => {
   const solar = Solar.fromYmdHms(1991, 6, 2, 12, 0, 0);
   const baZi = solar.getLunar().getEightChar();
@@ -84,13 +84,13 @@ const generateDefaultData = () => {
   const daYunArr: DaYun[] = yun.getDaYun().map((dy: any) => ({
     startYear: dy.getStartYear(),
     startAge: dy.getStartAge(),
-    gan: dy.getGan(),
-    zhi: dy.getZhi(),
+    gan: dy.getGanZhi().charAt(0),
+    zhi: dy.getGanZhi().charAt(1),
     liuNians: dy.getLiuNian().map((ln: any) => ({
       year: ln.getYear(),
       age: ln.getAge(),
-      gan: ln.getGan(),
-      zhi: ln.getZhi()
+      gan: ln.getGanZhi().charAt(0),
+      zhi: ln.getGanZhi().charAt(1)
     }))
   }));
 
@@ -116,11 +116,9 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
   
   const [activeTab, setActiveTab] = useState<'chart' | 'dayun'>('chart');
   
-  // 🌟 核心選取狀態
   const [selectedDaYunIndex, setSelectedDaYunIndex] = useState(1);
-  const [selectedLiuNianIndex, setSelectedLiuNianIndex] = useState(0); // 記錄點選了哪個流年
+  const [selectedLiuNianIndex, setSelectedLiuNianIndex] = useState(0); 
   
-  // 🌟 雷達圖的疊加開關
   const [showDaYunInChart, setShowDaYunInChart] = useState(false);
   const [showLiuNianInChart, setShowLiuNianInChart] = useState(false);
 
@@ -168,36 +166,35 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
         },
       ];
 
+      // 🌟 修正點 2：同樣在計算時使用 getGanZhi().charAt()
       const yun = baZi.getYun(birthData.gender === 'M' ? 1 : 0);
       const parsedDaYuns: DaYun[] = yun.getDaYun().map((dy: any) => ({
         startYear: dy.getStartYear(),
         startAge: dy.getStartAge(),
-        gan: dy.getGan(),
-        zhi: dy.getZhi(),
+        gan: dy.getGanZhi().charAt(0),
+        zhi: dy.getGanZhi().charAt(1),
         liuNians: dy.getLiuNian().map((ln: any) => ({
           year: ln.getYear(),
           age: ln.getAge(),
-          gan: ln.getGan(),
-          zhi: ln.getZhi()
+          gan: ln.getGanZhi().charAt(0),
+          zhi: ln.getGanZhi().charAt(1)
         }))
       }));
 
       setBaziResult(newBazi);
       setDaYuns(parsedDaYuns);
       setSelectedDaYunIndex(1);
-      setSelectedLiuNianIndex(0); // 重新計算時重置流年選取
-      setActiveTab('dayun'); // 計算完自動跳轉到大運讓客人看
+      setSelectedLiuNianIndex(0); 
+      setActiveTab('dayun'); 
       setShowDaYunInChart(false);
       setShowLiuNianInChart(false);
       setIsCalculating(false);
     }, 800);
   };
 
-  // 🌟 動態計算雙層雷達圖資料 (本命 vs 運勢疊加)
   const dynamicChartData = useMemo(() => {
     let baseCount: Record<string, number> = { '金': 0, '木': 0, '水': 0, '火': 0, '土': 0 };
     
-    // 1. 計算先天本命五行
     baziResult.forEach(pillar => {
       if (pillar.stemElement) baseCount[pillar.stemElement] += 1;
       if (pillar.branchElement) baseCount[pillar.branchElement] += 1;
@@ -205,16 +202,14 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
 
     let currentCount = { ...baseCount };
 
-    // 2. 疊加目前選中大運五行
     if (showDaYunInChart && daYuns[selectedDaYunIndex]) {
        const dy = daYuns[selectedDaYunIndex];
        const ganElement = getWuXingChar(dy.gan);
        const zhiElement = getWuXingChar(dy.zhi);
-       if (ganElement) currentCount[ganElement] += 1.5; // 大運權重稍高
+       if (ganElement) currentCount[ganElement] += 1.5; 
        if (zhiElement) currentCount[zhiElement] += 1.5;
     }
 
-    // 3. 疊加目前選中流年五行
     if (showLiuNianInChart && daYuns[selectedDaYunIndex] && daYuns[selectedDaYunIndex].liuNians[selectedLiuNianIndex]) {
        const ln = daYuns[selectedDaYunIndex].liuNians[selectedLiuNianIndex];
        const ganElement = getWuXingChar(ln.gan);
@@ -236,7 +231,6 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
   return (
     <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
       
-      {/* 左側表單說明區 (保持不變) */}
       <div className="lg:col-span-6 space-y-8 text-center lg:text-left">
         <div className="space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-800/50 text-emerald-400 text-xs font-medium tracking-widest uppercase shadow-[0_0_20px_rgba(16,185,129,0.15)] backdrop-blur-md">
@@ -293,7 +287,6 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
         </form>
       </div>
 
-      {/* 右側命盤展示區 */}
       <div className="lg:col-span-6 bg-stone-900/60 backdrop-blur-xl border border-stone-800 rounded-[2rem] p-6 md:p-8 shadow-2xl relative overflow-hidden">
         {isCalculating && (
           <div className="absolute inset-0 bg-stone-950/80 backdrop-blur-md flex flex-col items-center justify-center z-20">
@@ -337,7 +330,6 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
 
         <div className="relative z-10 min-h-[220px]">
           
-          {/* 🌟 五行雷達圖 (含動態疊加勾選區) */}
           {activeTab === 'chart' && (
             <div className="animate-in fade-in zoom-in-95 duration-300">
               <div className="h-[200px] w-full -ml-2 relative">
@@ -347,10 +339,8 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
                     <PolarGrid stroke="#292524" strokeDasharray="3 3" />
                     <PolarAngleAxis dataKey="subject" tick={renderCustomTick} />
                     
-                    {/* 本命雷達 (永遠顯示) */}
                     <Radar name="先天命格" dataKey="base" stroke="#10b981" strokeWidth={2} fill="#34d399" fillOpacity={0.2} />
                     
-                    {/* 後天運勢雷達 (勾選時顯示金色) */}
                     {(showDaYunInChart || showLiuNianInChart) && (
                       <Radar name="後天運勢疊加" dataKey="current" stroke="#f59e0b" strokeWidth={2} fill="#fbbf24" fillOpacity={0.3} />
                     )}
@@ -358,7 +348,6 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
                 </ResponsiveContainer>
               </div>
 
-              {/* 使用者互動：動態勾選疊加運勢 */}
               <div className="mt-4 flex flex-col md:flex-row items-center justify-center gap-4 bg-stone-950/50 p-3 rounded-xl border border-stone-800/50">
                 <label className="flex items-center gap-2 cursor-pointer text-sm font-medium text-stone-300 hover:text-amber-400 transition-colors">
                   <input type="checkbox" checked={showDaYunInChart} onChange={e => setShowDaYunInChart(e.target.checked)} className="rounded bg-stone-900 border-stone-700 text-amber-500 focus:ring-amber-500/50" />
@@ -372,7 +361,6 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
             </div>
           )}
 
-          {/* 大運流年互動網格 */}
           {activeTab === 'dayun' && (
             <div className="animate-in fade-in zoom-in-95 duration-300">
               <div className="flex overflow-x-auto pb-3 gap-2 snap-x scrollbar-hide mb-2">
@@ -384,7 +372,7 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
                       key={actualIndex} 
                       onClick={() => {
                         setSelectedDaYunIndex(actualIndex);
-                        setSelectedLiuNianIndex(0); // 切換大運時，流年預設選回第一年
+                        setSelectedLiuNianIndex(0); 
                       }}
                       className={`shrink-0 snap-start w-16 py-2.5 rounded-xl border flex flex-col items-center cursor-pointer transition-all ${
                         isSelected
@@ -408,7 +396,6 @@ export default function BaziCalculator({ onActionClick, actionText }: BaziCalcul
                   <span className="text-[10px] text-stone-500">點擊流年可至圖表疊加查看</span>
                 </div>
                 <div className="grid grid-cols-5 gap-2">
-                  {/* 🌟 讓流年網格可以點選 */}
                   {daYuns[selectedDaYunIndex]?.liuNians.map((ln, i) => (
                     <div 
                       key={i} 
