@@ -267,25 +267,41 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen bg-stone-950 text-stone-100 font-sans selection:bg-emerald-500 selection:text-stone-950 overflow-hidden relative">
+    <main className="min-h-screen bg-[#09090b] text-zinc-200 font-sans selection:bg-amber-500 selection:text-zinc-950 overflow-x-hidden relative">
       
-      <div className="absolute -top-40 -right-40 w-[800px] h-[800px] pointer-events-none opacity-[0.07] flex items-center justify-center z-0">
-        <div className="w-full h-full text-stone-300" style={{ animation: 'spin 240s linear infinite' }}>
+      {/* 🌟 1. 東方琉璃環境光 (Glassmorphism Ambient Orbs) */}
+      <div className="absolute top-[-15%] left-[-10%] w-[600px] h-[600px] bg-emerald-900/10 rounded-full blur-[120px] pointer-events-none mix-blend-screen z-0"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[700px] h-[700px] bg-amber-900/15 rounded-full blur-[150px] pointer-events-none mix-blend-screen z-0"></div>
+      <div className="absolute top-[40%] left-[50%] -translate-x-1/2 w-[800px] h-[400px] bg-indigo-900/10 rounded-full blur-[150px] pointer-events-none mix-blend-screen z-0"></div>
+
+      {/* 🌟 2. 升級版星盤：琥珀金發光全息投影 */}
+      <div className="absolute top-[-150px] right-[-200px] w-[900px] h-[900px] pointer-events-none opacity-[0.25] flex items-center justify-center z-0">
+        {/* 加入 drop-shadow 產生神祕發光感 */}
+        <div className="w-full h-full text-amber-500/80 drop-shadow-[0_0_15px_rgba(245,158,11,0.4)]" style={{ animation: 'spin 240s linear infinite' }}>
           <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
             <g transform="translate(50,50)">
-              <circle r="49" fill="none" stroke="currentColor" strokeWidth="0.2" />
-              <circle r="47" fill="none" stroke="currentColor" strokeWidth="0.1" strokeDasharray="1 2" />
-              <circle r="35" fill="none" stroke="currentColor" strokeWidth="0.2" opacity="0.6"/>
-              <path d="M -49 0 L 49 0 M 0 -49 L 0 49" stroke="currentColor" strokeWidth="0.15" opacity="0.5"/>
-              <circle cx="0" cy="-35" r="1.5" fill="currentColor" opacity="0.8" />
-              <circle cx="35" cy="0" r="1.5" fill="currentColor" opacity="0.8" />
+              {/* 外圈 */}
+              <circle r="49" fill="none" stroke="currentColor" strokeWidth="0.15" />
+              {/* 刻度圈 */}
+              <circle r="47" fill="none" stroke="currentColor" strokeWidth="0.1" strokeDasharray="1 2.5" />
+              {/* 內圈 */}
+              <circle r="35" fill="none" stroke="currentColor" strokeWidth="0.15" opacity="0.8"/>
+              {/* 十字定位線 */}
+              <path d="M -49 0 L 49 0 M 0 -49 L 0 49" stroke="currentColor" strokeWidth="0.1" opacity="0.5"/>
+              {/* 星位標記 */}
+              <circle cx="0" cy="-35" r="1.2" fill="currentColor" opacity="0.9" />
+              <circle cx="35" cy="0" r="1.2" fill="currentColor" opacity="0.9" />
+              <circle cx="-24.7" cy="24.7" r="0.8" fill="currentColor" opacity="0.6" />
             </g>
           </svg>
         </div>
       </div>
-      <div className="absolute inset-0 opacity-[0.15] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] pointer-events-none z-0"></div>
+      
+      {/* 星塵紋理疊加 */}
+      <div className="absolute inset-0 opacity-[0.2] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] pointer-events-none z-0 mix-blend-overlay"></div>
 
-      <section className="relative pt-32 pb-20 px-4 md:px-8 z-10 border-b border-stone-900 min-h-[85vh] flex flex-col justify-center">
+      {/* 內容區塊保持原本的 section ... */}
+      <section className="relative pt-32 pb-20 px-4 md:px-8 z-10 border-b border-zinc-900/50 min-h-[85vh] flex flex-col justify-center">
         <div className="max-w-7xl mx-auto w-full">
           
           <div className="text-center mb-12">
