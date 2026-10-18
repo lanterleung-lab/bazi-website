@@ -175,6 +175,7 @@ export default function Home() {
               <circle cx="40" cy="160" r="0.15" /> <circle cx="160" cy="170" r="0.25" /> <circle cx="10" cy="90" r="0.1" />
               <circle cx="80" cy="15" r="0.2" /> <circle cx="190" cy="140" r="0.15" /> <circle cx="50" cy="190" r="0.2" />
             </g>
+            
             {/* 緩慢閃爍的亮星 (帶光暈) */}
             <g>
               <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="-360 100 100" dur="600s" repeatCount="indefinite" />
@@ -185,8 +186,12 @@ export default function Home() {
                 <circle cx="25" cy="135" r="0.4" fill="url(#blue-glow)" /> <circle cx="25" cy="135" r="0.1" />
               </g>
             </g>
-            {/* 流銀星河 (密集微塵) */}
-            <path d="M 10 10 Q 50 60 100 100 T 190 190" stroke="#c7d2fe" strokeWidth="15" fill="none" opacity="0.03" strokeDasharray="0.5 3" />
+            
+            {/* 💫 優化版：移除原本產生「斜紋理」的粗糙虛線路徑，改用極細微的宇宙流線代替 */}
+            <g opacity="0.15">
+              <path d="M -20 40 Q 100 90 220 20" stroke="url(#blue-glow)" strokeWidth="0.2" fill="none" />
+              <path d="M 0 180 Q 120 120 200 190" stroke="url(#gold-glow)" strokeWidth="0.15" fill="none" />
+            </g>
           </g>
 
           <g stroke="#fde68a" fill="none">
