@@ -273,15 +273,20 @@ export default function Home() {
               <polygon points="100,35 165,100 100,165 35,100" strokeWidth="0.05" opacity="0.1" />
             </g>
 
-           {/* 🪐 最外層軌道 */}
+           {/* 🪐 最外層軌道 (極遠星系：升級冰晶透亮發光體) */}
             <g className="origin-center opacity-80">
               <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="200s" repeatCount="indefinite" />
               <circle cx="100" cy="100" r="80" strokeWidth="0.08" strokeDasharray="0.2 5" opacity="0.15" />
+              
+              {/* 替換原本灰暗的星體，改用透亮的冰藍色光暈與純淨白心 */}
               <g transform="translate(0, 0)">
-                <circle cx="100" cy="20" r="3.5" fill="url(#green-glow)" stroke="none" />
-                <circle cx="100" cy="20" r="0.8" fill="#ffffff" stroke="none" opacity="0.8" />
+                <circle cx="100" cy="20" r="4.5" fill="url(#blue-glow)" stroke="none" opacity="0.85" />
+                <circle cx="100" cy="20" r="1.2" fill="#ffffff" stroke="none" opacity="0.9" />
               </g>
-              <circle cx="100" cy="180" r="1.5" fill="url(#gold-glow)" stroke="none" opacity="0.6" />
+              
+              {/* 軌道另一側的微光伴星 */}
+              <circle cx="100" cy="180" r="2.5" fill="url(#gold-glow)" stroke="none" opacity="0.7" />
+              <circle cx="100" cy="180" r="0.6" fill="#ffffff" stroke="none" opacity="0.8" />
             </g>
 
             {/* 🪐 第四軌道 (緋紅行星與發光伴星) */}
