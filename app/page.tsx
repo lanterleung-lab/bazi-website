@@ -284,7 +284,7 @@ export default function Home() {
               <circle cx="100" cy="180" r="1.5" fill="url(#gold-glow)" stroke="none" opacity="0.6" />
             </g>
 
-            {/* 🪐 第四軌道 (緋紅行星：還原為純淨漸層，移除醜陋堆疊) */}
+            {/* 🪐 第四軌道 (緋紅行星與發光伴星) */}
             <g className="origin-center opacity-90">
               <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="150s" repeatCount="indefinite" />
               <circle cx="100" cy="100" r="65" strokeWidth="0.08" strokeDasharray="0.5 3" opacity="0.15" />
@@ -293,12 +293,15 @@ export default function Home() {
               <circle cx="100" cy="35" r="5" fill="url(#red-glow)" stroke="none" />
               <circle cx="100" cy="35" r="1.2" fill="#ffffff" stroke="none" opacity="0.85" />
               
-              {/* 伴隨的小行星 */}
-              <circle cx="92" cy="38" r="0.8" fill="#fde68a" stroke="none" opacity="0.8" />
-              <circle cx="108" cy="32" r="0.5" fill="#fde68a" stroke="none" opacity="0.5" />
+              {/* 伴隨的小行星也加上漸層發光與微透白心 */}
+              <circle cx="92" cy="38" r="2" fill="url(#gold-glow)" stroke="none" opacity="0.8" />
+              <circle cx="92" cy="38" r="0.4" fill="#ffffff" stroke="none" opacity="0.9" />
+              
+              <circle cx="108" cy="32" r="1.5" fill="url(#gold-glow)" stroke="none" opacity="0.6" />
+              <circle cx="108" cy="32" r="0.3" fill="#ffffff" stroke="none" opacity="0.8" />
             </g>
 
-            {/* 🪐 第三軌道 (帶星環巨行星：極簡高級雙層環) */}
+           {/* 🪐 第三軌道 (帶星環巨行星：還原極簡星環，移除廉價粗線條) */}
             <g className="origin-center">
               <animateTransform attributeName="transform" type="rotate" from="45 100 100" to="405 100 100" dur="90s" repeatCount="indefinite" />
               <circle cx="100" cy="100" r="50" strokeWidth="0.05" opacity="0.1" />
@@ -307,10 +310,10 @@ export default function Home() {
                 <circle cx="0" cy="0" r="5" fill="url(#gold-glow)" stroke="none" />
                 <circle cx="0" cy="0" r="1.5" fill="#ffffff" stroke="none" opacity="0.9" />
                 
-                {/* 雙層極細星環，增加精緻度 */}
+                {/* 極簡高級的雙層微光星環，純粹的細線條 */}
                 <g transform="rotate(-20)">
-                  <ellipse cx="0" cy="0" rx="9" ry="2" fill="none" stroke="#fde68a" strokeWidth="0.25" opacity="0.8" />
-                  <ellipse cx="0" cy="0" rx="10" ry="2.5" fill="none" stroke="#d97706" strokeWidth="0.1" opacity="0.4" />
+                  <ellipse cx="0" cy="0" rx="9.5" ry="2.2" fill="none" stroke="#fde68a" strokeWidth="0.15" opacity="0.7" />
+                  <ellipse cx="0" cy="0" rx="11" ry="2.8" fill="none" stroke="#d97706" strokeWidth="0.08" opacity="0.4" />
                 </g>
               </g>
             </g>
@@ -331,7 +334,7 @@ export default function Home() {
                 <circle cx="0" cy="-6.5" r="0.6" fill="#ffffff" stroke="none" opacity="0.9" />
               </g>
             </g>
-            
+
             {/* ☄️ 彗星軌跡 */}
             <g className="origin-center opacity-60">
               <animateTransform attributeName="transform" type="rotate" from="120 100 100" to="480 100 100" dur="25s" repeatCount="indefinite" />
