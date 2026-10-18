@@ -120,9 +120,10 @@ export default function Home() {
       <div className="absolute bottom-[-10%] right-[-5%] w-[700px] h-[700px] bg-amber-600/20 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
       <div className="absolute top-[40%] left-[50%] -translate-x-1/2 w-[800px] h-[400px] bg-indigo-700/15 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
 
-     {/* 🌟 2. 太陽系全景版 (極致隱晦軌道版)：軌道若隱若現，突顯星體神祕光芒 */}
-      <div className="absolute top-[-250px] right-[-250px] w-[1000px] h-[1000px] pointer-events-none flex items-center justify-center z-0 mix-blend-screen opacity-85">
-        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_0_12px_rgba(253,230,138,0.25)]">
+     {/* 🌟 2. 沉浸式全屏宇宙背景 (Fixed 視差深空版) */}
+      {/* 改為 fixed 置中，覆蓋全螢幕，降低 opacity 確保文字閱讀性，降低 drop-shadow 減輕 GPU 負擔 */}
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200vw] min-w-[1200px] max-w-[3000px] aspect-square pointer-events-none flex items-center justify-center z-0 mix-blend-screen opacity-35 md:opacity-40">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_0_8px_rgba(253,230,138,0.15)]">
           
           <defs>
             <radialGradient id="center-glow" cx="50%" cy="50%" r="50%">
@@ -157,10 +158,9 @@ export default function Home() {
             </radialGradient>
           </defs>
 
-          {/* 全局金屬線條 (基礎色) */}
           <g stroke="#fde68a" fill="none">
             
-            {/* 📍 外圍羅盤底座：整體透明度調降至 0.2，背景更乾淨 */}
+            {/* 📍 外圍羅盤底座 */}
             <g className="origin-center opacity-20">
               <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="400s" repeatCount="indefinite" />
               <circle cx="100" cy="100" r="95" strokeWidth="0.08" />
@@ -174,7 +174,6 @@ export default function Home() {
                 ))}
               </g>
 
-              {/* 神聖幾何線條極度隱晦化 */}
               <polygon points="100,12 176.2,144 23.8,144" strokeWidth="0.05" opacity="0.2" />
               <polygon points="100,188 23.8,56 176.2,56" strokeWidth="0.05" opacity="0.2" />
               <polygon points="100,35 165,100 100,165 35,100" strokeWidth="0.05" opacity="0.1" />
@@ -183,7 +182,6 @@ export default function Home() {
             {/* 🪐 最外層軌道 (極遠星系) */}
             <g className="origin-center opacity-80">
               <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="200s" repeatCount="indefinite" />
-              {/* 軌道極度微弱 */}
               <circle cx="100" cy="100" r="80" strokeWidth="0.08" strokeDasharray="0.2 5" opacity="0.15" />
               <g transform="translate(0, 0)">
                 <circle cx="100" cy="20" r="3.5" fill="url(#green-glow)" stroke="none" />
@@ -226,7 +224,7 @@ export default function Home() {
               </g>
             </g>
 
-            {/* ☄️ 彗星軌跡 (保留些微動態拖尾感) */}
+            {/* ☄️ 彗星軌跡 */}
             <g className="origin-center opacity-60">
               <animateTransform attributeName="transform" type="rotate" from="120 100 100" to="480 100 100" dur="25s" repeatCount="indefinite" />
               <circle cx="100" cy="10" r="1.5" fill="#ffffff" stroke="none" />
@@ -234,7 +232,7 @@ export default function Home() {
               <path d="M 100 10 Q 108 25 115 45" stroke="url(#blue-glow)" strokeWidth="0.2" fill="none" opacity="0.3" />
             </g>
 
-            {/* 🌟 極內圈軌道 1 (水星概念) */}
+            {/* 🌟 極內圈軌道 1 */}
             <g className="origin-center opacity-[0.95]">
               <animateTransform attributeName="transform" type="rotate" from="90 100 100" to="450 100 100" dur="12s" repeatCount="indefinite" />
               <circle cx="100" cy="100" r="12" strokeWidth="0.05" opacity="0.15" />
@@ -242,7 +240,7 @@ export default function Home() {
               <circle cx="100" cy="88" r="0.6" fill="#ffffff" stroke="none" />
             </g>
 
-            {/* 🌟 極內圈軌道 2 (金星概念) */}
+            {/* 🌟 極內圈軌道 2 */}
             <g className="origin-center opacity-90">
               <animateTransform attributeName="transform" type="rotate" from="270 100 100" to="-90 100 100" dur="20s" repeatCount="indefinite" />
               <circle cx="100" cy="100" r="22" strokeWidth="0.08" strokeDasharray="0.5 3" opacity="0.15" />
@@ -250,7 +248,7 @@ export default function Home() {
               <circle cx="100" cy="78" r="0.8" fill="#fffbeb" stroke="none" />
             </g>
 
-            {/* ☀️ 太陽/恆星中心能量源頭 */}
+            {/* ☀️ 太陽/恆星中心 */}
             <circle cx="100" cy="100" r="28" strokeWidth="0.08" strokeDasharray="0.2 2" opacity="0.15" />
             
             <g className="origin-center opacity-60">
@@ -261,13 +259,6 @@ export default function Home() {
             <circle cx="100" cy="100" r="6" fill="url(#center-glow)" stroke="none" />
             <circle cx="100" cy="100" r="2.5" fill="#ffffff" stroke="none" />
             
-            <g className="origin-center opacity-30">
-              <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="60s" repeatCount="indefinite" />
-              {Array.from({length: 12}).map((_, i) => (
-                <line key={i} x1="100" y1="92" x2="100" y2="88" transform={`rotate(${i * 30} 100 100)`} strokeWidth="0.1" />
-              ))}
-            </g>
-
           </g>
         </svg>
       </div>
