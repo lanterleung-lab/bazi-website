@@ -194,6 +194,43 @@ export default function Home() {
             </g>
           </g>
 
+          {/* 🌌 點睛之筆：北斗七星 (The Big Dipper) - 完美平衡左側空曠區 */}
+          <g>
+            {/* 6秒一次的平緩呼吸閃爍 */}
+            <animate attributeName="opacity" values="0.3;0.8;0.3" dur="6s" repeatCount="indefinite" />
+            
+            {/* 牽引連線 (極細虛線) */}
+            <polyline points="16,102 24,94 32,90 40,86 44,98 56,94 52,78 40,86" fill="none" stroke="#c7d2fe" strokeWidth="0.1" strokeDasharray="0.5 1.5" opacity="0.6" />
+            
+            {/* 1. 搖光 (Alkaid) - 斗柄最尾 */}
+            <circle cx="16" cy="102" r="0.6" fill="#ffffff" />
+            <circle cx="16" cy="102" r="2.5" fill="url(#blue-glow)" stroke="none" opacity="0.6" />
+            
+            {/* 2. 開陽 (Mizar) */}
+            <circle cx="24" cy="94" r="0.5" fill="#ffffff" />
+            <circle cx="24" cy="94" r="2" fill="url(#blue-glow)" stroke="none" opacity="0.5" />
+            
+            {/* 3. 玉衡 (Alioth) */}
+            <circle cx="32" cy="90" r="0.6" fill="#ffffff" />
+            <circle cx="32" cy="90" r="2.5" fill="url(#blue-glow)" stroke="none" opacity="0.6" />
+            
+            {/* 4. 天權 (Megrez) - 斗柄與斗勺連接處 */}
+            <circle cx="40" cy="86" r="0.4" fill="#ffffff" />
+            <circle cx="40" cy="86" r="1.5" fill="url(#blue-glow)" stroke="none" opacity="0.4" />
+            
+            {/* 5. 天璣 (Phecda) */}
+            <circle cx="44" cy="98" r="0.5" fill="#ffffff" />
+            <circle cx="44" cy="98" r="2" fill="url(#blue-glow)" stroke="none" opacity="0.5" />
+            
+            {/* 6. 天璇 (Merak) */}
+            <circle cx="56" cy="94" r="0.6" fill="#ffffff" />
+            <circle cx="56" cy="94" r="2.5" fill="url(#blue-glow)" stroke="none" opacity="0.6" />
+            
+            {/* 7. 天樞 (Dubhe) - 指極星 */}
+            <circle cx="52" cy="78" r="0.7" fill="#ffffff" />
+            <circle cx="52" cy="78" r="3" fill="url(#blue-glow)" stroke="none" opacity="0.8" />
+          </g>
+
           <g stroke="#fde68a" fill="none">
             
             {/* 📍 外圍羅盤底座 */}
@@ -205,6 +242,7 @@ export default function Home() {
               <circle cx="100" cy="100" r="86" strokeWidth="0.08" strokeDasharray="1 8" opacity="0.5" />
               
               <g opacity="0.3">
+                {/* 這裡幫你把剛才壞掉的語法修好了！ */}
                 {Array.from({length: 12}).map((_, i) => (
                   <line key={i} x1="100" y1="5" x2="100" y2="12" transform={`rotate(${i * 30} 100 100)`} strokeWidth="0.1" />
                 ))}
