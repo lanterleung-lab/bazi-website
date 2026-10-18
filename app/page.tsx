@@ -131,12 +131,11 @@ export default function Home() {
             </radialGradient>
           </defs>
 
-          {/* 向上平移 (將 translate 的 Y 軸從 40 改為 -10) */}
-          <g transform="translate(10, -10) scale(0.85)">
+         {/* 北斗七星本體：大幅向上平移 (Y軸改為 -40) 並完全移除連線 */}
+          <g transform="translate(10, -40) scale(0.85)">
             <animate attributeName="opacity" values="0.5;1;0.5" dur="7s" repeatCount="indefinite" />
             
-            {/* 星辰牽引線 (移除模糊濾鏡，保持銳利) */}
-            <polyline points="20,120 40,110 65,105 85,110 95,135 125,120 115,95 85,110" fill="none" stroke="#e0e7ff" strokeWidth="0.15" opacity="0.3" />
+            {/* 已經徹底刪除 <polyline> 連線，讓星體自然懸浮 */}
             
             {/* 1. 搖光 (Alkaid) */}
             <circle cx="20" cy="120" r="3.5" fill="url(#dipper-glow)" />
