@@ -329,7 +329,7 @@ export default function Home() {
               <circle cx="100" cy="78" r="0.8" fill="#ffffff" stroke="none" />
             </g>
 
-            {/* ☀️ 太陽/恆星中心 */}
+            {/* ☀️ 太陽/恆星中心 (還原為純粹乾淨的發光圓體) */}
             <circle cx="100" cy="100" r="28" strokeWidth="0.08" strokeDasharray="0.2 2" opacity="0.15" />
             
             <g className="origin-center opacity-70">
@@ -338,10 +338,7 @@ export default function Home() {
             </g>
 
             <circle cx="100" cy="100" r="6" fill="url(#center-glow)" stroke="none" />
-            
-            {/* 微調過的十字耀光，極度輕微模糊，不再糊成一團 */}
-            <path d="M 100 88 L 100 112 M 88 100 L 112 100" stroke="#ffffff" strokeWidth="0.4" filter="url(#light-flare)" opacity="0.7" />
-            <path d="M 96 96 L 104 104 M 96 104 L 104 96" stroke="#fde68a" strokeWidth="0.3" opacity="0.5" />
+            <circle cx="100" cy="100" r="2.5" fill="#ffffff" stroke="none" />
             
           </g>
         </svg>
