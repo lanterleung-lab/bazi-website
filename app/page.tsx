@@ -306,20 +306,30 @@ export default function Home() {
               <circle cx="108" cy="32" r="0.3" fill="#ffffff" stroke="none" opacity="0.8" />
             </g>
 
-           {/* 🪐 第三軌道 (帶星環巨行星：還原極簡星環，移除廉價粗線條) */}
+          {/* 🪐 第三軌道 (帶星環巨行星：光學分層立體星環，徹底擺脫呼拉圈感) */}
             <g className="origin-center">
               <animateTransform attributeName="transform" type="rotate" from="45 100 100" to="405 100 100" dur="90s" repeatCount="indefinite" />
               <circle cx="100" cy="100" r="50" strokeWidth="0.05" opacity="0.1" />
               <g transform="translate(100, 50)">
-                {/* 簡單柔和的琥珀發光體 */}
-                <circle cx="0" cy="0" r="5" fill="url(#gold-glow)" stroke="none" />
-                <circle cx="0" cy="0" r="1.5" fill="#ffffff" stroke="none" opacity="0.9" />
                 
-                {/* 極簡高級的雙層微光星環，純粹的細線條 */}
-                <g transform="rotate(-20)">
-                  <ellipse cx="0" cy="0" rx="9.5" ry="2.2" fill="none" stroke="#fde68a" strokeWidth="0.15" opacity="0.7" />
-                  <ellipse cx="0" cy="0" rx="11" ry="2.8" fill="none" stroke="#d97706" strokeWidth="0.08" opacity="0.4" />
+                {/* 1. 星環後半部 (被星球擋住的遠端環，透明度較低) */}
+                <g transform="rotate(-25)" opacity="0.35">
+                  <ellipse cx="0" cy="0" rx="12" ry="3.5" fill="none" stroke="#fde68a" strokeWidth="0.8" />
+                  <ellipse cx="0" cy="0" rx="10" ry="2.8" fill="none" stroke="#fef3c7" strokeWidth="0.4" />
                 </g>
+
+                {/* 2. 行星本體 (發光球體，夾在星環中間) */}
+                <circle cx="0" cy="0" r="5.5" fill="url(#gold-glow)" stroke="none" />
+                <circle cx="0" cy="0" r="1.8" fill="#ffffff" stroke="none" opacity="0.95" />
+
+                {/* 3. 星環前半部 (穿過星球前方的近端環，疊加高光與細緻分層) */}
+                <g transform="rotate(-25)">
+                  {/* 利用 clip 概念或局部遮罩，畫出帶有厚度與光芒的立體感 */}
+                  <path d="M -12 0 A 12 3.5 0 0 0 12 0" fill="none" stroke="#fde68a" strokeWidth="1.2" opacity="0.85" />
+                  <path d="M -10 0 A 10 2.8 0 0 0 10 0" fill="none" stroke="#ffffff" strokeWidth="0.5" opacity="0.9" />
+                  <path d="M -14 0 A 14 4.2 0 0 0 14 0" fill="none" stroke="#d97706" strokeWidth="0.4" opacity="0.5" />
+                </g>
+
               </g>
             </g>
 
