@@ -120,96 +120,142 @@ export default function Home() {
       <div className="absolute bottom-[-10%] right-[-5%] w-[700px] h-[700px] bg-amber-600/20 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
       <div className="absolute top-[40%] left-[50%] -translate-x-1/2 w-[800px] h-[400px] bg-indigo-700/15 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
 
-     {/* 🌟 2. 神聖幾何星盤：獨立多彩光暈星體，營造深邃宇宙感 */}
-      <div className="absolute top-[-250px] right-[-250px] w-[1000px] h-[1000px] pointer-events-none flex items-center justify-center z-0 mix-blend-screen opacity-80">
-        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_0_10px_rgba(253,230,138,0.2)]">
+     {/* 🌟 2. 史詩級宇宙星系：多軌道繁星、彗星軌跡與神聖幾何，打造極致深邃感 */}
+      <div className="absolute top-[-250px] right-[-250px] w-[1000px] h-[1000px] pointer-events-none flex items-center justify-center z-0 mix-blend-screen opacity-85">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_0_12px_rgba(253,230,138,0.25)]">
           
           <defs>
-            {/* ☀️ 中心源頭金光 */}
+            {/* 核心光暈 */}
             <radialGradient id="center-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#fde68a" stopOpacity="0.8" />
-              <stop offset="40%" stopColor="#d97706" stopOpacity="0.3" />
+              <stop offset="0%" stopColor="#fde68a" stopOpacity="1" />
+              <stop offset="40%" stopColor="#d97706" stopOpacity="0.4" />
               <stop offset="100%" stopColor="#000000" stopOpacity="0" />
             </radialGradient>
-            
-            {/* 🪐 冰藍色星體光暈 (如水星/天王星) */}
+            {/* 冰藍色星體 (水/天王星) */}
             <radialGradient id="blue-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#c7d2fe" stopOpacity="0.9" />
-              <stop offset="40%" stopColor="#4f46e5" stopOpacity="0.5" />
+              <stop offset="0%" stopColor="#c7d2fe" stopOpacity="1" />
+              <stop offset="40%" stopColor="#4f46e5" stopOpacity="0.6" />
               <stop offset="100%" stopColor="#000000" stopOpacity="0" />
             </radialGradient>
-            
-            {/* 🪐 緋紅色星體光暈 (如火星) */}
+            {/* 緋紅色星體 (火星) */}
             <radialGradient id="red-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#fecdd3" stopOpacity="0.9" />
-              <stop offset="40%" stopColor="#e11d48" stopOpacity="0.5" />
+              <stop offset="0%" stopColor="#fecdd3" stopOpacity="1" />
+              <stop offset="40%" stopColor="#e11d48" stopOpacity="0.6" />
               <stop offset="100%" stopColor="#000000" stopOpacity="0" />
             </radialGradient>
-            
-            {/* 🪐 琥珀金星體光暈 (如金星/木星) */}
+            {/* 琥珀金星體 (金/木/土星) */}
             <radialGradient id="gold-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#fef3c7" stopOpacity="0.9" />
-              <stop offset="40%" stopColor="#d97706" stopOpacity="0.5" />
+              <stop offset="0%" stopColor="#fef3c7" stopOpacity="1" />
+              <stop offset="40%" stopColor="#d97706" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+            </radialGradient>
+            {/* 翡翠綠星體 (木星/海王星) */}
+            <radialGradient id="green-glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#a7f3d0" stopOpacity="1" />
+              <stop offset="40%" stopColor="#059669" stopOpacity="0.5" />
               <stop offset="100%" stopColor="#000000" stopOpacity="0" />
             </radialGradient>
           </defs>
 
-          {/* 全局設定極細線條 (軌道與幾何線維持統一淡金色) */}
+          {/* 全局極細金屬線條 */}
           <g stroke="#fde68a" fill="none" strokeWidth="0.15">
             
             {/* 📍 外圍羅盤底座 (極慢逆時針) */}
-            <g className="origin-center opacity-40">
-              <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="300s" repeatCount="indefinite" />
-              
+            <g className="origin-center opacity-30">
+              <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="400s" repeatCount="indefinite" />
               <circle cx="100" cy="100" r="95" strokeWidth="0.1" />
-              <circle cx="100" cy="100" r="93" strokeWidth="0.3" strokeDasharray="0.3 2" />
+              <circle cx="100" cy="100" r="93" strokeWidth="0.3" strokeDasharray="0.2 1.5" />
               <circle cx="100" cy="100" r="88" strokeWidth="0.1" />
+              <circle cx="100" cy="100" r="86" strokeWidth="0.1" strokeDasharray="2 6" />
               
-              <g opacity="0.3">
+              {/* 十二宮刻度 */}
+              <g opacity="0.4">
                 {Array.from({length: 12}).map((_, i) => (
                   <line key={i} x1="100" y1="5" x2="100" y2="12" transform={`rotate(${i * 30} 100 100)`} strokeWidth="0.2" />
                 ))}
               </g>
 
-              {/* 占星大三角 */}
-              <polygon points="100,12 176.2,144 23.8,144" strokeWidth="0.15" opacity="0.3" />
-              <polygon points="100,188 23.8,56 176.2,56" strokeWidth="0.15" opacity="0.3" />
+              {/* 神聖幾何：梅爾卡巴 (大六芒星) */}
+              <polygon points="100,12 176.2,144 23.8,144" strokeWidth="0.1" opacity="0.4" />
+              <polygon points="100,188 23.8,56 176.2,56" strokeWidth="0.1" opacity="0.4" />
+              {/* 內嵌正方形 */}
+              <polygon points="100,35 165,100 100,165 35,100" strokeWidth="0.1" opacity="0.2" />
             </g>
 
-            {/* 🪐 中軌道：火象星體 (緋紅光暈) */}
+            {/* 🪐 最外層軌道 (極遠星系，慢速順時針) */}
+            <g className="origin-center opacity-80">
+              <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="200s" repeatCount="indefinite" />
+              <circle cx="100" cy="100" r="80" strokeWidth="0.1" strokeDasharray="0.5 4" opacity="0.5" />
+              {/* 翡翠綠大冰星 */}
+              <g transform="translate(0, 0)">
+                <circle cx="100" cy="20" r="3.5" fill="url(#green-glow)" stroke="none" />
+                <circle cx="100" cy="20" r="0.5" fill="#ecfdf5" stroke="none" />
+              </g>
+              {/* 對角的黯淡碎星 */}
+              <circle cx="100" cy="180" r="1.5" fill="url(#gold-glow)" stroke="none" opacity="0.6" />
+            </g>
+
+            {/* 🪐 第四軌道 (中速逆時針) */}
             <g className="origin-center opacity-90">
-              <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="120s" repeatCount="indefinite" />
-              <circle cx="100" cy="100" r="65" strokeWidth="0.1" strokeDasharray="1 3" opacity="0.4" />
-              
-              {/* 星體光暈 (大範圍漸層) */}
-              <circle cx="100" cy="35" r="4" fill="url(#red-glow)" stroke="none" />
-              {/* 星體核心 (極亮白點) */}
-              <circle cx="100" cy="35" r="0.6" fill="#fff1f2" stroke="none" />
+              <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="150s" repeatCount="indefinite" />
+              <circle cx="100" cy="100" r="65" strokeWidth="0.1" strokeDasharray="1 2" opacity="0.3" />
+              {/* 緋紅火星 */}
+              <circle cx="100" cy="35" r="4.5" fill="url(#red-glow)" stroke="none" />
+              <circle cx="100" cy="35" r="0.8" fill="#fff1f2" stroke="none" />
+              {/* 伴隨的小行星帶 */}
+              <circle cx="92" cy="38" r="0.8" fill="#fde68a" stroke="none" opacity="0.8" />
+              <circle cx="108" cy="32" r="0.5" fill="#fde68a" stroke="none" opacity="0.5" />
             </g>
 
-            {/* 🪐 內軌道：水象/風象雙星系統 (冰藍主星 + 琥珀衛星) */}
-            <g className="origin-center opacity-[0.95]">
-              <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="60s" repeatCount="indefinite" />
-              <circle cx="100" cy="100" r="40" strokeWidth="0.1" opacity="0.3" />
-              
-              {/* 冰藍色主星 */}
-              <circle cx="100" cy="60" r="5" fill="url(#blue-glow)" stroke="none" />
-              <circle cx="100" cy="60" r="0.8" fill="#e0e7ff" stroke="none" />
-              
-              {/* 繞著主星自轉的小衛星 (琥珀金) */}
-              <g transform="translate(100, 60)">
-                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="8s" repeatCount="indefinite" />
-                <circle cx="0" cy="-7" r="2.5" fill="url(#gold-glow)" stroke="none" opacity="0.8" />
-                <circle cx="0" cy="-7" r="0.4" fill="#fffbeb" stroke="none" />
+            {/* 🪐 第三軌道：帶有星環的巨行星 (順時針) */}
+            <g className="origin-center">
+              <animateTransform attributeName="transform" type="rotate" from="45 100 100" to="405 100 100" dur="90s" repeatCount="indefinite" />
+              <circle cx="100" cy="100" r="50" strokeWidth="0.1" opacity="0.2" />
+              {/* 琥珀色巨行星 (土星概念) */}
+              <g transform="translate(100, 50)">
+                <circle cx="0" cy="0" r="5" fill="url(#gold-glow)" stroke="none" />
+                <circle cx="0" cy="0" r="1" fill="#fffbeb" stroke="none" />
+                {/* 傾斜的星環 */}
+                <ellipse cx="0" cy="0" rx="9" ry="2" fill="none" stroke="url(#gold-glow)" strokeWidth="0.3" transform="rotate(-20)" opacity="0.8" />
               </g>
             </g>
 
-            {/* ☀️ 中心能量源頭 */}
-            <circle cx="100" cy="100" r="25" strokeWidth="0.1" strokeDasharray="0.5 1.5" opacity="0.3" />
-            {/* 太陽光暈 */}
-            <circle cx="100" cy="100" r="15" fill="url(#center-glow)" stroke="none" />
-            {/* 太陽核心 */}
-            <circle cx="100" cy="100" r="1.2" fill="#ffffff" stroke="none" />
+            {/* 🪐 第二軌道：雙星系統 (快速逆時針) */}
+            <g className="origin-center opacity-[0.95]">
+              <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="45s" repeatCount="indefinite" />
+              <circle cx="100" cy="100" r="35" strokeWidth="0.1" strokeDasharray="0.5 1" opacity="0.4" />
+              {/* 冰藍主星 */}
+              <circle cx="100" cy="65" r="3" fill="url(#blue-glow)" stroke="none" />
+              <circle cx="100" cy="65" r="0.5" fill="#e0e7ff" stroke="none" />
+              {/* 飛快的衛星 */}
+              <g transform="translate(100, 65)">
+                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="5s" repeatCount="indefinite" />
+                <circle cx="0" cy="-6" r="2" fill="url(#gold-glow)" stroke="none" opacity="0.9" />
+                <circle cx="0" cy="-6" r="0.3" fill="#ffffff" stroke="none" />
+              </g>
+            </g>
+
+            {/* ☄️ 彗星軌跡 (極扁橢圓軌道) */}
+            <g className="origin-center opacity-60">
+              <animateTransform attributeName="transform" type="rotate" from="120 100 100" to="480 100 100" dur="25s" repeatCount="indefinite" />
+              {/* 彗星本體 */}
+              <circle cx="100" cy="10" r="1.5" fill="#ffffff" stroke="none" />
+              {/* 彗尾 (使用極細的線條模擬拖曳的光芒) */}
+              <path d="M 100 10 Q 105 25 110 40" stroke="url(#blue-glow)" strokeWidth="0.8" fill="none" opacity="0.8" />
+              <path d="M 100 10 Q 108 25 115 45" stroke="url(#blue-glow)" strokeWidth="0.3" fill="none" opacity="0.4" />
+            </g>
+
+            {/* ☀️ 太陽/恆星中心能量源頭 */}
+            <circle cx="100" cy="100" r="25" strokeWidth="0.1" strokeDasharray="0.5 1.5" opacity="0.4" />
+            <circle cx="100" cy="100" r="18" fill="url(#center-glow)" stroke="none" />
+            <circle cx="100" cy="100" r="2.5" fill="#ffffff" stroke="none" />
+            {/* 恆星的光芒射線 */}
+            <g className="origin-center opacity-40">
+              <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="60s" repeatCount="indefinite" />
+              {Array.from({length: 8}).map((_, i) => (
+                <line key={i} x1="100" y1="80" x2="100" y2="76" transform={`rotate(${i * 45} 100 100)`} strokeWidth="0.2" />
+              ))}
+            </g>
 
           </g>
         </svg>
