@@ -120,68 +120,62 @@ export default function Home() {
       <div className="absolute bottom-[-10%] right-[-5%] w-[700px] h-[700px] bg-amber-600/20 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
       <div className="absolute top-[40%] left-[50%] -translate-x-1/2 w-[800px] h-[400px] bg-indigo-700/15 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
 
-    {/* 🌟 2. 左側獨立星空：北斗七星 (真實排列、光學散射、無虛線) */}
-      <div className="fixed top-0 left-0 w-full md:w-[60vw] h-screen pointer-events-none flex items-center justify-start z-0 mix-blend-screen opacity-70">
-        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+    {/* 🌟 2. 左側獨立星空：北斗七星 (上移並恢復銳利冰藍光芒) */}
+      <div className="fixed top-0 left-0 w-full md:w-[60vw] h-screen pointer-events-none flex items-center justify-start z-0 mix-blend-screen opacity-80">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_0_15px_rgba(199,210,254,0.3)]">
           <defs>
-            <filter id="star-bloom" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="0.8" />
-            </filter>
             <radialGradient id="dipper-glow" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-              <stop offset="30%" stopColor="#e0e7ff" stopOpacity="0.6" />
+              <stop offset="40%" stopColor="#c7d2fe" stopOpacity="0.8" />
               <stop offset="100%" stopColor="#000000" stopOpacity="0" />
             </radialGradient>
           </defs>
 
-          {/* 北斗七星本體：依據真實星圖比例繪製 */}
-          <g transform="translate(10, 40) scale(0.8)">
-            <animate attributeName="opacity" values="0.4;0.9;0.4" dur="7s" repeatCount="indefinite" />
+          {/* 向上平移 (將 translate 的 Y 軸從 40 改為 -10) */}
+          <g transform="translate(10, -10) scale(0.85)">
+            <animate attributeName="opacity" values="0.5;1;0.5" dur="7s" repeatCount="indefinite" />
             
-            {/* 星辰牽引線 (極度微弱、柔和的實線，移除生硬的虛線) */}
-            <polyline points="20,120 40,110 65,105 85,110 95,135 125,120 115,95 85,110" fill="none" stroke="#e0e7ff" strokeWidth="0.15" opacity="0.2" filter="url(#star-bloom)" />
+            {/* 星辰牽引線 (移除模糊濾鏡，保持銳利) */}
+            <polyline points="20,120 40,110 65,105 85,110 95,135 125,120 115,95 85,110" fill="none" stroke="#e0e7ff" strokeWidth="0.15" opacity="0.3" />
             
             {/* 1. 搖光 (Alkaid) */}
-            <circle cx="20" cy="120" r="3" fill="url(#dipper-glow)" />
-            <circle cx="20" cy="120" r="0.6" fill="#ffffff" filter="url(#star-bloom)" />
+            <circle cx="20" cy="120" r="3.5" fill="url(#dipper-glow)" />
+            <circle cx="20" cy="120" r="0.8" fill="#ffffff" />
             
             {/* 2. 開陽 (Mizar) */}
-            <circle cx="40" cy="110" r="2.5" fill="url(#dipper-glow)" />
-            <circle cx="40" cy="110" r="0.5" fill="#ffffff" filter="url(#star-bloom)" />
+            <circle cx="40" cy="110" r="3" fill="url(#dipper-glow)" />
+            <circle cx="40" cy="110" r="0.6" fill="#ffffff" />
             
             {/* 3. 玉衡 (Alioth) */}
-            <circle cx="65" cy="105" r="3.5" fill="url(#dipper-glow)" />
-            <circle cx="65" cy="105" r="0.7" fill="#ffffff" filter="url(#star-bloom)" />
+            <circle cx="65" cy="105" r="4" fill="url(#dipper-glow)" />
+            <circle cx="65" cy="105" r="1" fill="#ffffff" />
             
             {/* 4. 天權 (Megrez) */}
-            <circle cx="85" cy="110" r="2" fill="url(#dipper-glow)" />
-            <circle cx="85" cy="110" r="0.4" fill="#ffffff" filter="url(#star-bloom)" />
+            <circle cx="85" cy="110" r="2.5" fill="url(#dipper-glow)" />
+            <circle cx="85" cy="110" r="0.5" fill="#ffffff" />
             
             {/* 5. 天璣 (Phecda) */}
-            <circle cx="95" cy="135" r="2.5" fill="url(#dipper-glow)" />
-            <circle cx="95" cy="135" r="0.5" fill="#ffffff" filter="url(#star-bloom)" />
+            <circle cx="95" cy="135" r="3" fill="url(#dipper-glow)" />
+            <circle cx="95" cy="135" r="0.7" fill="#ffffff" />
             
             {/* 6. 天璇 (Merak) */}
-            <circle cx="125" cy="120" r="3" fill="url(#dipper-glow)" />
-            <circle cx="125" cy="120" r="0.6" fill="#ffffff" filter="url(#star-bloom)" />
+            <circle cx="125" cy="120" r="3.5" fill="url(#dipper-glow)" />
+            <circle cx="125" cy="120" r="0.8" fill="#ffffff" />
             
             {/* 7. 天樞 (Dubhe) */}
-            <circle cx="115" cy="95" r="4" fill="url(#dipper-glow)" />
-            <circle cx="115" cy="95" r="0.8" fill="#ffffff" filter="url(#star-bloom)" />
+            <circle cx="115" cy="95" r="4.5" fill="url(#dipper-glow)" />
+            <circle cx="115" cy="95" r="1.2" fill="#ffffff" />
           </g>
         </svg>
       </div>
 
-      {/* 🌟 3. 右側深空宇宙與太陽系 (光學散射版：徹底移除死硬圓形，增加真實光暈) */}
+      {/* 🌟 3. 右側深空宇宙與太陽系 (恢復星體銳利度，微調太陽耀光) */}
       <div className="fixed top-0 right-0 translate-x-1/3 -translate-y-1/4 w-[150vw] min-w-[1200px] max-w-[2500px] aspect-square pointer-events-none flex items-center justify-center z-0 mix-blend-screen opacity-40 md:opacity-50">
         <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_0_8px_rgba(253,230,138,0.15)]">
           <defs>
-            {/* 全局光學模糊濾鏡 (用來打破星體邊緣) */}
-            <filter id="core-blur" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="0.6" />
-            </filter>
-            <filter id="heavy-flare" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="1.5" />
+            {/* 只保留給太陽耀光的極輕微模糊 */}
+            <filter id="light-flare" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="0.4" />
             </filter>
 
             <radialGradient id="nebula-void" cx="50%" cy="50%" r="50%">
@@ -191,7 +185,7 @@ export default function Home() {
             </radialGradient>
             <radialGradient id="center-glow" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-              <stop offset="20%" stopColor="#fde68a" stopOpacity="0.8" />
+              <stop offset="20%" stopColor="#fde68a" stopOpacity="0.9" />
               <stop offset="100%" stopColor="#d97706" stopOpacity="0" />
             </radialGradient>
             <radialGradient id="blue-glow" cx="50%" cy="50%" r="50%">
@@ -216,7 +210,7 @@ export default function Home() {
             </radialGradient>
             <radialGradient id="corona-glow" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#ffffff" stopOpacity="0.8" />
-              <stop offset="50%" stopColor="#fde68a" stopOpacity="0.2" />
+              <stop offset="50%" stopColor="#fde68a" stopOpacity="0.3" />
               <stop offset="100%" stopColor="#d97706" stopOpacity="0" />
             </radialGradient>
           </defs>
@@ -233,10 +227,11 @@ export default function Home() {
             <g>
               <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="-360 100 100" dur="600s" repeatCount="indefinite" />
               <g opacity="0.6">
-                <circle cx="45" cy="45" r="0.4" fill="url(#blue-glow)" /> <circle cx="45" cy="45" r="0.1" filter="url(#core-blur)" />
-                <circle cx="165" cy="35" r="0.5" fill="url(#gold-glow)" /> <circle cx="165" cy="35" r="0.15" filter="url(#core-blur)" />
-                <circle cx="130" cy="185" r="0.3" fill="url(#red-glow)" /> <circle cx="130" cy="185" r="0.1" filter="url(#core-blur)" />
-                <circle cx="25" cy="135" r="0.4" fill="url(#blue-glow)" /> <circle cx="25" cy="135" r="0.1" filter="url(#core-blur)" />
+                {/* 移除模糊濾鏡，恢復星體銳利度 */}
+                <circle cx="45" cy="45" r="0.4" fill="url(#blue-glow)" /> <circle cx="45" cy="45" r="0.1" />
+                <circle cx="165" cy="35" r="0.5" fill="url(#gold-glow)" /> <circle cx="165" cy="35" r="0.15" />
+                <circle cx="130" cy="185" r="0.3" fill="url(#red-glow)" /> <circle cx="130" cy="185" r="0.1" />
+                <circle cx="25" cy="135" r="0.4" fill="url(#blue-glow)" /> <circle cx="25" cy="135" r="0.1" />
               </g>
             </g>
             <g opacity="0.15">
@@ -271,10 +266,9 @@ export default function Home() {
               <circle cx="100" cy="100" r="80" strokeWidth="0.08" strokeDasharray="0.2 5" opacity="0.15" />
               <g transform="translate(0, 0)">
                 <circle cx="100" cy="20" r="3.5" fill="url(#green-glow)" stroke="none" />
-                {/* 套用濾鏡打破圓形 */}
-                <circle cx="100" cy="20" r="0.5" fill="#ecfdf5" stroke="none" filter="url(#core-blur)" />
+                <circle cx="100" cy="20" r="0.5" fill="#ecfdf5" stroke="none" />
               </g>
-              <circle cx="100" cy="180" r="1.5" fill="url(#gold-glow)" stroke="none" opacity="0.6" filter="url(#core-blur)" />
+              <circle cx="100" cy="180" r="1.5" fill="url(#gold-glow)" stroke="none" opacity="0.6" />
             </g>
 
             {/* 🪐 第四軌道 */}
@@ -282,9 +276,9 @@ export default function Home() {
               <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="150s" repeatCount="indefinite" />
               <circle cx="100" cy="100" r="65" strokeWidth="0.08" strokeDasharray="0.5 3" opacity="0.15" />
               <circle cx="100" cy="35" r="4.5" fill="url(#red-glow)" stroke="none" />
-              <circle cx="100" cy="35" r="0.8" fill="#ffffff" stroke="none" filter="url(#core-blur)" />
-              <circle cx="92" cy="38" r="0.8" fill="#fde68a" stroke="none" opacity="0.8" filter="url(#core-blur)" />
-              <circle cx="108" cy="32" r="0.5" fill="#fde68a" stroke="none" opacity="0.5" filter="url(#core-blur)" />
+              <circle cx="100" cy="35" r="0.8" fill="#ffffff" stroke="none" />
+              <circle cx="92" cy="38" r="0.8" fill="#fde68a" stroke="none" opacity="0.8" />
+              <circle cx="108" cy="32" r="0.5" fill="#fde68a" stroke="none" opacity="0.5" />
             </g>
 
             {/* 🪐 第三軌道 (帶星環巨行星) */}
@@ -293,7 +287,7 @@ export default function Home() {
               <circle cx="100" cy="100" r="50" strokeWidth="0.05" opacity="0.1" />
               <g transform="translate(100, 50)">
                 <circle cx="0" cy="0" r="5" fill="url(#gold-glow)" stroke="none" />
-                <circle cx="0" cy="0" r="1" fill="#ffffff" stroke="none" filter="url(#core-blur)" />
+                <circle cx="0" cy="0" r="1" fill="#ffffff" stroke="none" />
                 <ellipse cx="0" cy="0" rx="9" ry="2" fill="none" stroke="url(#gold-glow)" strokeWidth="0.2" transform="rotate(-20)" opacity="0.8" />
               </g>
             </g>
@@ -303,18 +297,18 @@ export default function Home() {
               <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="45s" repeatCount="indefinite" />
               <circle cx="100" cy="100" r="35" strokeWidth="0.08" strokeDasharray="0.3 2" opacity="0.15" />
               <circle cx="100" cy="65" r="3" fill="url(#blue-glow)" stroke="none" />
-              <circle cx="100" cy="65" r="0.5" fill="#ffffff" stroke="none" filter="url(#core-blur)" />
+              <circle cx="100" cy="65" r="0.5" fill="#ffffff" stroke="none" />
               <g transform="translate(100, 65)">
                 <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="5s" repeatCount="indefinite" />
                 <circle cx="0" cy="-6" r="2" fill="url(#gold-glow)" stroke="none" opacity="0.9" />
-                <circle cx="0" cy="-6" r="0.3" fill="#ffffff" stroke="none" filter="url(#core-blur)" />
+                <circle cx="0" cy="-6" r="0.3" fill="#ffffff" stroke="none" />
               </g>
             </g>
 
             {/* ☄️ 彗星軌跡 */}
             <g className="origin-center opacity-60">
               <animateTransform attributeName="transform" type="rotate" from="120 100 100" to="480 100 100" dur="25s" repeatCount="indefinite" />
-              <circle cx="100" cy="10" r="1.5" fill="#ffffff" stroke="none" filter="url(#core-blur)" />
+              <circle cx="100" cy="10" r="1.5" fill="#ffffff" stroke="none" />
               <path d="M 100 10 Q 105 25 110 40" stroke="url(#blue-glow)" strokeWidth="0.6" fill="none" opacity="0.7" />
               <path d="M 100 10 Q 108 25 115 45" stroke="url(#blue-glow)" strokeWidth="0.2" fill="none" opacity="0.3" />
             </g>
@@ -324,7 +318,7 @@ export default function Home() {
               <animateTransform attributeName="transform" type="rotate" from="90 100 100" to="450 100 100" dur="12s" repeatCount="indefinite" />
               <circle cx="100" cy="100" r="12" strokeWidth="0.05" opacity="0.15" />
               <circle cx="100" cy="88" r="1.5" fill="url(#gold-glow)" stroke="none" />
-              <circle cx="100" cy="88" r="0.6" fill="#ffffff" stroke="none" filter="url(#core-blur)" />
+              <circle cx="100" cy="88" r="0.6" fill="#ffffff" stroke="none" />
             </g>
 
             {/* 🌟 極內圈軌道 2 */}
@@ -332,10 +326,10 @@ export default function Home() {
               <animateTransform attributeName="transform" type="rotate" from="270 100 100" to="-90 100 100" dur="20s" repeatCount="indefinite" />
               <circle cx="100" cy="100" r="22" strokeWidth="0.08" strokeDasharray="0.5 3" opacity="0.15" />
               <circle cx="100" cy="78" r="2.5" fill="url(#corona-glow)" stroke="none" />
-              <circle cx="100" cy="78" r="0.8" fill="#ffffff" stroke="none" filter="url(#core-blur)" />
+              <circle cx="100" cy="78" r="0.8" fill="#ffffff" stroke="none" />
             </g>
 
-            {/* ☀️ 太陽/恆星中心 (加入十字耀光打破完美圓形) */}
+            {/* ☀️ 太陽/恆星中心 */}
             <circle cx="100" cy="100" r="28" strokeWidth="0.08" strokeDasharray="0.2 2" opacity="0.15" />
             
             <g className="origin-center opacity-70">
@@ -343,12 +337,11 @@ export default function Home() {
               <circle cx="100" cy="100" r="10" fill="url(#corona-glow)" stroke="none" />
             </g>
 
-            {/* 核心改用光學暈染，取代原本死白的圓點 */}
             <circle cx="100" cy="100" r="6" fill="url(#center-glow)" stroke="none" />
             
-            {/* 加入 Lens Flare (鏡頭耀光)，徹底消除貼紙感 */}
-            <path d="M 100 85 L 100 115 M 85 100 L 115 100" stroke="#ffffff" strokeWidth="0.8" filter="url(#heavy-flare)" opacity="0.9" />
-            <path d="M 95 95 L 105 105 M 95 105 L 105 95" stroke="#fde68a" strokeWidth="0.5" filter="url(#core-blur)" opacity="0.5" />
+            {/* 微調過的十字耀光，極度輕微模糊，不再糊成一團 */}
+            <path d="M 100 88 L 100 112 M 88 100 L 112 100" stroke="#ffffff" strokeWidth="0.4" filter="url(#light-flare)" opacity="0.7" />
+            <path d="M 96 96 L 104 104 M 96 104 L 104 96" stroke="#fde68a" strokeWidth="0.3" opacity="0.5" />
             
           </g>
         </svg>
