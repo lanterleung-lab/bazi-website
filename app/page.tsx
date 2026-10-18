@@ -120,12 +120,18 @@ export default function Home() {
       <div className="absolute bottom-[-10%] right-[-5%] w-[700px] h-[700px] bg-amber-600/20 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
       <div className="absolute top-[40%] left-[50%] -translate-x-1/2 w-[800px] h-[400px] bg-indigo-700/15 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
 
-     {/* 🌟 2. 沉浸式全屏宇宙背景 (Fixed 視差深空版) */}
-      {/* 改為 fixed 置中，覆蓋全螢幕，降低 opacity 確保文字閱讀性，降低 drop-shadow 減輕 GPU 負擔 */}
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200vw] min-w-[1200px] max-w-[3000px] aspect-square pointer-events-none flex items-center justify-center z-0 mix-blend-screen opacity-35 md:opacity-40">
+     {/* 🌟 2. 終極深空宇宙背景 (右上角偏移 + 史詩級星雲與繁星) */}
+      <div className="fixed top-0 right-0 translate-x-1/3 -translate-y-1/4 w-[150vw] min-w-[1200px] max-w-[2500px] aspect-square pointer-events-none flex items-center justify-center z-0 mix-blend-screen opacity-40 md:opacity-50">
         <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_0_8px_rgba(253,230,138,0.15)]">
           
           <defs>
+            {/* 🌌 新增：深空星雲底色 (Nebula Void) */}
+            <radialGradient id="nebula-void" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#1e1b4b" stopOpacity="0.6" /> {/* 極深紫藍色星雲 */}
+              <stop offset="40%" stopColor="#064e3b" stopOpacity="0.2" /> {/* 微弱的深墨綠星塵 */}
+              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+            </radialGradient>
+
             <radialGradient id="center-glow" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#fde68a" stopOpacity="1" />
               <stop offset="40%" stopColor="#d97706" stopOpacity="0.5" />
@@ -158,6 +164,31 @@ export default function Home() {
             </radialGradient>
           </defs>
 
+          {/* 🌌 星雲背景層：賦予深空真實的色彩層次 */}
+          <circle cx="100" cy="100" r="120" fill="url(#nebula-void)" stroke="none" />
+
+          {/* ✨ 漫天繁星 (Background Stars)：靜態與微弱閃爍的星海 */}
+          <g fill="#ffffff">
+            {/* 靜態微弱星群 (極小點) */}
+            <g opacity="0.3">
+              <circle cx="20" cy="30" r="0.2" /> <circle cx="150" cy="10" r="0.15" /> <circle cx="180" cy="80" r="0.2" />
+              <circle cx="40" cy="160" r="0.15" /> <circle cx="160" cy="170" r="0.25" /> <circle cx="10" cy="90" r="0.1" />
+              <circle cx="80" cy="15" r="0.2" /> <circle cx="190" cy="140" r="0.15" /> <circle cx="50" cy="190" r="0.2" />
+            </g>
+            {/* 緩慢閃爍的亮星 (帶光暈) */}
+            <g>
+              <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="-360 100 100" dur="600s" repeatCount="indefinite" />
+              <g opacity="0.6">
+                <circle cx="45" cy="45" r="0.4" fill="url(#blue-glow)" /> <circle cx="45" cy="45" r="0.1" />
+                <circle cx="165" cy="35" r="0.5" fill="url(#gold-glow)" /> <circle cx="165" cy="35" r="0.15" />
+                <circle cx="130" cy="185" r="0.3" fill="url(#red-glow)" /> <circle cx="130" cy="185" r="0.1" />
+                <circle cx="25" cy="135" r="0.4" fill="url(#blue-glow)" /> <circle cx="25" cy="135" r="0.1" />
+              </g>
+            </g>
+            {/* 流銀星河 (密集微塵) */}
+            <path d="M 10 10 Q 50 60 100 100 T 190 190" stroke="#c7d2fe" strokeWidth="15" fill="none" opacity="0.03" strokeDasharray="0.5 3" />
+          </g>
+
           <g stroke="#fde68a" fill="none">
             
             {/* 📍 外圍羅盤底座 */}
@@ -188,6 +219,8 @@ export default function Home() {
                 <circle cx="100" cy="20" r="0.5" fill="#ecfdf5" stroke="none" />
               </g>
               <circle cx="100" cy="180" r="1.5" fill="url(#gold-glow)" stroke="none" opacity="0.6" />
+              {/* 伴隨遠方的小星 */}
+              <circle cx="45" cy="45" r="1" fill="#c7d2fe" stroke="none" opacity="0.7" />
             </g>
 
             {/* 🪐 第四軌道 */}
@@ -251,9 +284,9 @@ export default function Home() {
             {/* ☀️ 太陽/恆星中心 */}
             <circle cx="100" cy="100" r="28" strokeWidth="0.08" strokeDasharray="0.2 2" opacity="0.15" />
             
-            <g className="origin-center opacity-60">
+            <g className="origin-center opacity-70">
               <animateTransform attributeName="transform" type="scale" values="1; 1.05; 1" dur="4s" repeatCount="indefinite" />
-              <circle cx="100" cy="100" r="9" fill="url(#corona-glow)" stroke="none" />
+              <circle cx="100" cy="100" r="10" fill="url(#corona-glow)" stroke="none" />
             </g>
 
             <circle cx="100" cy="100" r="6" fill="url(#center-glow)" stroke="none" />
