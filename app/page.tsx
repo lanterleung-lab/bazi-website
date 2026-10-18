@@ -120,21 +120,97 @@ export default function Home() {
       <div className="absolute bottom-[-10%] right-[-5%] w-[700px] h-[700px] bg-amber-600/20 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
       <div className="absolute top-[40%] left-[50%] -translate-x-1/2 w-[800px] h-[400px] bg-indigo-700/15 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
 
-      {/* 🌟 2. 終極發光星盤 */}
-      <div className="absolute top-[-150px] right-[-200px] w-[900px] h-[900px] pointer-events-none opacity-[0.8] flex items-center justify-center">
-        <div className="w-full h-full text-amber-500 drop-shadow-[0_0_25px_rgba(245,158,11,0.8)]" style={{ animation: 'spin 240s linear infinite' }}>
-          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-            <g transform="translate(50,50)">
-              <circle r="49" fill="none" stroke="currentColor" strokeWidth="0.25" />
-              <circle r="47" fill="none" stroke="currentColor" strokeWidth="0.2" strokeDasharray="1 2.5" />
-              <circle r="35" fill="none" stroke="currentColor" strokeWidth="0.25" />
-              <path d="M -49 0 L 49 0 M 0 -49 L 0 49" stroke="currentColor" strokeWidth="0.15" />
-              <circle cx="0" cy="-35" r="1.5" fill="currentColor" />
-              <circle cx="35" cy="0" r="1.5" fill="currentColor" />
-              <circle cx="-24.7" cy="24.7" r="1.2" fill="currentColor" />
+      {/* 🌟 2. 終極天體運行星盤 (多軌道獨立自轉、幾何相位、精密刻度) */}
+      <div className="absolute top-[-250px] right-[-250px] w-[1000px] h-[1000px] pointer-events-none flex items-center justify-center z-0 mix-blend-screen opacity-[0.85]">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]">
+          <defs>
+            <radialGradient id="sun-glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#fde68a" stopOpacity="1" />
+              <stop offset="30%" stopColor="#d97706" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+
+          {/* 所有線條統一使用琥珀金 */}
+          <g stroke="#fde68a" fill="none">
+            
+            {/* 📍 底座刻度圈 (緩慢逆時針旋轉) */}
+            <g className="origin-center opacity-40">
+              <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="240s" repeatCount="indefinite" />
+              {/* 最外圍羅盤刻度 */}
+              <circle cx="100" cy="100" r="95" strokeWidth="0.2" />
+              <circle cx="100" cy="100" r="92" strokeWidth="0.5" strokeDasharray="1 2.5" />
+              <circle cx="100" cy="100" r="88" strokeWidth="2" strokeDasharray="2 12.65" /> {/* 12 宮位分割 */}
+              {Array.from({length: 12}).map((_, i) => (
+                <line key={i} x1="100" y1="5" x2="100" y2="12" transform={`rotate(${i * 30} 100 100)`} strokeWidth="0.3" />
+              ))}
             </g>
-          </svg>
-        </div>
+
+            {/* 📍 神祕幾何相位線 (大三角/六芒星) */}
+            <g className="origin-center opacity-20">
+              <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="300s" repeatCount="indefinite" />
+              <polygon points="100,20 169.28,140 30.72,140" strokeWidth="0.3" />
+              <polygon points="100,180 30.72,60 169.28,60" strokeWidth="0.3" />
+              <circle cx="100" cy="100" r="80" strokeWidth="0.2" />
+            </g>
+
+            {/* 📍 行星軌道底線 */}
+            <g className="origin-center opacity-30">
+              <circle cx="100" cy="100" r="65" strokeWidth="0.2" strokeDasharray="4 4" />
+              <circle cx="100" cy="100" r="45" strokeWidth="0.1" />
+              <circle cx="100" cy="100" r="25" strokeWidth="0.3" strokeDasharray="1 2" />
+            </g>
+
+            {/* 🪐 星體 1：外圈緩慢行星 (帶有十字標靶) */}
+            <g>
+              <animateTransform attributeName="transform" type="rotate" from="45 100 100" to="405 100 100" dur="80s" repeatCount="indefinite" />
+              <circle cx="100" cy="35" r="2.5" fill="#fcd34d" opacity="0.9" />
+              <circle cx="100" cy="35" r="5" strokeWidth="0.2" />
+              <line x1="100" y1="28" x2="100" y2="42" strokeWidth="0.2" />
+              <line x1="93" y1="35" x2="107" y2="35" strokeWidth="0.2" />
+            </g>
+
+            {/* 🪐 星體 2：中圈行星 (帶有衛星繞行！) */}
+            <g>
+              <animateTransform attributeName="transform" type="rotate" from="180 100 100" to="-180 100 100" dur="45s" repeatCount="indefinite" />
+              <circle cx="100" cy="55" r="3.5" fill="#f59e0b" />
+              <circle cx="100" cy="55" r="7" strokeWidth="0.3" strokeDasharray="1 1.5" />
+              {/* 繞著該行星自轉的小衛星 */}
+              <g transform="translate(100, 55)">
+                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="8s" repeatCount="indefinite" />
+                <circle cx="0" cy="-9" r="1" fill="#fde68a" />
+              </g>
+            </g>
+
+            {/* 🪐 星體 3：內圈極速行星 */}
+            <g>
+              <animateTransform attributeName="transform" type="rotate" from="270 100 100" to="630 100 100" dur="20s" repeatCount="indefinite" />
+              <circle cx="100" cy="75" r="1.5" fill="#fef3c7" />
+              <circle cx="100" cy="75" r="3" strokeWidth="0.1" />
+            </g>
+
+            {/* ✨ 遠方星座連線 (隨機星群) */}
+            <g className="origin-center opacity-50">
+              <animateTransform attributeName="transform" type="rotate" from="120 100 100" to="480 100 100" dur="150s" repeatCount="indefinite" />
+              <polyline points="100,8 115,22 135,18 145,32" strokeWidth="0.4" fill="none" strokeDasharray="1 1" />
+              <circle cx="100" cy="8" r="1" fill="#fde68a" />
+              <circle cx="115" cy="22" r="1.5" fill="#fde68a" />
+              <circle cx="135" cy="18" r="0.8" fill="#fde68a" />
+              <circle cx="145" cy="32" r="1.2" fill="#fde68a" />
+            </g>
+
+            {/* ☀️ 核心星體 (太陽/源頭能量) */}
+            <circle cx="100" cy="100" r="12" fill="url(#sun-glow)" stroke="none" />
+            <circle cx="100" cy="100" r="3" fill="#fef3c7" stroke="none" />
+            <g className="origin-center opacity-60">
+              <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="60s" repeatCount="indefinite" />
+              {Array.from({length: 8}).map((_, i) => (
+                <line key={i} x1="100" y1="84" x2="100" y2="87" transform={`rotate(${i * 45} 100 100)`} strokeWidth="0.5" />
+              ))}
+            </g>
+
+          </g>
+        </svg>
       </div>
       
       {/* 🌟 星塵紋理疊加 */}
