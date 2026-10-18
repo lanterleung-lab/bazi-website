@@ -273,55 +273,93 @@ export default function Home() {
               <polygon points="100,35 165,100 100,165 35,100" strokeWidth="0.05" opacity="0.1" />
             </g>
 
-            {/* 🪐 最外層軌道 */}
+            {/* 🪐 最外層軌道 (極遠星系) */}
             <g className="origin-center opacity-80">
               <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="200s" repeatCount="indefinite" />
               <circle cx="100" cy="100" r="80" strokeWidth="0.08" strokeDasharray="0.2 5" opacity="0.15" />
-              <g transform="translate(0, 0)">
-                <circle cx="100" cy="20" r="3.5" fill="url(#green-glow)" stroke="none" />
-                <circle cx="100" cy="20" r="0.5" fill="#ecfdf5" stroke="none" />
+              <g transform="translate(100, 20)">
+                {/* 立體星體堆疊 */}
+                <circle cx="0" cy="0" r="4" fill="url(#green-glow)" stroke="none" opacity="0.5" />
+                <circle cx="0" cy="0" r="1.8" fill="#059669" stroke="none" />
+                <circle cx="-0.4" cy="-0.4" r="1" fill="#a7f3d0" stroke="none" />
+                <circle cx="-0.7" cy="-0.7" r="0.4" fill="#ffffff" stroke="none" />
               </g>
-              <circle cx="100" cy="180" r="1.5" fill="url(#gold-glow)" stroke="none" opacity="0.6" />
+              <circle cx="100" cy="180" r="1.5" fill="#fde68a" stroke="none" opacity="0.6" />
             </g>
 
-            {/* 🪐 第四軌道 */}
+            {/* 🪐 第四軌道 (緋紅行星) */}
             <g className="origin-center opacity-90">
               <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="150s" repeatCount="indefinite" />
               <circle cx="100" cy="100" r="65" strokeWidth="0.08" strokeDasharray="0.5 3" opacity="0.15" />
-              <circle cx="100" cy="35" r="4.5" fill="url(#red-glow)" stroke="none" />
-              <circle cx="100" cy="35" r="0.8" fill="#ffffff" stroke="none" />
+              <g transform="translate(100, 35)">
+                <circle cx="0" cy="0" r="5" fill="url(#red-glow)" stroke="none" opacity="0.6" />
+                <circle cx="0" cy="0" r="2.2" fill="#e11d48" stroke="none" />
+                <circle cx="-0.5" cy="-0.5" r="1.2" fill="#fca5a5" stroke="none" />
+                <circle cx="-0.9" cy="-0.9" r="0.5" fill="#ffffff" stroke="none" />
+              </g>
+              {/* 小行星帶 */}
               <circle cx="92" cy="38" r="0.8" fill="#fde68a" stroke="none" opacity="0.8" />
               <circle cx="108" cy="32" r="0.5" fill="#fde68a" stroke="none" opacity="0.5" />
             </g>
 
-            {/* 🪐 第三軌道 (帶星環巨行星) */}
+            {/* 🪐 第三軌道 (帶星環巨行星：告別廉價感，真 3D 質感) */}
             <g className="origin-center">
               <animateTransform attributeName="transform" type="rotate" from="45 100 100" to="405 100 100" dur="90s" repeatCount="indefinite" />
               <circle cx="100" cy="100" r="50" strokeWidth="0.05" opacity="0.1" />
               <g transform="translate(100, 50)">
-                <circle cx="0" cy="0" r="5" fill="url(#gold-glow)" stroke="none" />
-                <circle cx="0" cy="0" r="1" fill="#ffffff" stroke="none" />
-                <ellipse cx="0" cy="0" rx="9" ry="2" fill="none" stroke="url(#gold-glow)" strokeWidth="0.2" transform="rotate(-20)" opacity="0.8" />
+                <g>
+                  <animateTransform attributeName="transform" type="scale" values="1; 1.15; 1" dur="4s" repeatCount="indefinite" />
+                  <circle cx="0" cy="0" r="7" fill="url(#gold-glow)" stroke="none" opacity="0.5" />
+                </g>
+                <circle cx="0" cy="0" r="3.2" fill="#b45309" stroke="none" />
+                <circle cx="-0.8" cy="-0.8" r="2" fill="#fde68a" stroke="none" />
+                <circle cx="-1.2" cy="-1.2" r="0.8" fill="#ffffff" stroke="none" />
+                
+                {/* 雙層高質感星環，加入前景立體遮罩 */}
+                <g transform="rotate(-20)">
+                  <ellipse cx="0" cy="0" rx="10" ry="2.5" fill="none" stroke="#fde68a" strokeWidth="0.1" opacity="0.4" />
+                  <ellipse cx="0" cy="0" rx="10" ry="2.5" fill="none" stroke="#d97706" strokeWidth="0.4" opacity="0.2" />
+                  <ellipse cx="0" cy="0" rx="8" ry="1.5" fill="none" stroke="#fef3c7" strokeWidth="0.2" opacity="0.3" />
+                  {/* 這條是關鍵：只畫出前半圈的亮面，營造出繞過星球前方的立體穿透感 */}
+                  <path d="M -8 0 Q 0 1.5 8 0" fill="none" stroke="#fef3c7" strokeWidth="0.3" opacity="0.9" />
+                </g>
               </g>
             </g>
 
-            {/* 🪐 第二軌道 (雙星系統) */}
+            {/* 🪐 第二軌道 (雙星系統：精緻發光體) */}
             <g className="origin-center opacity-[0.95]">
               <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="45s" repeatCount="indefinite" />
               <circle cx="100" cy="100" r="35" strokeWidth="0.08" strokeDasharray="0.3 2" opacity="0.15" />
-              <circle cx="100" cy="65" r="3" fill="url(#blue-glow)" stroke="none" />
-              <circle cx="100" cy="65" r="0.5" fill="#ffffff" stroke="none" />
+              
               <g transform="translate(100, 65)">
-                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="5s" repeatCount="indefinite" />
-                <circle cx="0" cy="-6" r="2" fill="url(#gold-glow)" stroke="none" opacity="0.9" />
-                <circle cx="0" cy="-6" r="0.3" fill="#ffffff" stroke="none" />
+                {/* 主星 */}
+                <g>
+                  <circle cx="0" cy="0" r="4.5" fill="url(#blue-glow)" stroke="none" opacity="0.5" />
+                  <circle cx="0" cy="0" r="1.8" fill="#4f46e5" stroke="none" />
+                  <circle cx="-0.4" cy="-0.4" r="1" fill="#c7d2fe" stroke="none" />
+                  <circle cx="-0.7" cy="-0.7" r="0.4" fill="#ffffff" stroke="none" />
+                </g>
+                
+                {/* 繞行衛星 */}
+                <g>
+                  <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="5s" repeatCount="indefinite" />
+                  <g transform="translate(0, -6)">
+                    <circle cx="0" cy="0" r="2.5" fill="url(#gold-glow)" stroke="none" opacity="0.6" />
+                    <circle cx="0" cy="0" r="1.2" fill="#d97706" stroke="none" />
+                    <circle cx="-0.3" cy="-0.3" r="0.7" fill="#fde68a" stroke="none" />
+                    <circle cx="-0.5" cy="-0.5" r="0.3" fill="#ffffff" stroke="none" />
+                  </g>
+                </g>
               </g>
             </g>
 
             {/* ☄️ 彗星軌跡 */}
             <g className="origin-center opacity-60">
               <animateTransform attributeName="transform" type="rotate" from="120 100 100" to="480 100 100" dur="25s" repeatCount="indefinite" />
-              <circle cx="100" cy="10" r="1.5" fill="#ffffff" stroke="none" />
+              <g transform="translate(100, 10)">
+                <circle cx="0" cy="0" r="2.5" fill="url(#blue-glow)" stroke="none" opacity="0.8" />
+                <circle cx="0" cy="0" r="0.8" fill="#ffffff" stroke="none" />
+              </g>
               <path d="M 100 10 Q 105 25 110 40" stroke="url(#blue-glow)" strokeWidth="0.6" fill="none" opacity="0.7" />
               <path d="M 100 10 Q 108 25 115 45" stroke="url(#blue-glow)" strokeWidth="0.2" fill="none" opacity="0.3" />
             </g>
@@ -330,16 +368,22 @@ export default function Home() {
             <g className="origin-center opacity-[0.95]">
               <animateTransform attributeName="transform" type="rotate" from="90 100 100" to="450 100 100" dur="12s" repeatCount="indefinite" />
               <circle cx="100" cy="100" r="12" strokeWidth="0.05" opacity="0.15" />
-              <circle cx="100" cy="88" r="1.5" fill="url(#gold-glow)" stroke="none" />
-              <circle cx="100" cy="88" r="0.6" fill="#ffffff" stroke="none" />
+              <g transform="translate(100, 88)">
+                <circle cx="0" cy="0" r="2" fill="url(#gold-glow)" stroke="none" opacity="0.8" />
+                <circle cx="0" cy="0" r="1" fill="#fde68a" stroke="none" />
+                <circle cx="-0.3" cy="-0.3" r="0.4" fill="#ffffff" stroke="none" />
+              </g>
             </g>
 
             {/* 🌟 極內圈軌道 2 */}
             <g className="origin-center opacity-90">
               <animateTransform attributeName="transform" type="rotate" from="270 100 100" to="-90 100 100" dur="20s" repeatCount="indefinite" />
               <circle cx="100" cy="100" r="22" strokeWidth="0.08" strokeDasharray="0.5 3" opacity="0.15" />
-              <circle cx="100" cy="78" r="2.5" fill="url(#corona-glow)" stroke="none" />
-              <circle cx="100" cy="78" r="0.8" fill="#ffffff" stroke="none" />
+              <g transform="translate(100, 78)">
+                <circle cx="0" cy="0" r="3" fill="url(#corona-glow)" stroke="none" opacity="0.7" />
+                <circle cx="0" cy="0" r="1.5" fill="#fef3c7" stroke="none" />
+                <circle cx="-0.4" cy="-0.4" r="0.6" fill="#ffffff" stroke="none" />
+              </g>
             </g>
 
             {/* ☀️ 太陽/恆星中心 (還原為純粹乾淨的發光圓體) */}
