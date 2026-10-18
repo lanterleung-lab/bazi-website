@@ -172,6 +172,20 @@ export default function Home() {
       <div className="fixed top-0 right-0 translate-x-1/3 -translate-y-1/4 w-[150vw] min-w-[1200px] max-w-[2500px] aspect-square pointer-events-none flex items-center justify-center z-0 mix-blend-screen opacity-40 md:opacity-50">
         <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_0_8px_rgba(253,230,138,0.15)]">
           <defs>
+            {/* 新增：灰白星體漸層 (解決圖1的廉價感) */}
+            <radialGradient id="grey-glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
+              <stop offset="30%" stopColor="#a3a3a3" stopOpacity="0.5" />
+              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+            </radialGradient>
+            
+            {/* 新增：紅核心星體漸層 (解決圖2的廉價感) */}
+            <radialGradient id="red-core-glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+              <stop offset="20%" stopColor="#fca5a5" stopOpacity="0.8" />
+              <stop offset="60%" stopColor="#e11d48" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+            </radialGradient>
             {/* 只保留給太陽耀光的極輕微模糊 */}
             <filter id="light-flare" x="-50%" y="-50%" width="200%" height="200%">
               <feGaussianBlur stdDeviation="0.4" />
