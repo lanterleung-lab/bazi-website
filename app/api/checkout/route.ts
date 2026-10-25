@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 // 初始化 Stripe (它會自動讀取你 .env.local 裡的 STRIPE_SECRET_KEY)
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+const stripe = new Stripe(process.env.STRIPE_S_KEY as string, {
   apiVersion: '2026-09-30.endive', // 維持最新的 API 版本
 });
 
