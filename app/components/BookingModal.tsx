@@ -210,7 +210,7 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
           {loadingData ? (
             <div className="h-full flex flex-col items-center justify-center text-stone-400 space-y-4">
               <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
-              <p className="text-sm font-medium">正在讀取師傅即時檔期...</p>
+              <p className="text-sm font-medium">正在讀取導師即時檔期...</p>
             </div>
           ) : isSuccess ? (
             <div className="h-full flex flex-col items-center justify-center text-center space-y-4 animate-in zoom-in-95 duration-500">
@@ -219,7 +219,7 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
               </div>
               <h3 className="text-2xl font-bold text-stone-900">預約申請已送出！</h3>
               <p className="text-stone-500 text-sm max-w-[250px]">
-                保留金支付成功。師傅確認後將會透過手機與您聯繫。
+                保留金支付成功。導師確認後將會透過手機與您聯繫。
               </p>
               <div className="w-full bg-white border border-stone-100 rounded-2xl p-5 mt-6 text-left space-y-3 text-sm shadow-sm">
                 <div className="flex justify-between"><span className="text-stone-500">服務項目</span><span className="font-medium text-stone-900">{selectedService?.name}</span></div>
@@ -328,7 +328,7 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
                       </div>
                     ) : (
                       <div className="p-4 bg-rose-50 text-rose-600 rounded-xl text-sm border border-rose-100 text-center">
-                        師傅近期沒有設定可預約的排班檔期。
+                        導師近期沒有設定可預約的排班檔期。
                       </div>
                     )}
                   </div>
@@ -356,7 +356,7 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
                         </div>
                       ) : (
                         <div className="p-4 bg-stone-100 text-stone-500 rounded-xl text-sm text-center">
-                          這一天師傅的時段無法容納該服務時長，請選擇其他日期。
+                          這一天導師的時段無法容納該服務時長，請選擇其他日期。
                         </div>
                       )}
                     </div>
@@ -375,7 +375,7 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
                     </div>
                     <div className="space-y-1.5">
                       <label className="text-sm font-medium text-stone-700">聯絡電話 (WhatsApp)</label>
-                      <input type="tel" required value={clientData.phone} onChange={e => setClientData({...clientData, phone: e.target.value})} className="w-full px-4 py-3 bg-white border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600/20" placeholder="師傅將以此號碼與您聯繫" />
+                      <input type="tel" required value={clientData.phone} onChange={e => setClientData({...clientData, phone: e.target.value})} className="w-full px-4 py-3 bg-white border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600/20" placeholder="導師將以此號碼與您聯繫" />
                     </div>
                   </div>
 
@@ -405,14 +405,14 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
                       <div className="flex justify-between items-center pt-2">
                         <div className="flex items-center gap-2 text-stone-600">
                           <span>🤝 現場尾款</span>
-                          <span className="text-[10px] border border-stone-300 px-2 py-0.5 rounded-full">諮詢當日面付師傅</span>
+                          <span className="text-[10px] border border-stone-300 px-2 py-0.5 rounded-full">諮詢當日面付導師</span>
                         </div>
                         <span className="font-medium text-stone-600">HK$ {orderAmounts.balance.toLocaleString()}</span>
                       </div>
                     </div>
 
                     <p className="text-[11px] text-stone-500 mt-5 leading-relaxed bg-white p-3 rounded-lg border border-stone-100">
-                      ⚠️ 支付保留金後方能為您鎖定師傅專屬時段。諮詢當日請將尾款 HK$ {orderAmounts.balance.toLocaleString()} 直接支付予師傅。若於 24 小時內取消，保留金恕不退還。
+                      ⚠️ 支付保留金後方能為您鎖定導師該時段。諮詢當日請將尾款 HK$ {orderAmounts.balance.toLocaleString()} 直接支付予導師。若於 24 小時內取消，保留金恕不退還。
                     </p>
                   </div>
 

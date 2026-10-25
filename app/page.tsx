@@ -386,7 +386,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto w-full">
           
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-6xl font-serif text-stone-100 mb-6 tracking-wide drop-shadow-sm">遇見你的心靈指引</h1>
+            <h1 className="text-4xl md:text-6xl font-serif text-stone-100 mb-6 tracking-wide drop-shadow-sm">俯瞰生命軌跡，鑒照真實自我</h1>
             <p className="text-stone-400 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed">
               匯聚東方命理、西方塔羅與現代心理學。<br className="hidden md:block" />在迷惘的十字路口，為您點亮前行的方向。
             </p>

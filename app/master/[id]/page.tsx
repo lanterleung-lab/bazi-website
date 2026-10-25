@@ -47,13 +47,13 @@ export default function MasterProfilePage({ params }: { params: Promise<{ id: st
             is_accepting_orders: data.is_accepting_orders ?? true,
             schedule: data.schedule,  // 👈 就是漏了這一行！把排班表存進去
             recentReviews: [
-              { id: 1, user: '陳**', text: '大師一語道破我的困境，非常精準！', date: '2023-10-12' },
+              { id: 1, user: '陳**', text: '師傅一語道破我的困境，非常精準！', date: '2023-10-12' },
               { id: 2, user: '林**', text: '非常有耐心，讓人感到安心。', date: '2023-10-05' }
             ]
           });
         }
       } catch (error) {
-        console.error('抓取大師資料失敗:', error);
+        console.error('抓取導師資料失敗:', error);
       } finally {
         setIsLoading(false);
       }
@@ -65,7 +65,7 @@ export default function MasterProfilePage({ params }: { params: Promise<{ id: st
   if (isLoading) {
     return (
       <div className="min-h-screen bg-stone-50 flex items-center justify-center font-sans">
-        <p className="text-stone-500 animate-pulse">正在為您請出大師資料...</p>
+        <p className="text-stone-500 animate-pulse">正在為您讀出導師資料...</p>
       </div>
     );
   }
@@ -73,8 +73,8 @@ export default function MasterProfilePage({ params }: { params: Promise<{ id: st
   if (!master) {
     return (
       <div className="min-h-screen bg-stone-50 flex flex-col items-center justify-center font-sans space-y-4">
-        <p className="text-xl text-stone-800">查無此大師</p>
-        <a href="/" className="text-emerald-700 hover:underline">返回大師名冊</a>
+        <p className="text-xl text-stone-800">查無此導師</p>
+        <a href="/" className="text-emerald-700 hover:underline">返回導師名冊</a>
       </div>
     );
   }
@@ -84,7 +84,7 @@ export default function MasterProfilePage({ params }: { params: Promise<{ id: st
       <nav className="absolute top-0 w-full p-6 z-10 flex justify-between items-center">
         <a href="/" className="flex items-center gap-2 text-stone-50 bg-stone-900/40 backdrop-blur-md px-4 py-2 rounded-full hover:bg-stone-900/60 transition-colors">
           <ArrowLeft className="w-4 h-4" />
-          <span className="text-sm font-medium">返回大師名冊</span>
+          <span className="text-sm font-medium">返回Observer 澄空堂</span>
         </a>
       </nav>
 
@@ -143,7 +143,7 @@ export default function MasterProfilePage({ params }: { params: Promise<{ id: st
             onActionClick={() => {
               if(master.is_accepting_orders) setIsModalOpen(true);
             }} 
-            actionText={master.is_accepting_orders ? "立即預約大師為您解盤" : "大師目前休息中"} 
+            actionText={master.is_accepting_orders ? "立即預約導師為您解盤" : "導師目前休息中"} 
           />
         </div>
 
@@ -201,7 +201,7 @@ export default function MasterProfilePage({ params }: { params: Promise<{ id: st
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-xl font-medium text-stone-900">真實結緣返饋</h3>
+            <h3 className="text-xl font-medium text-stone-900">真實諮詢返饋</h3>
             <div className="space-y-4">
               {master.recentReviews.map((review: any) => (
                 <div key={review.id} className="bg-white p-4 rounded-2xl border border-stone-100 shadow-sm">
@@ -240,7 +240,7 @@ export default function MasterProfilePage({ params }: { params: Promise<{ id: st
             {master.is_accepting_orders ? (
               <><Clock className="w-4 h-4" /> 查看檔期並預約</>
             ) : (
-              '大師休息中'
+              '導師休息中'
             )}
           </button>
         </div>

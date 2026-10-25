@@ -59,7 +59,7 @@ export default function MasterShowcase({ externalFilter = 'ALL', onClearFilter }
           setMasters(formattedData);
         }
       } catch (error) {
-        console.error('抓取大師資料失敗:', error);
+        console.error('抓取導師資料失敗:', error);
       } finally {
         setIsLoading(false);
       }
@@ -113,14 +113,14 @@ export default function MasterShowcase({ externalFilter = 'ALL', onClearFilter }
       
       <div className="max-w-4xl mx-auto text-center mb-10 space-y-4">
         <h2 className="text-sm font-medium tracking-widest text-emerald-800 uppercase">Curated Masters</h2>
-        <h1 className="text-4xl md:text-5xl font-light text-stone-900 tracking-wide">結緣您的專屬命理導師</h1>
+        <h1 className="text-4xl md:text-5xl font-light text-stone-900 tracking-wide">Observer 駐站導師</h1>
       </div>
 
       {externalFilter !== 'ALL' && (
         <div className="max-w-3xl mx-auto mb-10 flex justify-center animate-in fade-in zoom-in duration-300">
            <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-5 py-2.5 rounded-full flex items-center gap-3 shadow-sm text-sm">
               <span className="font-medium flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-emerald-500" /> 正在為您推薦專精【{externalFilter}】領域的大師
+                <Sparkles className="w-4 h-4 text-emerald-500" /> 正在為您推薦專精【{externalFilter}】領域的導師
               </span>
               <button onClick={onClearFilter} className="bg-white hover:bg-emerald-100 text-emerald-600 p-1 rounded-full transition-colors">
                 <X className="w-4 h-4" />
@@ -147,7 +147,7 @@ export default function MasterShowcase({ externalFilter = 'ALL', onClearFilter }
 
       {isLoading ? (
         <div className="text-center py-20 text-stone-500 animate-pulse">
-          正在從雲端請出大師名冊，請稍候...
+          正在從雲端請出導師名冊，請稍候...
         </div>
       ) : (
         <>
@@ -201,9 +201,9 @@ export default function MasterShowcase({ externalFilter = 'ALL', onClearFilter }
           {filteredMasters.length === 0 && (
             <div className="text-center py-20">
               <div className="inline-block p-4 rounded-full bg-stone-100 mb-4 text-stone-400"><Sparkles className="w-8 h-8" /></div>
-              <p className="text-stone-500 text-lg">目前尚無符合該條件的大師</p>
+              <p className="text-stone-500 text-lg">目前尚無符合該條件的導師</p>
               <button onClick={onClearFilter} className="mt-4 text-emerald-600 hover:text-emerald-700 font-medium">
-                查看所有大師陣容
+                查看所有導師陣容
               </button>
             </div>
           )}
