@@ -13,6 +13,15 @@ import {
 } from 'lucide-react';
 // 新增這行：匯入評價管理組件 (請確認相對路徑 ../components 正確)
 import ReviewManager from '../../components/ReviewManager';
+// 在 import 區塊下方加入這段
+
+function calculateOrderAmounts(totalPrice: number) {
+  const COMMISSION_RATE = 0.2; // 平台抽成 25%
+  const COMMISSION_CAP = 800;   // 平台抽成封頂 800 元
+  const deposit = Math.min(totalPrice * COMMISSION_RATE, COMMISSION_CAP);
+  const balance = totalPrice - deposit;
+  return { total: totalPrice, deposit, balance };
+}
 
 const createImage = (url: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {
@@ -442,16 +451,42 @@ export default function MasterDashboard() {
                           </select>
                           <span className="text-sm font-bold text-stone-900">{order.date} {order.time}</span>
                         </div>
-                        <div>
-                          <h4 className="font-medium text-stone-900 text-lg flex items-center gap-2">
+                        <div className="flex-1">
+                          <h4 className="font-bold text-stone-900 text-lg flex items-center gap-2">
                             {order.clientName} 
-                            <span className="text-sm font-normal text-stone-500">{order.serviceName} (HK$ {order.price})</span>
+                            <span className="text-sm font-normal text-stone-500">{order.serviceName}</span>
                           </h4>
+                          
+                          {/* 聯絡電話 */}
                           {order.clientPhone && (
                             <p className="text-sm text-stone-500 mt-1 flex items-center gap-1">
                               <Phone className="w-3 h-3"/> {order.clientPhone}
                             </p>
                           )}
+
+                          {/* 💰 升級版財務明細區塊 */}
+                          {(() => {
+                            // 動態算出這筆訂單的拆解金額
+                            const amounts = calculateOrderAmounts(order.price || 0);
+                            return (
+                              <div className="mt-3 p-3 bg-white border border-stone-200 rounded-xl space-y-1.5 shadow-sm max-w-sm">
+                                <div className="flex justify-between items-center text-xs text-stone-500">
+                                  <span>服務總額</span>
+                                  <span>HK$ {amounts.total.toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between items-center text-xs text-stone-400">
+                                  <span>平台已收保留金</span>
+                                  <span>- HK$ {amounts.deposit.toLocaleString()}</span>
+                                </div>
+                                <div className="border-t border-stone-100 my-1 pt-1 flex justify-between items-center">
+                                  <span className="text-sm font-medium text-stone-600">現場應收尾款</span>
+                                  <span className="text-lg font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-lg">
+                                    HK$ {amounts.balance.toLocaleString()}
+                                  </span>
+                                </div>
+                              </div>
+                            );
+                          })()}
                         </div>
                       </div>
                       
