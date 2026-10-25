@@ -15,13 +15,7 @@ import {
 import ReviewManager from '../../components/ReviewManager';
 // 在 import 區塊下方加入這段
 
-function calculateOrderAmounts(totalPrice: number) {
-  const COMMISSION_RATE = 0.2; // 平台抽成 25%
-  const COMMISSION_CAP = 800;   // 平台抽成封頂 800 元
-  const deposit = Math.min(totalPrice * COMMISSION_RATE, COMMISSION_CAP);
-  const balance = totalPrice - deposit;
-  return { total: totalPrice, deposit, balance };
-}
+import { calculateOrderAmounts } from '@/lib/pricing';
 
 const createImage = (url: string): Promise<HTMLImageElement> =>
   new Promise((resolve, reject) => {

@@ -4,21 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { X, Calendar, Clock, CreditCard, ArrowLeft, Loader2, CheckCircle2, ChevronRight, Sparkles } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
-// -------------------------------------------------------------
-// 💰 財務拆解大腦 (計算訂金與尾款)
-// -------------------------------------------------------------
-function calculateOrderAmounts(totalPrice: number) {
-  const COMMISSION_RATE = 0.2; // 平台抽成 25%
-  const COMMISSION_CAP = 800;   // 平台抽成封頂 800 元
-
-  // 1. 計算訂金：取「總價*25%」與「800」之間的最小值
-  const deposit = Math.min(totalPrice * COMMISSION_RATE, COMMISSION_CAP);
-  
-  // 2. 計算尾款：總價扣掉訂金
-  const balance = totalPrice - deposit;
-
-  return { total: totalPrice, deposit, balance };
-}
+import { calculateOrderAmounts } from '@/lib/pricing';
 
 interface BookingModalProps {
   isOpen: boolean;
