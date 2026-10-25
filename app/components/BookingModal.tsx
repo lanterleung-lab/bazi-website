@@ -2,7 +2,23 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { X, Calendar, Clock, CreditCard, ArrowLeft, Loader2, CheckCircle2, ChevronRight, Sparkles } from 'lucide-react';
-import { supabase } from '@/lib/supabase'; // 確保路徑正確
+import { supabase } from '@/lib/supabase';
+
+// -------------------------------------------------------------
+// 💰 財務拆解大腦 (計算訂金與尾款)
+// -------------------------------------------------------------
+function calculateOrderAmounts(totalPrice: number) {
+  const COMMISSION_RATE = 0.2; // 平台抽成 25%
+  const COMMISSION_CAP = 800;   // 平台抽成封頂 800 元
+
+  // 1. 計算訂金：取「總價*25%」與「800」之間的最小值
+  const deposit = Math.min(totalPrice * COMMISSION_RATE, COMMISSION_CAP);
+  
+  // 2. 計算尾款：總價扣掉訂金
+  const balance = totalPrice - deposit;
+
+  return { total: totalPrice, deposit, balance };
+}
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -48,11 +64,15 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string>('');
   
-  // 回歸極簡：只收集姓名與電話
   const [clientData, setClientData] = useState({ name: '', phone: '' });
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  // 取得當前選擇服務的財務拆解數據
+  const orderAmounts = useMemo(() => {
+    return calculateOrderAmounts(selectedService?.price || 0);
+  }, [selectedService]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -126,13 +146,15 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
       const { error } = await supabase.from('orders').insert([{
         master_id: master.id,
         client_name: clientData.name,
-        client_phone: clientData.phone, // 將寫入 Supabase 新增的 client_phone 欄位
+        client_phone: clientData.phone,
         service_name: selectedService?.name,
-        price: selectedService?.price,
+        // 🌟 寫入完整的財務拆解資料到資料庫
+        total_price: orderAmounts.total,
+        deposit_paid: orderAmounts.deposit,
+        balance_due: orderAmounts.balance,
         appointment_date: selectedDate?.toISOString().split('T')[0],
         appointment_time: selectedTime,
         status: 'pending'
-        // birth_data 與 client_gender 皆留空，後續大師手動補上
       }]);
 
       if (error) throw error;
@@ -151,6 +173,7 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
     <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center bg-stone-900/40 backdrop-blur-sm p-0 md:p-4 transition-all">
       <div className="bg-white w-full md:w-[500px] h-[85vh] md:h-auto md:max-h-[85vh] rounded-t-3xl md:rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-8 md:slide-in-from-bottom-4 duration-300">
         
+        {/* Header */}
         <div className="px-6 py-4 border-b border-stone-100 flex justify-between items-center bg-white z-10 shrink-0">
           <div className="flex items-center gap-3">
             {step > 1 && !isSuccess && (
@@ -162,7 +185,7 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
               <h2 className="font-bold text-stone-900">預約 {masterName}</h2>
               {!isSuccess && (
                 <p className="text-xs text-stone-500 font-medium tracking-wide">
-                  步驟 {step} / 3：{step === 1 ? '選擇服務' : step === 2 ? '選擇檔期' : '確認預約'}
+                  步驟 {step} / 3：{step === 1 ? '選擇服務' : step === 2 ? '選擇檔期' : '確認與支付'}
                 </p>
               )}
             </div>
@@ -172,11 +195,12 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
           </button>
         </div>
 
+        {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 bg-stone-50/50">
           {loadingData ? (
             <div className="h-full flex flex-col items-center justify-center text-stone-400 space-y-4">
               <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
-              <p className="text-sm font-medium">正在讀取大師即時檔期...</p>
+              <p className="text-sm font-medium">正在讀取師傅即時檔期...</p>
             </div>
           ) : isSuccess ? (
             <div className="h-full flex flex-col items-center justify-center text-center space-y-4 animate-in zoom-in-95 duration-500">
@@ -185,13 +209,16 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
               </div>
               <h3 className="text-2xl font-bold text-stone-900">預約申請已送出！</h3>
               <p className="text-stone-500 text-sm max-w-[250px]">
-                我們已收到您預約 {masterName} 的申請，大師確認後將會透過手機與您聯繫。
+                保留金支付成功。師傅確認後將會透過手機與您聯繫。
               </p>
-              <div className="w-full bg-white border border-stone-100 rounded-2xl p-4 mt-6 text-left space-y-2 text-sm shadow-sm">
-                <div className="flex justify-between"><span className="text-stone-500">服務</span><span className="font-medium text-stone-900">{selectedService?.name}</span></div>
-                <div className="flex justify-between"><span className="text-stone-500">日期</span><span className="font-medium text-stone-900">{selectedDate?.toLocaleDateString('zh-TW')}</span></div>
-                <div className="flex justify-between"><span className="text-stone-500">時間</span><span className="font-medium text-stone-900">{selectedTime}</span></div>
-                <div className="pt-2 mt-2 border-t border-stone-100 flex justify-between"><span className="text-stone-500">總金額</span><span className="font-bold text-emerald-700">HK$ {selectedService?.price}</span></div>
+              <div className="w-full bg-white border border-stone-100 rounded-2xl p-5 mt-6 text-left space-y-3 text-sm shadow-sm">
+                <div className="flex justify-between"><span className="text-stone-500">服務項目</span><span className="font-medium text-stone-900">{selectedService?.name}</span></div>
+                <div className="flex justify-between"><span className="text-stone-500">預約時間</span><span className="font-medium text-stone-900">{selectedDate?.toLocaleDateString('zh-TW')} {selectedTime}</span></div>
+                
+                <div className="pt-3 mt-1 border-t border-stone-100">
+                  <div className="flex justify-between items-center mb-1"><span className="text-stone-500 text-xs">已付保留金</span><span className="font-bold text-stone-900 text-xs">HK$ {orderAmounts.deposit}</span></div>
+                  <div className="flex justify-between items-center"><span className="font-medium text-emerald-700">現場應付尾款</span><span className="text-lg font-bold text-emerald-700">HK$ {orderAmounts.balance}</span></div>
+                </div>
               </div>
               <button onClick={onClose} className="w-full py-4 mt-4 bg-stone-900 text-stone-50 rounded-xl font-medium hover:bg-stone-800 transition-colors">
                 完成並關閉
@@ -199,6 +226,7 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
             </div>
           ) : (
             <>
+              {/* Step 1: 選擇服務 */}
               {step === 1 && (
                 <div className="space-y-4 animate-in fade-in slide-in-from-right-4 duration-300">
                   <h3 className="font-medium text-stone-900 mb-2 flex items-center gap-2">
@@ -224,7 +252,7 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
                             <Clock className="w-3.5 h-3.5" /> {service.duration} 分鐘
                           </p>
                           
-                          {/* 👇 新增這段：線上/線下標籤 👇 */}
+                          {/* 線上/線下標籤 */}
                           {service.serviceType === 'offline' ? (
                             <span className="text-xs px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-md">🏠 線下面測</span>
                           ) : service.serviceType === 'both' ? (
@@ -257,6 +285,7 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
                 </div>
               )}
 
+              {/* Step 2: 選擇檔期 */}
               {step === 2 && (
                 <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
                   <div className="p-3 bg-emerald-50 text-emerald-800 rounded-xl text-sm font-medium flex justify-between items-center border border-emerald-100">
@@ -289,7 +318,7 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
                       </div>
                     ) : (
                       <div className="p-4 bg-rose-50 text-rose-600 rounded-xl text-sm border border-rose-100 text-center">
-                        大師近期沒有設定可預約的排班檔期。
+                        師傅近期沒有設定可預約的排班檔期。
                       </div>
                     )}
                   </div>
@@ -317,7 +346,7 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
                         </div>
                       ) : (
                         <div className="p-4 bg-stone-100 text-stone-500 rounded-xl text-sm text-center">
-                          這一天大師的時段無法容納該服務時長，請選擇其他日期。
+                          這一天師傅的時段無法容納該服務時長，請選擇其他日期。
                         </div>
                       )}
                     </div>
@@ -325,16 +354,10 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
                 </div>
               )}
 
+              {/* Step 3: 確認與支付 */}
               {step === 3 && (
-                <form onSubmit={handleConfirmBooking} className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-                  <div className="bg-white p-5 rounded-2xl border border-stone-100 shadow-sm space-y-3">
-                    <h3 className="font-bold text-stone-900 border-b border-stone-100 pb-2 mb-3">訂單摘要</h3>
-                    <div className="flex justify-between items-center text-sm"><span className="text-stone-500">大師</span><span className="font-medium text-stone-900">{masterName}</span></div>
-                    <div className="flex justify-between items-center text-sm"><span className="text-stone-500">服務</span><span className="font-medium text-stone-900">{selectedService?.name}</span></div>
-                    <div className="flex justify-between items-center text-sm"><span className="text-stone-500">時間</span><span className="font-medium text-emerald-700">{selectedDate?.toLocaleDateString('zh-TW')} {selectedTime}</span></div>
-                    <div className="pt-3 mt-1 border-t border-stone-100 flex justify-between items-center"><span className="font-medium text-stone-700">總結帳金額</span><span className="text-xl font-bold text-stone-900">HK$ {selectedService?.price}</span></div>
-                  </div>
-
+                <form onSubmit={handleConfirmBooking} className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300 pb-4">
+                  
                   <div className="space-y-4">
                     <div className="space-y-1.5">
                       <label className="text-sm font-medium text-stone-700">您的姓名</label>
@@ -342,15 +365,54 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
                     </div>
                     <div className="space-y-1.5">
                       <label className="text-sm font-medium text-stone-700">聯絡電話 (WhatsApp)</label>
-                      <input type="tel" required value={clientData.phone} onChange={e => setClientData({...clientData, phone: e.target.value})} className="w-full px-4 py-3 bg-white border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600/20" placeholder="大師將以此號碼與您聯繫" />
+                      <input type="tel" required value={clientData.phone} onChange={e => setClientData({...clientData, phone: e.target.value})} className="w-full px-4 py-3 bg-white border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-600/20" placeholder="師傅將以此號碼與您聯繫" />
                     </div>
                   </div>
+
+                  {/* 🌟 升級版結帳明細卡片 */}
+                  <div className="bg-stone-900/5 border border-stone-800/10 rounded-2xl p-5 shadow-sm mt-6">
+                    <h4 className="text-base font-bold text-stone-900 mb-4 flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-emerald-600" /> 
+                      預約結帳明細
+                    </h4>
+                    
+                    <div className="space-y-3 text-sm">
+                      <div className="flex justify-between text-stone-500">
+                        <span>{selectedService?.name}</span>
+                        <span>HK$ {orderAmounts.total.toLocaleString()}</span>
+                      </div>
+                      
+                      <div className="border-t border-stone-200 my-3"></div>
+
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-stone-900">🔒 預約保留金</span>
+                          <span className="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium">本次支付</span>
+                        </div>
+                        <span className="text-xl font-bold text-emerald-600">HK$ {orderAmounts.deposit.toLocaleString()}</span>
+                      </div>
+
+                      <div className="flex justify-between items-center pt-2">
+                        <div className="flex items-center gap-2 text-stone-600">
+                          <span>🤝 現場尾款</span>
+                          <span className="text-[10px] border border-stone-300 px-2 py-0.5 rounded-full">諮詢當日面付師傅</span>
+                        </div>
+                        <span className="font-medium text-stone-600">HK$ {orderAmounts.balance.toLocaleString()}</span>
+                      </div>
+                    </div>
+
+                    <p className="text-[11px] text-stone-500 mt-5 leading-relaxed bg-white p-3 rounded-lg border border-stone-100">
+                      ⚠️ 支付保留金後方能為您鎖定師傅專屬時段。諮詢當日請將尾款 HK$ {orderAmounts.balance.toLocaleString()} 直接支付予師傅。若於 24 小時內取消，保留金恕不退還。
+                    </p>
+                  </div>
+
                 </form>
               )}
             </>
           )}
         </div>
 
+        {/* Footer Actions */}
         {!loadingData && !isSuccess && (
           <div className="p-4 bg-white border-t border-stone-100 shrink-0">
             {step === 1 ? (
@@ -371,14 +433,14 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
               <button 
                 onClick={handleConfirmBooking}
                 disabled={isSubmitting || !clientData.name || !clientData.phone}
-                className={`w-full py-4 flex items-center justify-center gap-2 rounded-xl font-medium transition-all ${
+                className={`w-full py-4 flex items-center justify-center gap-2 rounded-xl font-bold transition-all ${
                   !clientData.name || !clientData.phone 
                   ? 'bg-stone-100 text-stone-400 cursor-not-allowed' 
                   : 'bg-emerald-600 text-white hover:bg-emerald-500 shadow-lg shadow-emerald-600/20 active:scale-95'
                 }`}
               >
                 {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <CreditCard className="w-5 h-5" />}
-                {isSubmitting ? '處理中...' : '確認預約送出'}
+                {isSubmitting ? '處理中...' : `支付預約保留金 HK$ ${orderAmounts.deposit.toLocaleString()}`}
               </button>
             )}
           </div>
