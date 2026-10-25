@@ -4,7 +4,7 @@ import Stripe from 'stripe';
 
 // 初始化 Stripe (它會自動讀取你 .env.local 裡的 STRIPE_SECRET_KEY)
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: '2025-01-27.acacia',
+  apiVersion: '2026-09-30.endive', // 維持最新的 API 版本
 });
 
 export async function POST(request: Request) {
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
 
     // 建立 Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card', 'alipay'], // 允許信用卡與支付寶
+      // 🌟 已經移除 payment_method_types，改由 Stripe 儀表板自動控制
       line_items: [
         {
           price_data: {
