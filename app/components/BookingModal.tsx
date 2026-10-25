@@ -5,6 +5,10 @@ import { X, Calendar, Clock, CreditCard, ArrowLeft, Loader2, CheckCircle2, Chevr
 import { supabase } from '@/lib/supabase';
 
 import { calculateOrderAmounts } from '@/lib/pricing';
+import { loadStripe } from '@stripe/stripe-js';
+
+// 在元件外面初始化 Stripe
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string);
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -124,32 +128,52 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
     return slots;
   }, [selectedDate, schedule, selectedService]);
 
-  const handleConfirmBooking = async (e: React.FormEvent) => {
+ const handleConfirmBooking = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
     try {
-      const { error } = await supabase.from('orders').insert([{
+      // 1. 先將訂單寫入 Supabase，狀態設為 'awaiting_payment' (等待付款)
+      const { data: orderData, error } = await supabase.from('orders').insert([{
         master_id: master.id,
         client_name: clientData.name,
         client_phone: clientData.phone,
         service_name: selectedService?.name,
-        // 🌟 寫入完整的財務拆解資料到資料庫
         total_price: orderAmounts.total,
         deposit_paid: orderAmounts.deposit,
         balance_due: orderAmounts.balance,
         appointment_date: selectedDate?.toISOString().split('T')[0],
         appointment_time: selectedTime,
-        status: 'pending'
-      }]);
+        status: 'awaiting_payment' // 狀態不再是 pending，而是等待付款
+      }]).select().single();
 
       if (error) throw error;
-      setIsSuccess(true);
+
+      // 2. 呼叫我們剛剛建立的後端 API，取得 Stripe 結帳網址
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId: orderData.id,
+          amount: orderAmounts.deposit,
+          serviceName: selectedService?.name,
+          masterName: masterName,
+        }),
+      });
+
+      const session = await response.json();
+
+      if (session.error) throw new Error(session.error);
+
+      // 3. 取得網址成功，瞬間將畫面導向 Stripe 的安全結帳頁面！
+      if (session.url) {
+        window.location.href = session.url;
+      }
+      
     } catch (err) {
-      alert('預約失敗，請檢查網路連線或稍後再試。');
+      alert('準備結帳環境失敗，請檢查網路連線或稍後再試。');
       console.error(err);
-    } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false); // 只有失敗時才解除鎖定狀態，成功的話會直接跳轉
     }
   };
 
