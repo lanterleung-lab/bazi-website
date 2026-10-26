@@ -2,30 +2,41 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-// 💡 初始化 Stripe (使用你修改後的環境變數名稱，並且完全移除 apiVersion)
-const stripe = new Stripe(process.env.STRIPE_S_KEY as string);
-
 export async function POST(request: Request) {
+  console.log('--- 進入 Checkout API ---');
+  
   try {
+    // 💡 初始化 Stripe (使用你修改後的環境變數名稱，並且完全移除 apiVersion)
+    const stripeSecretKey = process.env.STRIPE_S_KEY;
+    console.log('1. 讀取密鑰:', stripeSecretKey ? '成功讀取' : '未讀取到 (undefined)');
+
+    if (!stripeSecretKey) {
+      throw new Error('無法從環境變數讀取 STRIPE_S_KEY');
+    }
+
+    const stripe = new Stripe(stripeSecretKey);
+    console.log('2. Stripe 初始化成功');
+
     const body = await request.json();
+    console.log('3. 收到前端資料:', body);
+    
     const { orderId, amount, serviceName, masterName } = body;
 
     // 💡 防護機制：抓取網址來源，如果抓不到就組裝一個
     const origin = request.headers.get('origin') || 'https://' + request.headers.get('host');
+    console.log('4. 網址來源 origin:', origin);
 
     // 建立 Stripe Checkout Session
+    console.log('5. 準備呼叫 Stripe API...');
     const session = await stripe.checkout.sessions.create({
-      // 🌟 已經移除 payment_method_types，改由 Stripe 儀表板自動控制
       line_items: [
         {
           price_data: {
             currency: 'hkd',
             product_data: {
-              // 💡 修正了多行字串，確保這是一行
-              name: `預約保留金：${masterName} - ${serviceName}`,
+              name: `預約保留金：${masterName || '導師'} - ${serviceName || '諮詢服務'}`,
             },
-            // 💡 防護機制：確保金額絕對是整數
-            unit_amount: Math.round(amount * 100), 
+            unit_amount: Math.round((amount || 100) * 100), 
           },
           quantity: 1,
         },
@@ -36,13 +47,16 @@ export async function POST(request: Request) {
       // 取消付款跳回首頁
       cancel_url: `${origin}/?checkout=canceled`,
       metadata: {
-        orderId: orderId, // 將 Supabase 的訂單 ID 藏在 metadata 裡
+        orderId: String(orderId || 'unknown'), // 將 Supabase 的訂單 ID 藏在 metadata 裡
       }
     });
 
+    console.log('6. Stripe Session 建立成功, URL:', session.url);
     return NextResponse.json({ url: session.url });
+    
   } catch (err: any) {
-    console.error('Stripe Checkout Error:', err);
+    console.error('❌ Checkout API 發生嚴重錯誤:', err.message);
+    // 確保一定回傳 JSON 格式的錯誤，這樣前端 JSON 解析才不會崩潰
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
