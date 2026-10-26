@@ -2,32 +2,20 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
+// 💡 這裡必須使用你在 Vercel 新修改的後端 Stripe Secret Key 名稱
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+  apiVersion: '2025-02-28.acacia' as any, // 確保 Stripe SDK 版本穩定
+});
+
 export async function POST(request: Request) {
-  console.log('--- 進入 Checkout API ---');
-  
   try {
-    // 💡 初始化 Stripe (使用你修改後的環境變數名稱，並且完全移除 apiVersion)
-    const stripeSecretKey = process.env.STRIPE_S_KEY;
-    console.log('1. 讀取密鑰:', stripeSecretKey ? '成功讀取' : '未讀取到 (undefined)');
-
-    if (!stripeSecretKey) {
-      throw new Error('無法從環境變數讀取 STRIPE_S_KEY');
-    }
-
-    const stripe = new Stripe(stripeSecretKey);
-    console.log('2. Stripe 初始化成功');
-
     const body = await request.json();
-    console.log('3. 收到前端資料:', body);
-    
     const { orderId, amount, serviceName, masterName } = body;
 
     // 💡 防護機制：抓取網址來源，如果抓不到就組裝一個
     const origin = request.headers.get('origin') || 'https://' + request.headers.get('host');
-    console.log('4. 網址來源 origin:', origin);
 
     // 建立 Stripe Checkout Session
-    console.log('5. 準備呼叫 Stripe API...');
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
@@ -36,6 +24,7 @@ export async function POST(request: Request) {
             product_data: {
               name: `預約保留金：${masterName || '導師'} - ${serviceName || '諮詢服務'}`,
             },
+            // 💡 防護機制：確保金額絕對是整數
             unit_amount: Math.round((amount || 100) * 100), 
           },
           quantity: 1,
@@ -51,12 +40,9 @@ export async function POST(request: Request) {
       }
     });
 
-    console.log('6. Stripe Session 建立成功, URL:', session.url);
     return NextResponse.json({ url: session.url });
-    
   } catch (err: any) {
-    console.error('❌ Checkout API 發生嚴重錯誤:', err.message);
-    // 確保一定回傳 JSON 格式的錯誤，這樣前端 JSON 解析才不會崩潰
+    console.error('Stripe Checkout Error:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
