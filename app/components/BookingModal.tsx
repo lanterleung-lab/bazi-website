@@ -145,55 +145,35 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
 
   const handleConfirmBooking = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // 🌟 核心修改 3：在按鈕點擊時，確保 Stripe 已經準備好了
-    if (!stripePromise) {
-      alert("結帳模組正在載入中，請稍後再試。");
-      return;
-    }
-
     setIsSubmitting(true);
     
     try {
-      const { data: orderData, error } = await supabase.from('orders').insert([{
-        master_id: master.id,
-        client_name: clientData.name,
-        client_phone: clientData.phone,
-        service_name: selectedService?.name,
-        total_price: orderAmounts.total,
-        deposit_paid: orderAmounts.deposit,
-        balance_due: orderAmounts.balance,
-        appointment_date: selectedDate?.toISOString().split('T')[0],
-        appointment_time: selectedTime,
-        status: 'awaiting_payment' 
-      }]).select().single();
-
-      if (error) throw error;
-
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          orderId: orderData.id,
-          amount: orderAmounts.deposit,
+          masterId: master.id,
+          clientName: clientData.name,
+          clientPhone: clientData.phone,
           serviceName: selectedService?.name,
+          totalPrice: orderAmounts.total,
+          deposit: orderAmounts.deposit,
+          balance: orderAmounts.balance,
+          appointmentDate: selectedDate?.toISOString().split('T')[0],
+          appointmentTime: selectedTime,
           masterName: masterName,
         }),
       });
 
       const session = await response.json();
-
       if (session.error) throw new Error(session.error);
 
       if (session.url) {
         window.location.href = session.url;
       }
-      
     } catch (err: any) {
-      // 顯示我們寫好的錯誤訊息
-      alert('準備結帳失敗原因: ' + (err instanceof Error ? err.message : '未知錯誤'));
-      console.error(err);
-      setIsSubmitting(false); 
+      alert('結帳準備失敗: ' + err.message);
+      setIsSubmitting(false);
     }
   };
 
