@@ -23,14 +23,14 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
   if (!isOpen || !master) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex justify-end bg-stone-900/60 backdrop-blur-sm transition-opacity">
-      {/* 點擊旁邊的黑色半透明背景可以關閉視窗 */}
+    // ✅ 恢復為：背景全螢幕，內容「置中」對齊
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-sm transition-opacity">
+      
       <div className="absolute inset-0 cursor-pointer" onClick={onClose} />
 
-      {/* 側邊滑出的面板 */}
-      <div className="relative w-full max-w-md md:max-w-lg h-full bg-stone-50 shadow-2xl animate-in slide-in-from-right-8 duration-300 flex flex-col overflow-hidden">
+      {/* ✅ 恢復為：置中大圓角卡片 (max-w-2xl, max-h-[85vh], rounded-3xl)，並帶有從中央放大的動畫 (zoom-in-95) */}
+      <div className="relative w-full max-w-2xl max-h-[85vh] bg-stone-50 rounded-3xl shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col overflow-hidden">
         
-        {/* 關閉按鈕 */}
         <button 
           onClick={onClose} 
           className="absolute top-4 right-4 z-50 p-2 bg-black/30 hover:bg-black/50 text-white rounded-full backdrop-blur-md transition-colors"
@@ -40,15 +40,13 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
 
         <div className="flex-1 overflow-y-auto pb-28 scrollbar-hide">
           
-          {/* 💡 修改 1：調整頂部圖片的高度 (h-72 -> h-56) 與顯示方式，避免過度放大 */}
-          <div className="relative h-56 w-full bg-stone-200">
+          {/* ✅ 修復圖片：改回原本的高度 (h-64)，拿掉害人的 object-top，讓它自然置中裁切 */}
+          <div className="relative h-64 w-full bg-white">
             {master.imageUrl ? (
-               // 使用 object-cover 但限定了較矮的容器，如果原圖比例落差大，也可試著改用 object-contain 加底色
-               <img src={master.imageUrl} alt={master.name} className="w-full h-full object-cover object-top" />
+               <img src={master.imageUrl} alt={master.name} className="w-full h-full object-cover object-center" />
             ) : (
                <div className="w-full h-full flex items-center justify-center text-stone-400 font-medium">無照片</div>
             )}
-            {/* 漸層過渡 */}
             <div className="absolute inset-0 bg-gradient-to-t from-stone-50 via-transparent to-transparent" />
             
             <div className="absolute top-4 left-4 z-10">
@@ -60,8 +58,7 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
             </div>
           </div>
 
-          <div className="px-6 md:px-8 -mt-8 relative z-10 space-y-6">
-            {/* 導師標題卡片 */}
+          <div className="px-6 md:px-10 -mt-10 relative z-10 space-y-6">
             <div className="bg-white rounded-3xl p-6 shadow-xl shadow-stone-200/50 border border-stone-100 flex flex-col justify-between gap-3">
               <div>
                 <div className="flex items-center gap-3 mb-1">
@@ -86,7 +83,7 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
 
             <div className="space-y-6 pt-2">
               
-              {/* 💡 修改 2：將「擅長領域」區塊移到最前面 */}
+              {/* ✅ 保留你要求的順序：「擅長領域」在前面 */}
               <section className="space-y-3">
                 <h3 className="text-lg font-bold text-stone-900 flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-emerald-600" /> 擅長領域
@@ -103,7 +100,7 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
                 </div>
               </section>
 
-              {/* 💡 修改 2：將「關於導師」區塊往下移 */}
+              {/* ✅ 保留你要求的順序：「關於導師」在後面 */}
               <section className="space-y-3">
                 <h3 className="text-lg font-bold text-stone-900 flex items-center gap-2">
                   <ScrollText className="w-4 h-4 text-emerald-600" /> 關於導師
@@ -113,7 +110,6 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
                 </p>
               </section>
 
-              {/* 服務項目 */}
               <section className="space-y-3">
                 <h3 className="text-lg font-bold text-stone-900 flex items-center gap-2">
                   <CreditCard className="w-4 h-4 text-emerald-600" /> 服務項目
@@ -140,7 +136,6 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
           </div>
         </div>
 
-        {/* 底部懸浮收銀台 */}
         <div className="absolute bottom-0 w-full bg-white border-t border-stone-200 p-5 z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
           <div className="flex justify-between items-center gap-4">
             <div>
@@ -169,7 +164,6 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
           </div>
         </div>
 
-        {/* 實際處理結帳的 BookingModal */}
         {isBookingModalOpen && (
            <BookingModal 
              isOpen={isBookingModalOpen}
