@@ -23,14 +23,13 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
   if (!isOpen || !master) return null;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 sm:p-6 bg-stone-900/70 backdrop-blur-sm transition-opacity">
+    // 💡 修正 1：將 z-40 提升到 z-[999]，確保它絕對蓋在所有首頁元素（包含 Footer）之上
+    <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 sm:p-6 bg-stone-900/70 backdrop-blur-sm transition-opacity">
       
       <div className="absolute inset-0 cursor-pointer" onClick={onClose} />
 
-      {/* 極簡白底彈出視窗 */}
       <div className="relative w-full max-w-2xl max-h-[90vh] bg-white rounded-3xl shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col overflow-hidden border border-stone-100">
         
-        {/* 懸浮關閉按鈕 */}
         <button 
           onClick={onClose} 
           className="absolute top-4 right-4 z-50 p-2 bg-white/80 hover:bg-white text-stone-600 hover:text-stone-900 rounded-full backdrop-blur-md transition-colors shadow-sm border border-stone-200"
@@ -38,9 +37,9 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
           <X className="w-5 h-5" />
         </button>
 
-        <div className="flex-1 overflow-y-auto pb-32 scrollbar-hide p-6 sm:p-8">
+        {/* 💡 修正 2：確保這個區域可以順暢滾動，重點是 pb-32，這會為底部的收銀台留出足夠的空間，讓最後一項服務也能被看到 */}
+        <div className="flex-1 overflow-y-auto pb-32 p-6 sm:p-8">
           
-          {/* ✅ 極簡圖片區塊：不再做滿版，而是作為內文的一部分 */}
           <div className="flex flex-col sm:flex-row gap-6 items-start mb-8">
             <div className="relative shrink-0 w-32 h-32 sm:w-40 sm:h-40">
               <div className="w-full h-full rounded-2xl overflow-hidden bg-stone-100 border border-stone-200">
@@ -63,7 +62,6 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
               </div>
             </div>
 
-            {/* 標題與簡介 */}
             <div className="flex-1 pt-2">
               <div className="flex items-center gap-3 mb-2">
                 <h1 className="text-3xl font-bold text-stone-900">{master.name}</h1>
@@ -87,7 +85,6 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
 
           <div className="space-y-10 border-t border-stone-100 pt-8">
             
-            {/* 擅長領域 */}
             <section className="space-y-4">
               <h3 className="text-xl font-bold text-stone-900 flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-stone-400" /> 擅長領域
@@ -104,7 +101,6 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
               </div>
             </section>
 
-            {/* 關於導師 */}
             <section className="space-y-4">
               <h3 className="text-xl font-bold text-stone-900 flex items-center gap-2">
                 <ScrollText className="w-5 h-5 text-stone-400" /> 關於導師
@@ -114,7 +110,6 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
               </div>
             </section>
 
-            {/* 服務項目 */}
             <section className="space-y-4">
               <h3 className="text-xl font-bold text-stone-900 flex items-center gap-2">
                 <CreditCard className="w-5 h-5 text-stone-400" /> 服務項目
@@ -140,8 +135,8 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
           </div>
         </div>
 
-        {/* 底部懸浮收銀台 */}
-        <div className="absolute bottom-0 w-full bg-white/90 backdrop-blur-md border-t border-stone-200 p-5 sm:px-8 z-50">
+        {/* 💡 修正 3：讓收銀台永遠固定在 Modal 內部最底端，不會因為滾動而移位 */}
+        <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-stone-200 p-5 sm:px-8 z-20">
           <div className="flex justify-between items-center gap-6">
             <div>
               <p className="text-xs text-stone-500 font-medium mb-0.5">線上諮詢起步價</p>
