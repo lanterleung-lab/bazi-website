@@ -23,7 +23,7 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
   if (!isOpen || !master) return null;
 
   return (
-    // 💡 修正 1：將 z-40 提升到 z-[999]，確保它絕對蓋在所有首頁元素（包含 Footer）之上
+    // 💡 修正 1：將 z-40 提升至 z-[999]，確保 Modal 覆蓋首頁所有元素（包含底部黑色區塊）
     <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 sm:p-6 bg-stone-900/70 backdrop-blur-sm transition-opacity">
       
       <div className="absolute inset-0 cursor-pointer" onClick={onClose} />
@@ -37,8 +37,8 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
           <X className="w-5 h-5" />
         </button>
 
-        {/* 💡 修正 2：確保這個區域可以順暢滾動，重點是 pb-32，這會為底部的收銀台留出足夠的空間，讓最後一項服務也能被看到 */}
-        <div className="flex-1 overflow-y-auto pb-32 p-6 sm:p-8">
+        {/* 💡 修正 2：增加 pb-40 (原本是 pb-32)，確保滾動到底部時，內容不會被下方的收銀台遮住 */}
+        <div className="flex-1 overflow-y-auto pb-40 scrollbar-hide p-6 sm:p-8">
           
           <div className="flex flex-col sm:flex-row gap-6 items-start mb-8">
             <div className="relative shrink-0 w-32 h-32 sm:w-40 sm:h-40">
@@ -135,7 +135,7 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
           </div>
         </div>
 
-        {/* 💡 修正 3：讓收銀台永遠固定在 Modal 內部最底端，不會因為滾動而移位 */}
+        {/* 底部懸浮收銀台 */}
         <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-stone-200 p-5 sm:px-8 z-20">
           <div className="flex justify-between items-center gap-6">
             <div>
