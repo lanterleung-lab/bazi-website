@@ -2,10 +2,8 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-// 💡 這裡必須使用你在 Vercel 新修改的後端 Stripe Secret Key 名稱
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: '2025-02-28.acacia' as any, // 確保 Stripe SDK 版本穩定
-});
+// 新的寫法：拔掉 apiVersion，讓套件自己決定
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 export async function POST(request: Request) {
   try {
