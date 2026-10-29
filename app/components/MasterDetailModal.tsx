@@ -20,15 +20,28 @@ interface MasterDetailModalProps {
 export default function MasterDetailModal({ isOpen, onClose, master }: MasterDetailModalProps) {
   const [isBookingModalOpen, setIsBookingModalOpen] = React.useState(false);
 
+  // 💡 關鍵修正 1：利用 useEffect 控制 Body 的捲動，避免背景跟著滾，這也有助於解決 z-index 穿透的問題
+  React.useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   if (!isOpen || !master) return null;
 
   return (
-    // 💡 修正 1：將 z-40 提升至 z-[999]，確保 Modal 覆蓋首頁所有元素（包含底部黑色區塊）
-    <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 sm:p-6 bg-stone-900/70 backdrop-blur-sm transition-opacity">
+    // 💡 關鍵修正 2：確保這裡的 fixed 和 z-index 是作用在最外層 (Viewport)
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-stone-900/70 backdrop-blur-sm transition-opacity" style={{ isolation: 'isolate' }}>
       
       <div className="absolute inset-0 cursor-pointer" onClick={onClose} />
 
-      <div className="relative w-full max-w-2xl max-h-[90vh] bg-white rounded-3xl shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col overflow-hidden border border-stone-100">
+      {/* 💡 關鍵修正 3：將主容器改為 flex flex-col，拿掉 max-h，讓它自然長高但最高不超過視窗 */}
+      <div className="relative w-full max-w-2xl h-full max-h-[85vh] sm:max-h-[90vh] bg-white rounded-3xl shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col overflow-hidden border border-stone-100">
         
         <button 
           onClick={onClose} 
@@ -37,8 +50,8 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
           <X className="w-5 h-5" />
         </button>
 
-        {/* 💡 修正 2：增加 pb-40 (原本是 pb-32)，確保滾動到底部時，內容不會被下方的收銀台遮住 */}
-        <div className="flex-1 overflow-y-auto pb-40 scrollbar-hide p-6 sm:p-8">
+        {/* 💡 關鍵修正 4：這裡使用 flex-1 和 overflow-y-auto，拿掉多餘的 pb-40。這樣內容區會佔滿「扣除底部收銀台後」的剩餘空間，自然形成內部捲軸。 */}
+        <div className="flex-1 overflow-y-auto scrollbar-hide p-6 sm:p-8">
           
           <div className="flex flex-col sm:flex-row gap-6 items-start mb-8">
             <div className="relative shrink-0 w-32 h-32 sm:w-40 sm:h-40">
@@ -114,7 +127,7 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
               <h3 className="text-xl font-bold text-stone-900 flex items-center gap-2">
                 <CreditCard className="w-5 h-5 text-stone-400" /> 服務項目
               </h3>
-              <div className="grid gap-3">
+              <div className="grid gap-3 pb-4">
                 {master.services && master.services.length > 0 ? (
                   master.services.map((service: ServiceItem) => (
                     <div key={service.id} className="flex justify-between items-center p-5 bg-white border border-stone-200 rounded-2xl shadow-sm hover:border-emerald-300 hover:shadow-md transition-all">
@@ -135,8 +148,8 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
           </div>
         </div>
 
-        {/* 底部懸浮收銀台 */}
-        <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-stone-200 p-5 sm:px-8 z-20">
+        {/* 💡 關鍵修正 5：將絕對定位 (absolute bottom-0) 改為靜態佈局的收縮區塊 (shrink-0)。它會自動排在滾動區域的正下方。 */}
+        <div className="shrink-0 bg-white/95 backdrop-blur-md border-t border-stone-200 p-5 sm:px-8 z-20">
           <div className="flex justify-between items-center gap-6">
             <div>
               <p className="text-xs text-stone-500 font-medium mb-0.5">線上諮詢起步價</p>
