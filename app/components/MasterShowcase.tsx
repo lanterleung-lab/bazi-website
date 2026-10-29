@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Star, Sparkles, X } from 'lucide-react';
-import { supabase } from '../../lib/supabase'; 
-import BookingModal from './BookingModal';
+import { supabase } from '@/lib/supabase'; 
 
 type DomainType = 'ALL' | 'BAZI' | 'ZIWEI' | 'TAROT' | 'CHANNELING' | 'COUNSELING';
 
@@ -22,7 +21,6 @@ interface Master {
   schedule?: any;
 }
 
-// 🌟 讓首頁可以傳遞屬性進來的介面
 interface MasterShowcaseProps {
   externalFilter?: string;
   onClearFilter?: () => void;
@@ -33,8 +31,7 @@ export default function MasterShowcase({ externalFilter = 'ALL', onClearFilter }
   const [masters, setMasters] = useState<Master[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [selectedMaster, setSelectedMaster] = useState<Master | null>(null);
-  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  // 💡 這裡乾淨了，沒有 BookingModal 的東西
 
   useEffect(() => {
     const fetchMasters = async () => {
@@ -76,7 +73,6 @@ export default function MasterShowcase({ externalFilter = 'ALL', onClearFilter }
     { label: '心理諮詢', value: 'COUNSELING' },
   ];
 
-  // 🧠 智能關鍵字引擎
   const getSearchKeywords = (filter: string) => {
     switch(filter) {
       case '感情': return ['感情', '姻緣', '戀愛', '桃花', '愛情', '婚姻', '復合'];
@@ -103,10 +99,7 @@ export default function MasterShowcase({ externalFilter = 'ALL', onClearFilter }
     return matchDomain && matchTopic;
   });
 
-  const handleOpenBooking = (master: Master) => {
-    setSelectedMaster(master);
-    setIsBookingModalOpen(true);
-  };
+  // 💡 這裡乾淨了，沒有 handleOpenBooking 函數
 
   return (
     <section className="min-h-screen bg-stone-50 py-20 px-6 sm:px-12 lg:px-24 font-sans relative z-10">
@@ -153,9 +146,11 @@ export default function MasterShowcase({ externalFilter = 'ALL', onClearFilter }
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {filteredMasters.map((master) => (
-              <div 
+              
+              /* 💡 核心修改在這裡：將 div 改成 a 標籤，並加入 href 跳轉到大師詳情頁 */
+              <a 
+                href={`/master/${master.id}`}
                 key={master.id}
-                onClick={() => handleOpenBooking(master)}
                 className="group block bg-white rounded-2xl overflow-hidden border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 cursor-pointer"
               >
                 <div className="relative h-72 w-full overflow-hidden bg-stone-200">
@@ -194,7 +189,7 @@ export default function MasterShowcase({ externalFilter = 'ALL', onClearFilter }
                     查看詳情與預約
                   </div>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
           
@@ -209,10 +204,8 @@ export default function MasterShowcase({ externalFilter = 'ALL', onClearFilter }
           )}
         </>
       )}
-
-      {isBookingModalOpen && selectedMaster && (
-        <BookingModal isOpen={isBookingModalOpen} onClose={() => setIsBookingModalOpen(false)} master={selectedMaster} />
-      )}
+      
+      {/* 💡 這裡乾淨了，沒有 <BookingModal /> */}
     </section>
   );
 }
