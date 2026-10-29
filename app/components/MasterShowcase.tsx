@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Star, Sparkles, X } from 'lucide-react';
 import { supabase } from '@/lib/supabase'; 
+import MasterDetailModal from './MasterDetailModal'; // 🌟 引入新的詳情視窗
 
 type DomainType = 'ALL' | 'BAZI' | 'ZIWEI' | 'TAROT' | 'CHANNELING' | 'COUNSELING';
 
@@ -31,7 +32,9 @@ export default function MasterShowcase({ externalFilter = 'ALL', onClearFilter }
   const [masters, setMasters] = useState<Master[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 💡 這裡乾淨了，沒有 BookingModal 的東西
+  // 🌟 加回控制詳情視窗的狀態
+  const [selectedMaster, setSelectedMaster] = useState<Master | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false); 
 
   useEffect(() => {
     const fetchMasters = async () => {
@@ -99,7 +102,11 @@ export default function MasterShowcase({ externalFilter = 'ALL', onClearFilter }
     return matchDomain && matchTopic;
   });
 
-  // 💡 這裡乾淨了，沒有 handleOpenBooking 函數
+  // 🌟 新增點擊卡片時打開詳情視窗的函數
+  const handleOpenDetail = (master: Master) => {
+    setSelectedMaster(master);
+    setIsDetailModalOpen(true);
+  };
 
   return (
     <section className="min-h-screen bg-stone-50 py-20 px-6 sm:px-12 lg:px-24 font-sans relative z-10">
@@ -147,9 +154,9 @@ export default function MasterShowcase({ externalFilter = 'ALL', onClearFilter }
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             {filteredMasters.map((master) => (
               
-              /* 💡 核心修改在這裡：將 div 改成 a 標籤，並加入 href 跳轉到大師詳情頁 */
-              <a 
-                href={`/master/${master.id}`}
+              /* 🌟 把 a 改回 div，並綁定 onClick 事件來打開詳情視窗 */
+              <div 
+                onClick={() => handleOpenDetail(master)}
                 key={master.id}
                 className="group block bg-white rounded-2xl overflow-hidden border border-stone-100 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1 cursor-pointer"
               >
@@ -189,7 +196,7 @@ export default function MasterShowcase({ externalFilter = 'ALL', onClearFilter }
                     查看詳情與預約
                   </div>
                 </div>
-              </a>
+              </div>
             ))}
           </div>
           
@@ -205,7 +212,12 @@ export default function MasterShowcase({ externalFilter = 'ALL', onClearFilter }
         </>
       )}
       
-      {/* 💡 這裡乾淨了，沒有 <BookingModal /> */}
+      {/* 🌟 掛載新的詳情視窗 */}
+      <MasterDetailModal 
+        isOpen={isDetailModalOpen} 
+        onClose={() => setIsDetailModalOpen(false)} 
+        master={selectedMaster} 
+      />
     </section>
   );
 }
