@@ -134,7 +134,7 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
     
     try {
       // 1. 先將訂單寫入 Supabase，狀態設為 'awaiting_payment' (等待付款)
-      const { data: orderData, error } = await supabase.from('orders').insert([{
+      const { data: orderData, error: dbError } = await supabase.from('orders').insert([{
         master_id: master.id,
         client_name: clientData.name,
         client_phone: clientData.phone,
@@ -144,10 +144,14 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
         balance_due: orderAmounts.balance,
         appointment_date: selectedDate?.toISOString().split('T')[0],
         appointment_time: selectedTime,
-        status: 'awaiting_payment' // 狀態不再是 pending，而是等待付款
+        status: 'awaiting_payment'
       }]).select().single();
 
-      if (error) throw error;
+      // 檢查 Supabase 寫入是否報錯
+      if (dbError) {
+        console.error('Supabase 寫入錯誤細節:', dbError);
+        throw new Error(`資料庫寫入失敗: ${dbError.message}`);
+      }
 
       // 2. 呼叫我們剛剛建立的後端 API，取得 Stripe 結帳網址
       const response = await fetch('/api/checkout', {
@@ -155,7 +159,7 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           orderId: orderData.id,
-          amount: orderAmounts.deposit,
+          deposit: orderAmounts.deposit, // 注意：後端接收的是 deposit，這裡也傳 deposit
           serviceName: selectedService?.name,
           masterName: masterName,
         }),
@@ -163,17 +167,22 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
 
       const session = await response.json();
 
-      if (session.error) throw new Error(session.error);
+      // 檢查後端是否回傳錯誤
+      if (!response.ok || session.error) {
+        console.error('Stripe Checkout API 錯誤細節:', session.error);
+        throw new Error(session.error || '無法建立結帳畫面');
+      }
 
       // 3. 取得網址成功，瞬間將畫面導向 Stripe 的安全結帳頁面！
       if (session.url) {
         window.location.href = session.url;
       }
       
-    } catch (err) {
-      alert('準備結帳環境失敗，請檢查網路連線或稍後再試。');
-      console.error(err);
-      setIsSubmitting(false); // 只有失敗時才解除鎖定狀態，成功的話會直接跳轉
+    } catch (err: any) {
+      console.error('預約流程發生錯誤:', err);
+      alert('準備結帳環境失敗，請檢查網路連線或稍後再試。\n' + err.message);
+    } finally {
+      setIsSubmitting(false); // 無論成功失敗，都要解除鎖定狀態 (因為如果是成功，馬上就會跳轉了)
     }
   };
 
