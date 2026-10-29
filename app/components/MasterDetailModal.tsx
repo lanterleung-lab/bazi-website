@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom'; // 💡 引入 createPortal
 import { X, Star, ShieldCheck, ScrollText, Sparkles, Clock, CreditCard, Power } from 'lucide-react';
 import BookingModal from './BookingModal';
 
@@ -18,29 +19,35 @@ interface MasterDetailModalProps {
 }
 
 export default function MasterDetailModal({ isOpen, onClose, master }: MasterDetailModalProps) {
-  const [isBookingModalOpen, setIsBookingModalOpen] = React.useState(false);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  
+  // 💡 確保只有在客戶端 (瀏覽器) 執行時才掛載 Portal，避免 Next.js SSR 報錯
+  const [mounted, setMounted] = useState(false);
 
-  // 💡 關鍵修正 1：利用 useEffect 控制 Body 的捲動，避免背景跟著滾，這也有助於解決 z-index 穿透的問題
-  React.useEffect(() => {
+  useEffect(() => {
+    setMounted(true);
+    
+    // 💡 打開 Modal 時，禁止背後的首頁滾動
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
+    
     return () => {
       document.body.style.overflow = 'unset';
     };
   }, [isOpen]);
 
-  if (!isOpen || !master) return null;
+  if (!isOpen || !master || !mounted) return null;
 
-  return (
-    // 💡 關鍵修正 2：確保這裡的 fixed 和 z-index 是作用在最外層 (Viewport)
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 bg-stone-900/70 backdrop-blur-sm transition-opacity" style={{ isolation: 'isolate' }}>
+  // 💡 關鍵修正：將整個 Modal 的內容定義出來
+  const modalContent = (
+    // 💡 因為我們用了 Portal，所以這裡的 z-[99999] 絕對能生效，不會被首頁干擾
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 bg-stone-900/70 backdrop-blur-sm transition-opacity" style={{ isolation: 'isolate' }}>
       
       <div className="absolute inset-0 cursor-pointer" onClick={onClose} />
 
-      {/* 💡 關鍵修正 3：將主容器改為 flex flex-col，拿掉 max-h，讓它自然長高但最高不超過視窗 */}
       <div className="relative w-full max-w-2xl h-full max-h-[85vh] sm:max-h-[90vh] bg-white rounded-3xl shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col overflow-hidden border border-stone-100">
         
         <button 
@@ -50,7 +57,6 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
           <X className="w-5 h-5" />
         </button>
 
-        {/* 💡 關鍵修正 4：這裡使用 flex-1 和 overflow-y-auto，拿掉多餘的 pb-40。這樣內容區會佔滿「扣除底部收銀台後」的剩餘空間，自然形成內部捲軸。 */}
         <div className="flex-1 overflow-y-auto scrollbar-hide p-6 sm:p-8">
           
           <div className="flex flex-col sm:flex-row gap-6 items-start mb-8">
@@ -148,7 +154,6 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
           </div>
         </div>
 
-        {/* 💡 關鍵修正 5：將絕對定位 (absolute bottom-0) 改為靜態佈局的收縮區塊 (shrink-0)。它會自動排在滾動區域的正下方。 */}
         <div className="shrink-0 bg-white/95 backdrop-blur-md border-t border-stone-200 p-5 sm:px-8 z-20">
           <div className="flex justify-between items-center gap-6">
             <div>
@@ -187,4 +192,7 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
       </div>
     </div>
   );
+
+  // 💡 透過 createPortal 將內容掛載到 document.body
+  return createPortal(modalContent, document.body);
 }
