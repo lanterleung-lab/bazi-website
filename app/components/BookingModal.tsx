@@ -77,23 +77,44 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
     }
   }, [isOpen]);
 
+  // 💡 修正 1：可用日期，從今天 (i = 0) 開始，並判斷今天下班沒
   const availableDates = useMemo(() => {
-    if (!schedule) return [];
+    if (!schedule || !selectedService) return []; 
     const dates = [];
     const today = new Date();
+    const currentMins = today.getHours() * 60 + today.getMinutes();
     
-    for (let i = 1; i <= 30; i++) {
+    // 💡 從 i = 0 (今天) 開始算起
+    for (let i = 0; i <= 30; i++) {
       const d = new Date(today);
       d.setDate(today.getDate() + i);
       const dayName = DAY_MAP[d.getDay()];
+      const daySchedule = schedule[dayName];
       
-      if (schedule[dayName] && schedule[dayName].isActive) {
-        dates.push(d);
+      if (daySchedule && daySchedule.isActive) {
+        // 如果是今天，必須檢查是否還有「大於當前時間 + 服務時長」的空檔
+        if (i === 0) {
+          let hasFutureSlotToday = false;
+          daySchedule.slots.forEach((slot: TimeSlot) => {
+            const endMins = parseInt(slot.end.split(':')[0]) * 60 + parseInt(slot.end.split(':')[1]);
+            // 只要時段的結束時間 >= (現在時間 + 服務時間)，今天就能被選
+            if (endMins >= currentMins + selectedService.duration) {
+              hasFutureSlotToday = true;
+            }
+          });
+          if (hasFutureSlotToday) {
+            dates.push(d);
+          }
+        } else {
+          // 明天以後的日子，只要 isActive 就直接加入
+          dates.push(d);
+        }
       }
     }
     return dates;
-  }, [schedule]);
+  }, [schedule, selectedService]);
 
+  // 💡 修正 2：可用時段，如果是今天，過濾掉過去的時間
   const availableTimeSlots = useMemo(() => {
     if (!selectedDate || !schedule || !selectedService) return [];
     
@@ -103,6 +124,13 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
 
     const slots: string[] = [];
     const durationMins = selectedService.duration;
+    
+    const now = new Date();
+    // 檢查選中的日子是否就是今天
+    const isToday = selectedDate.getDate() === now.getDate() && 
+                    selectedDate.getMonth() === now.getMonth() && 
+                    selectedDate.getFullYear() === now.getFullYear();
+    const currentMins = now.getHours() * 60 + now.getMinutes();
 
     const timeToMins = (time: string) => {
       const [h, m] = time.split(':').map(Number);
@@ -116,12 +144,20 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
     };
 
     daySchedule.slots.forEach(slot => {
-      let currentMins = timeToMins(slot.start);
-      const endMins = timeToMins(slot.end);
+      let slotStartMins = timeToMins(slot.start);
+      const slotEndMins = timeToMins(slot.end);
 
-      while (currentMins + durationMins <= endMins) {
-        slots.push(minsToTime(currentMins));
-        currentMins += durationMins; 
+      // 如果選的是今天，且時段起點比現在時間早，就把起點推延到現在時間的 30 分鐘後 (緩衝時間)
+      if (isToday && slotStartMins < currentMins) {
+        slotStartMins = currentMins + 30; 
+      }
+
+      let currentIterMins = slotStartMins;
+
+      // 只要加上服務時長還在結束時間內，就切出一個時段
+      while (currentIterMins + durationMins <= slotEndMins) {
+        slots.push(minsToTime(currentIterMins));
+        currentIterMins += durationMins; 
       }
     });
 
