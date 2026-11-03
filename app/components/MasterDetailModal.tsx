@@ -23,6 +23,8 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
   
   // 💡 確保只有在客戶端 (瀏覽器) 執行時才掛載 Portal，避免 Next.js SSR 報錯
   const [mounted, setMounted] = useState(false);
+  // 💡 強制解析布林值，避免字串 'true' 造成的判斷失效
+  const isAccepting = master?.is_accepting_orders === true || master?.is_accepting_orders === 'true';
 
   useEffect(() => {
     setMounted(true);
@@ -164,16 +166,17 @@ export default function MasterDetailModal({ isOpen, onClose, master }: MasterDet
               </p>
             </div>
             
+            {/* 👇 將 master.is_accepting_orders 替換為 isAccepting 👇 */}
             <button 
-              disabled={!master.is_accepting_orders}
+              disabled={!isAccepting}
               onClick={() => setIsBookingModalOpen(true)}
               className={`flex-1 py-4 rounded-xl transition-all flex items-center justify-center gap-2 text-base font-bold ${
-                master.is_accepting_orders 
+                isAccepting 
                   ? 'bg-stone-900 text-white hover:bg-stone-800 shadow-xl shadow-stone-900/10 active:scale-95' 
                   : 'bg-stone-100 text-stone-400 cursor-not-allowed shadow-none'
               }`}
             >
-              {master.is_accepting_orders ? (
+              {isAccepting ? (
                 '查看檔期並預約'
               ) : (
                 '大師休息中'
