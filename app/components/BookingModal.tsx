@@ -33,6 +33,10 @@ interface DaySchedule {
   isActive: boolean;
   slots: TimeSlot[];
 }
+interface BlockedSlot {
+  date: string; 
+  slots: string[]; 
+}
 
 type WeeklySchedule = Record<string, DaySchedule>;
 
@@ -63,6 +67,7 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
   const orderAmounts = useMemo(() => {
     return calculateOrderAmounts(selectedService?.price || 0);
   }, [selectedService]);
+  const blockedSlots: BlockedSlot[] = master?.blocked_slots || []; // 👈 新增這行
 
   useEffect(() => {
     if (!isOpen) {
@@ -122,11 +127,18 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
     const daySchedule = schedule[dayName];
     if (!daySchedule || !daySchedule.isActive) return [];
 
+    // 💡 1. 取得選擇日期的 YYYY-MM-DD 格式，用來比對請假紀錄
+    const tzOffset = selectedDate.getTimezoneOffset() * 60000;
+    const localDateStr = new Date(selectedDate.getTime() - tzOffset).toISOString().split('T')[0];
+
+    // 💡 2. 尋找這一天是否有請假/封鎖的時段
+    const blockedToday = blockedSlots.find(b => b.date === localDateStr);
+    const blockedTimes = blockedToday ? blockedToday.slots : [];
+
     const slots: string[] = [];
     const durationMins = selectedService.duration;
     
     const now = new Date();
-    // 檢查選中的日子是否就是今天
     const isToday = selectedDate.getDate() === now.getDate() && 
                     selectedDate.getMonth() === now.getMonth() && 
                     selectedDate.getFullYear() === now.getFullYear();
@@ -147,22 +159,26 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
       let slotStartMins = timeToMins(slot.start);
       const slotEndMins = timeToMins(slot.end);
 
-      // 如果選的是今天，且時段起點比現在時間早，就把起點推延到現在時間的 30 分鐘後 (緩衝時間)
       if (isToday && slotStartMins < currentMins) {
         slotStartMins = currentMins + 30; 
       }
 
       let currentIterMins = slotStartMins;
 
-      // 只要加上服務時長還在結束時間內，就切出一個時段
       while (currentIterMins + durationMins <= slotEndMins) {
-        slots.push(minsToTime(currentIterMins));
+        const timeString = minsToTime(currentIterMins);
+        
+        // 💡 3. 關鍵判斷：如果這個時間沒有在大師的封鎖名單內，才加入可預約清單
+        if (!blockedTimes.includes(timeString)) {
+          slots.push(timeString);
+        }
+        
         currentIterMins += durationMins; 
       }
     });
 
     return slots;
-  }, [selectedDate, schedule, selectedService]);
+  }, [selectedDate, schedule, selectedService, blockedSlots]); // 記得把 blockedSlots 加入依賴
 
  const handleConfirmBooking = async (e: React.FormEvent) => {
     e.preventDefault();

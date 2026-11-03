@@ -21,6 +21,7 @@ interface Master {
   services?: any[];
   schedule?: any;
   is_accepting_orders?: boolean; // 👈 加上這行
+  blocked_slots?: any[]; // 👈 新增這行
 }
 
 interface MasterShowcaseProps {
@@ -57,6 +58,7 @@ export default function MasterShowcase({ externalFilter = 'ALL', onClearFilter }
             services: dbMaster.services,
             schedule: dbMaster.schedule,
             is_accepting_orders: dbMaster.is_accepting_orders,
+            blocked_slots: Array.isArray(dbMaster.blocked_slots) ? dbMaster.blocked_slots : [], // 👈 新增這行，確保傳入陣列
           }));
           setMasters(formattedData);
         }

@@ -43,6 +43,11 @@ async function getCroppedImg(imageSrc: string, pixelCrop: any): Promise<Blob | n
 interface ServiceItem { id: string; name: string; duration: number; price: number; serviceType: 'online' | 'offline' | 'both'; }
 interface TimeSlot { start: string; end: string; }
 interface DaySchedule { isActive: boolean; slots: TimeSlot[]; }
+// 在原本的 interface 附近加上這兩個定義
+interface BlockedSlot {
+  date: string; // 格式: YYYY-MM-DD
+  slots: string[]; // 格式: ["14:00", "14:30", "15:00"]
+}
 type WeeklySchedule = Record<string, DaySchedule>;
 
 const defaultSchedule: WeeklySchedule = {
@@ -88,6 +93,7 @@ export default function MasterDashboard() {
   const [masterData, setMasterData] = useState({
     id: '', name: '', lineage: '', bio: '', price: 0, image_url: '',
     tags: [] as string[], services: [] as ServiceItem[], is_accepting_orders: true, schedule: defaultSchedule as WeeklySchedule, 
+    blocked_slots: [] as BlockedSlot[], // 👈 新增這行
   });
 
   useEffect(() => {
@@ -107,7 +113,9 @@ export default function MasterDashboard() {
             ...masterProfile,
             bio: masterProfile.bio || '', 
             tags: masterProfile.tags || [], services: masterProfile.services || [],
-            is_accepting_orders: masterProfile.is_accepting_orders ?? true, schedule: dbSchedule
+            is_accepting_orders: masterProfile.is_accepting_orders ?? true, schedule: dbSchedule,
+            blocked_slots: Array.isArray(masterProfile.blocked_slots) ? masterProfile.blocked_slots : []
+         
           });
 
           const { data: ordersData, error: ordersError } = await supabase
@@ -268,7 +276,8 @@ export default function MasterDashboard() {
         name: masterData.name, lineage: masterData.lineage, bio: masterData.bio,
         price: masterData.services.length > 0 ? Math.min(...masterData.services.map(s => s.price)) : masterData.price, 
         image_url: masterData.image_url, tags: masterData.tags, services: masterData.services,
-        is_accepting_orders: masterData.is_accepting_orders, schedule: masterData.schedule 
+        is_accepting_orders: masterData.is_accepting_orders, schedule: masterData.schedule, 
+        blocked_slots: masterData.blocked_slots // 👈 補上這行
       }).eq('id', masterData.id);
       if (error) throw error;
       alert('🎉 變更已成功實時發布！');
@@ -288,6 +297,40 @@ export default function MasterDashboard() {
     const newSlots = [...masterData.schedule[dayKey].slots];
     newSlots[slotIndex][field] = value;
     setMasterData({ ...masterData, schedule: { ...masterData.schedule, [dayKey]: { ...masterData.schedule[dayKey], slots: newSlots } } });
+  };
+  // --- 請假管理邏輯 ---
+  const [newBlockDate, setNewBlockDate] = useState('');
+  const [newBlockTime, setNewBlockTime] = useState('');
+
+  const handleAddBlockedSlot = () => {
+    if (!newBlockDate || !newBlockTime) return;
+    
+    const existingIndex = masterData.blocked_slots.findIndex(b => b.date === newBlockDate);
+    let updatedBlocks = [...masterData.blocked_slots];
+
+    if (existingIndex >= 0) {
+      if (!updatedBlocks[existingIndex].slots.includes(newBlockTime)) {
+        updatedBlocks[existingIndex].slots.push(newBlockTime);
+        updatedBlocks[existingIndex].slots.sort(); // 幫他排序一下
+      }
+    } else {
+      updatedBlocks.push({ date: newBlockDate, slots: [newBlockTime] });
+      updatedBlocks.sort((a, b) => a.date.localeCompare(b.date));
+    }
+
+    setMasterData({ ...masterData, blocked_slots: updatedBlocks });
+    setNewBlockTime(''); 
+  };
+
+  const handleRemoveBlockedSlot = (date: string, time: string) => {
+    let updatedBlocks = masterData.blocked_slots.map(block => {
+      if (block.date === date) {
+        return { ...block, slots: block.slots.filter(t => t !== time) };
+      }
+      return block;
+    }).filter(block => block.slots.length > 0); 
+
+    setMasterData({ ...masterData, blocked_slots: updatedBlocks });
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center animate-pulse text-stone-500">正在進入大師專屬工作坊...</div>;
@@ -672,6 +715,78 @@ export default function MasterDashboard() {
                       );
                     })}
                   </div>
+                  {/* --- 🌟 特殊請假設定區塊 (從這裡開始複製) 🌟 --- */}
+                  <div className="pt-8 mt-8 border-t border-stone-100">
+                    <div className="border-b pb-2 mb-4">
+                      <h2 className="text-lg font-semibold text-stone-800 flex items-center gap-2">
+                        🛑 特定日期請假 / 封鎖時段
+                      </h2>
+                      <p className="text-sm text-stone-500 mt-1">臨時有事？在這裡選定日期與時間，該時段前台將無法預約。</p>
+                    </div>
+
+                    <div className="flex flex-col md:flex-row gap-3 mb-6 p-4 bg-stone-50 border border-stone-200 rounded-xl">
+                      <div className="flex-1 space-y-1">
+                        <label className="text-xs font-medium text-stone-500">選擇日期</label>
+                        <input 
+                          type="date" 
+                          value={newBlockDate} 
+                          onChange={(e) => setNewBlockDate(e.target.value)}
+                          className="w-full px-3 py-2 bg-white border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20"
+                        />
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <label className="text-xs font-medium text-stone-500">選擇要封鎖的時間</label>
+                        <input 
+                          type="time" 
+                          value={newBlockTime} 
+                          onChange={(e) => setNewBlockTime(e.target.value)}
+                          className="w-full px-3 py-2 bg-white border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20"
+                        />
+                      </div>
+                      <div className="flex items-end">
+                        <button 
+                          type="button" 
+                          onClick={handleAddBlockedSlot}
+                          disabled={!newBlockDate || !newBlockTime}
+                          className="w-full md:w-auto px-4 py-2 bg-stone-800 text-white rounded-lg text-sm font-medium hover:bg-stone-700 disabled:bg-stone-300 disabled:cursor-not-allowed transition-colors"
+                        >
+                          新增封鎖
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* 已封鎖清單 */}
+                    <div className="space-y-3">
+                      {masterData.blocked_slots.length === 0 ? (
+                        <div className="text-center py-6 text-sm text-stone-400 border border-dashed border-stone-200 rounded-xl">
+                          目前沒有設定任何特殊請假時段。
+                        </div>
+                      ) : (
+                        masterData.blocked_slots.map((block, i) => (
+                          <div key={i} className="flex flex-col sm:flex-row sm:items-center gap-4 p-4 border border-rose-100 bg-rose-50/50 rounded-xl">
+                            <div className="font-bold text-stone-800 min-w-[100px]">
+                              {block.date}
+                            </div>
+                            <div className="flex flex-wrap gap-2 flex-1">
+                              {block.slots.map((time, j) => (
+                                <span key={j} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white border border-rose-200 text-rose-700 rounded-md text-xs font-medium shadow-sm">
+                                  {time}
+                                  <button 
+                                    type="button" 
+                                    onClick={() => handleRemoveBlockedSlot(block.date, time)}
+                                    className="hover:bg-rose-100 rounded-full p-0.5 transition-colors"
+                                  >
+                                    <X className="w-3 h-3" />
+                                  </button>
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                  {/* --- 🌟 特殊請假設定區塊 (到這裡結束複製) 🌟 --- */}
                 </div>
               )}
 
