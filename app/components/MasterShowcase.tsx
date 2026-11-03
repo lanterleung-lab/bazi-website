@@ -20,6 +20,7 @@ interface Master {
   bio?: string;
   services?: any[];
   schedule?: any;
+  is_accepting_orders?: boolean; // 👈 加上這行
 }
 
 interface MasterShowcaseProps {
@@ -55,6 +56,7 @@ export default function MasterShowcase({ externalFilter = 'ALL', onClearFilter }
             bio: dbMaster.bio,
             services: dbMaster.services,
             schedule: dbMaster.schedule,
+            is_accepting_orders: dbMaster.is_accepting_orders,
           }));
           setMasters(formattedData);
         }
