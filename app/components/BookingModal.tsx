@@ -168,12 +168,12 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
       while (currentIterMins + durationMins <= slotEndMins) {
         const timeString = minsToTime(currentIterMins);
         
-        // 💡 3. 關鍵判斷：如果這個時間沒有在大師的封鎖名單內，才加入可預約清單
         if (!blockedTimes.includes(timeString)) {
           slots.push(timeString);
         }
         
-        currentIterMins += durationMins; 
+        // 💡 修改步進單位：強制每 60 分鐘跳一個時段，以配合整點制的封鎖邏輯
+        currentIterMins += 60; 
       }
     });
 

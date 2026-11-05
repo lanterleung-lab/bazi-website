@@ -11,10 +11,7 @@ import {
   LayoutDashboard, CreditCard, CalendarDays, Eye, ShieldCheck, Star, Plus, Trash2, Clock, ScrollText, Check,
   ClipboardList, UserSearch, CalendarClock, Phone, Edit3
 } from 'lucide-react';
-// 新增這行：匯入評價管理組件 (請確認相對路徑 ../components 正確)
 import ReviewManager from '../../components/ReviewManager';
-// 在 import 區塊下方加入這段
-
 import { calculateOrderAmounts } from '@/lib/pricing';
 
 const createImage = (url: string): Promise<HTMLImageElement> =>
@@ -43,10 +40,9 @@ async function getCroppedImg(imageSrc: string, pixelCrop: any): Promise<Blob | n
 interface ServiceItem { id: string; name: string; duration: number; price: number; serviceType: 'online' | 'offline' | 'both'; }
 interface TimeSlot { start: string; end: string; }
 interface DaySchedule { isActive: boolean; slots: TimeSlot[]; }
-// 在原本的 interface 附近加上這兩個定義
 interface BlockedSlot {
   date: string; // 格式: YYYY-MM-DD
-  slots: string[]; // 格式: ["14:00", "14:30", "15:00"]
+  slots: string[]; // 格式: ["14:00", "15:00"]
 }
 type WeeklySchedule = Record<string, DaySchedule>;
 
@@ -85,7 +81,6 @@ export default function MasterDashboard() {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [calculatedBazi, setCalculatedBazi] = useState<any>(null);
 
-  // 補登八字專用的狀態
   const [enrichModalOpen, setEnrichModalOpen] = useState(false);
   const [enrichData, setEnrichData] = useState({ orderId: '', clientName: '', gender: 'F', birthDate: '', birthTime: '12:00' });
   const [enriching, setEnriching] = useState(false);
@@ -93,7 +88,7 @@ export default function MasterDashboard() {
   const [masterData, setMasterData] = useState({
     id: '', name: '', lineage: '', bio: '', price: 0, image_url: '',
     tags: [] as string[], services: [] as ServiceItem[], is_accepting_orders: true, schedule: defaultSchedule as WeeklySchedule, 
-    blocked_slots: [] as BlockedSlot[], // 👈 新增這行
+    blocked_slots: [] as BlockedSlot[], 
   });
 
   useEffect(() => {
@@ -115,10 +110,9 @@ export default function MasterDashboard() {
             tags: masterProfile.tags || [], services: masterProfile.services || [],
             is_accepting_orders: masterProfile.is_accepting_orders ?? true, schedule: dbSchedule,
             blocked_slots: Array.isArray(masterProfile.blocked_slots) ? masterProfile.blocked_slots : []
-         
           });
 
-          const { data: ordersData, error: ordersError } = await supabase
+          const { data: ordersData } = await supabase
             .from('orders')
             .select('*')
             .eq('master_id', masterProfile.id)
@@ -156,27 +150,18 @@ export default function MasterDashboard() {
     }
   };
 
-  // --- 送出補登資料的邏輯 ---
   const handleEnrichSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setEnriching(true);
     try {
       const [year, month, day] = enrichData.birthDate.split('-');
-      
-      // 更新資料庫
       const { error } = await supabase.from('orders').update({
         client_gender: enrichData.gender,
-        birth_data: { 
-          year: parseInt(year), 
-          month: parseInt(month), 
-          day: parseInt(day), 
-          time: enrichData.birthTime 
-        }
+        birth_data: { year: parseInt(year), month: parseInt(month), day: parseInt(day), time: enrichData.birthTime }
       }).eq('id', enrichData.orderId);
 
       if (error) throw error;
 
-      // 實時更新前端畫面，戰情室按鈕會瞬間解鎖
       setOrders(orders.map(o => o.id === enrichData.orderId ? {
         ...o,
         clientGender: enrichData.gender,
@@ -185,7 +170,6 @@ export default function MasterDashboard() {
 
       setEnrichModalOpen(false);
     } catch (err) {
-      console.error('補登失敗', err);
       alert('補登失敗，請稍後再試。');
     } finally {
       setEnriching(false);
@@ -277,7 +261,7 @@ export default function MasterDashboard() {
         price: masterData.services.length > 0 ? Math.min(...masterData.services.map(s => s.price)) : masterData.price, 
         image_url: masterData.image_url, tags: masterData.tags, services: masterData.services,
         is_accepting_orders: masterData.is_accepting_orders, schedule: masterData.schedule, 
-        blocked_slots: masterData.blocked_slots // 👈 補上這行
+        blocked_slots: masterData.blocked_slots
       }).eq('id', masterData.id);
       if (error) throw error;
       alert('🎉 變更已成功實時發布！');
@@ -298,28 +282,60 @@ export default function MasterDashboard() {
     newSlots[slotIndex][field] = value;
     setMasterData({ ...masterData, schedule: { ...masterData.schedule, [dayKey]: { ...masterData.schedule[dayKey], slots: newSlots } } });
   };
-  // --- 請假管理邏輯 ---
-  const [newBlockDate, setNewBlockDate] = useState('');
-  const [newBlockTime, setNewBlockTime] = useState('');
 
-  const handleAddBlockedSlot = () => {
-    if (!newBlockDate || !newBlockTime) return;
+  // --- 🌟 升級版請假管理邏輯 (起訖區間 & 嚴格整點對齊) ---
+  const [blockDate, setBlockDate] = useState('');
+  const [blockStart, setBlockStart] = useState('09:00');
+  const [blockEnd, setBlockEnd] = useState('18:00');
+
+  const hourOptions = Array.from({ length: 24 }, (_, i) => {
+    return `${i.toString().padStart(2, '0')}:00`;
+  });
+
+  const handleAddBlockedRange = () => {
+    if (!blockDate || !blockStart || !blockEnd) return;
+
+    const timeToMins = (t: string) => {
+      const [h, m] = t.split(':').map(Number);
+      return h * 60 + m;
+    };
+
+    const startMins = timeToMins(blockStart);
+    const endMins = timeToMins(blockEnd);
+
+    if (startMins >= endMins) {
+      alert('結束時間必須晚於開始時間！');
+      return;
+    }
+
+    const generatedSlots: string[] = [];
+    let current = startMins;
     
-    const existingIndex = masterData.blocked_slots.findIndex(b => b.date === newBlockDate);
+    const minsToTime = (mins: number) => {
+      const h = Math.floor(mins / 60).toString().padStart(2, '0');
+      const m = (mins % 60).toString().padStart(2, '0');
+      return `${h}:${m}`;
+    };
+
+    // 推進 60 分鐘完美對齊前台
+    while (current < endMins) {
+      generatedSlots.push(minsToTime(current));
+      current += 60; 
+    }
+
+    const existingIndex = masterData.blocked_slots.findIndex(b => b.date === blockDate);
     let updatedBlocks = [...masterData.blocked_slots];
 
     if (existingIndex >= 0) {
-      if (!updatedBlocks[existingIndex].slots.includes(newBlockTime)) {
-        updatedBlocks[existingIndex].slots.push(newBlockTime);
-        updatedBlocks[existingIndex].slots.sort(); // 幫他排序一下
-      }
+      const combinedSlots = Array.from(new Set([...updatedBlocks[existingIndex].slots, ...generatedSlots]));
+      combinedSlots.sort();
+      updatedBlocks[existingIndex].slots = combinedSlots;
     } else {
-      updatedBlocks.push({ date: newBlockDate, slots: [newBlockTime] });
+      updatedBlocks.push({ date: blockDate, slots: generatedSlots });
       updatedBlocks.sort((a, b) => a.date.localeCompare(b.date));
     }
 
     setMasterData({ ...masterData, blocked_slots: updatedBlocks });
-    setNewBlockTime(''); 
   };
 
   const handleRemoveBlockedSlot = (date: string, time: string) => {
@@ -503,7 +519,6 @@ export default function MasterDashboard() {
 
                           {/* 💰 升級版財務明細區塊 */}
                           {(() => {
-                            // 動態算出這筆訂單的拆解金額
                             const amounts = calculateOrderAmounts(order.price || 0);
                             return (
                               <div className="mt-3 p-3 bg-white border border-stone-200 rounded-xl space-y-1.5 shadow-sm max-w-sm">
@@ -513,7 +528,7 @@ export default function MasterDashboard() {
                                 </div>
                                 <div className="flex justify-between items-center text-xs text-stone-400">
                                   <span>平台已收保留金</span>
-                                  <span>- HK$ {amounts.deposit.toLocaleString()}</span>
+                                  <span>HK$ {amounts.deposit.toLocaleString()}</span>
                                 </div>
                                 <div className="border-t border-stone-100 my-1 pt-1 flex justify-between items-center">
                                   <span className="text-sm font-medium text-stone-600">現場應收尾款</span>
@@ -715,47 +730,63 @@ export default function MasterDashboard() {
                       );
                     })}
                   </div>
-                  {/* --- 🌟 特殊請假設定區塊 (從這裡開始複製) 🌟 --- */}
+                  
+                  {/* --- 🌟 區間請假設定區塊 (防呆整點制) --- */}
                   <div className="pt-8 mt-8 border-t border-stone-100">
                     <div className="border-b pb-2 mb-4">
                       <h2 className="text-lg font-semibold text-stone-800 flex items-center gap-2">
-                        🛑 特定日期請假 / 封鎖時段
+                        🛑 特定日期區間請假
                       </h2>
-                      <p className="text-sm text-stone-500 mt-1">臨時有事？在這裡選定日期與時間，該時段前台將無法預約。</p>
+                      <p className="text-sm text-stone-500 mt-1">選定日期與「開始/結束時間」，系統將自動封鎖該區間內的所有可預約時段。</p>
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-3 mb-6 p-4 bg-stone-50 border border-stone-200 rounded-xl">
-                      <div className="flex-1 space-y-1">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-6 p-4 bg-stone-50 border border-stone-200 rounded-xl items-end">
+                      <div className="space-y-1">
                         <label className="text-xs font-medium text-stone-500">選擇日期</label>
                         <input 
                           type="date" 
-                          value={newBlockDate} 
-                          onChange={(e) => setNewBlockDate(e.target.value)}
+                          value={blockDate} 
+                          onChange={(e) => setBlockDate(e.target.value)}
                           className="w-full px-3 py-2 bg-white border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20"
                         />
                       </div>
-                      <div className="flex-1 space-y-1">
-                        <label className="text-xs font-medium text-stone-500">選擇要封鎖的時間</label>
-                        <input 
-                          type="time" 
-                          value={newBlockTime} 
-                          onChange={(e) => setNewBlockTime(e.target.value)}
+                      <div className="space-y-1">
+                        <label className="text-xs font-medium text-stone-500">開始時間 (整點)</label>
+                        <select 
+                          value={blockStart} 
+                          onChange={(e) => setBlockStart(e.target.value)}
                           className="w-full px-3 py-2 bg-white border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20"
-                        />
+                        >
+                          {hourOptions.map(hour => (
+                            <option key={`start-${hour}`} value={hour}>{hour}</option>
+                          ))}
+                        </select>
                       </div>
-                      <div className="flex items-end">
+                      <div className="space-y-1">
+                        <label className="text-xs font-medium text-stone-500">結束時間 (整點)</label>
+                        <select 
+                          value={blockEnd} 
+                          onChange={(e) => setBlockEnd(e.target.value)}
+                          className="w-full px-3 py-2 bg-white border border-stone-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20"
+                        >
+                          {hourOptions.map(hour => (
+                            <option key={`end-${hour}`} value={hour}>{hour}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
                         <button 
                           type="button" 
-                          onClick={handleAddBlockedSlot}
-                          disabled={!newBlockDate || !newBlockTime}
-                          className="w-full md:w-auto px-4 py-2 bg-stone-800 text-white rounded-lg text-sm font-medium hover:bg-stone-700 disabled:bg-stone-300 disabled:cursor-not-allowed transition-colors"
+                          onClick={handleAddBlockedRange}
+                          disabled={!blockDate || !blockStart || !blockEnd}
+                          className="w-full px-4 py-2 bg-stone-800 text-white rounded-lg text-sm font-medium hover:bg-stone-700 disabled:bg-stone-300 disabled:cursor-not-allowed transition-colors"
                         >
-                          新增封鎖
+                          批量封鎖區間
                         </button>
                       </div>
                     </div>
 
-                    {/* 已封鎖清單 */}
+                    {/* 已封鎖清單 (維持原本設計) */}
                     <div className="space-y-3">
                       {masterData.blocked_slots.length === 0 ? (
                         <div className="text-center py-6 text-sm text-stone-400 border border-dashed border-stone-200 rounded-xl">
@@ -786,7 +817,6 @@ export default function MasterDashboard() {
                       )}
                     </div>
                   </div>
-                  {/* --- 🌟 特殊請假設定區塊 (到這裡結束複製) 🌟 --- */}
                 </div>
               )}
 
