@@ -67,7 +67,59 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
   const orderAmounts = useMemo(() => {
     return calculateOrderAmounts(selectedService?.price || 0);
   }, [selectedService]);
-  const blockedSlots: BlockedSlot[] = master?.blocked_slots || []; // 👈 新增這行
+  
+  const blockedSlots: BlockedSlot[] = master?.blocked_slots || [];
+
+  // 🌟 儲存「該日已經被買走或正在結帳中」的時段
+  const [bookedSlots, setBookedSlots] = useState<string[]>([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
+
+  // 🌟 當使用者點選日期時，去資料庫查這天有哪些訂單
+  useEffect(() => {
+    const fetchBookedSlots = async () => {
+      if (!selectedDate || !master?.id) {
+        setBookedSlots([]);
+        return;
+      }
+      
+      setLoadingSlots(true);
+      try {
+        const tzOffset = selectedDate.getTimezoneOffset() * 60000;
+        const localDateStr = new Date(selectedDate.getTime() - tzOffset).toISOString().split('T')[0];
+
+        const { data, error } = await supabase
+          .from('orders')
+          .select('appointment_time, status, created_at')
+          .eq('master_id', master.id)
+          .eq('appointment_date', localDateStr);
+
+        if (error) throw error;
+
+        if (data) {
+          const busy = data.filter(order => {
+            if (order.status === 'confirmed' || order.status === 'completed') return true;
+            
+            if (order.status === 'awaiting_payment') {
+              const orderTime = new Date(order.created_at).getTime();
+              const now = new Date().getTime();
+              const diffMins = (now - orderTime) / (1000 * 60);
+              return diffMins <= 10; 
+            }
+            
+            return false;
+          }).map(order => order.appointment_time);
+
+          setBookedSlots(busy);
+        }
+      } catch (err) {
+        console.error('查詢已預約時段失敗:', err);
+      } finally {
+        setLoadingSlots(false);
+      }
+    };
+
+    fetchBookedSlots();
+  }, [selectedDate, master?.id]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -82,14 +134,12 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
     }
   }, [isOpen]);
 
-  // 💡 修正 1：可用日期，從今天 (i = 0) 開始，並判斷今天下班沒
   const availableDates = useMemo(() => {
     if (!schedule || !selectedService) return []; 
     const dates = [];
     const today = new Date();
     const currentMins = today.getHours() * 60 + today.getMinutes();
     
-    // 💡 從 i = 0 (今天) 開始算起
     for (let i = 0; i <= 30; i++) {
       const d = new Date(today);
       d.setDate(today.getDate() + i);
@@ -97,12 +147,10 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
       const daySchedule = schedule[dayName];
       
       if (daySchedule && daySchedule.isActive) {
-        // 如果是今天，必須檢查是否還有「大於當前時間 + 服務時長」的空檔
         if (i === 0) {
           let hasFutureSlotToday = false;
           daySchedule.slots.forEach((slot: TimeSlot) => {
             const endMins = parseInt(slot.end.split(':')[0]) * 60 + parseInt(slot.end.split(':')[1]);
-            // 只要時段的結束時間 >= (現在時間 + 服務時間)，今天就能被選
             if (endMins >= currentMins + selectedService.duration) {
               hasFutureSlotToday = true;
             }
@@ -111,7 +159,6 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
             dates.push(d);
           }
         } else {
-          // 明天以後的日子，只要 isActive 就直接加入
           dates.push(d);
         }
       }
@@ -119,7 +166,6 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
     return dates;
   }, [schedule, selectedService]);
 
-  // 💡 修正 2：可用時段，如果是今天，過濾掉過去的時間
   const availableTimeSlots = useMemo(() => {
     if (!selectedDate || !schedule || !selectedService) return [];
     
@@ -127,11 +173,9 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
     const daySchedule = schedule[dayName];
     if (!daySchedule || !daySchedule.isActive) return [];
 
-    // 💡 1. 取得選擇日期的 YYYY-MM-DD 格式，用來比對請假紀錄
     const tzOffset = selectedDate.getTimezoneOffset() * 60000;
     const localDateStr = new Date(selectedDate.getTime() - tzOffset).toISOString().split('T')[0];
 
-    // 💡 2. 尋找這一天是否有請假/封鎖的時段
     const blockedToday = blockedSlots.find(b => b.date === localDateStr);
     const blockedTimes = blockedToday ? blockedToday.slots : [];
 
@@ -168,24 +212,24 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
       while (currentIterMins + durationMins <= slotEndMins) {
         const timeString = minsToTime(currentIterMins);
         
-        if (!blockedTimes.includes(timeString)) {
+        // 💡 防超賣與請假過濾
+        if (!blockedTimes.includes(timeString) && !bookedSlots.includes(timeString)) {
           slots.push(timeString);
         }
         
-        // 💡 修改步進單位：強制每 60 分鐘跳一個時段，以配合整點制的封鎖邏輯
+        // 💡 修正 1：強制 60 分鐘一跳，與大師後台整點請假制完美對齊
         currentIterMins += 60; 
       }
     });
 
     return slots;
-  }, [selectedDate, schedule, selectedService, blockedSlots]); // 記得把 blockedSlots 加入依賴
+  }, [selectedDate, schedule, selectedService, blockedSlots, bookedSlots]); // 加入 bookedSlots
 
- const handleConfirmBooking = async (e: React.FormEvent) => {
+  const handleConfirmBooking = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
     try {
-      // 1. 先將訂單寫入 Supabase，狀態設為 'awaiting_payment' (等待付款)
       const { data: orderData, error: dbError } = await supabase.from('orders').insert([{
         master_id: master.id,
         client_name: clientData.name,
@@ -199,19 +243,17 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
         status: 'awaiting_payment'
       }]).select().single();
 
-      // 檢查 Supabase 寫入是否報錯
       if (dbError) {
         console.error('Supabase 寫入錯誤細節:', dbError);
         throw new Error(`資料庫寫入失敗: ${dbError.message}`);
       }
 
-      // 2. 呼叫我們剛剛建立的後端 API，取得 Stripe 結帳網址
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           orderId: orderData.id,
-          deposit: orderAmounts.deposit, // 注意：後端接收的是 deposit，這裡也傳 deposit
+          deposit: orderAmounts.deposit,
           serviceName: selectedService?.name,
           masterName: masterName,
         }),
@@ -219,13 +261,11 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
 
       const session = await response.json();
 
-      // 檢查後端是否回傳錯誤
       if (!response.ok || session.error) {
         console.error('Stripe Checkout API 錯誤細節:', session.error);
         throw new Error(session.error || '無法建立結帳畫面');
       }
 
-      // 3. 取得網址成功，瞬間將畫面導向 Stripe 的安全結帳頁面！
       if (session.url) {
         window.location.href = session.url;
       }
@@ -234,7 +274,7 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
       console.error('預約流程發生錯誤:', err);
       alert('準備結帳環境失敗，請檢查網路連線或稍後再試。\n' + err.message);
     } finally {
-      setIsSubmitting(false); // 無論成功失敗，都要解除鎖定狀態 (因為如果是成功，馬上就會跳轉了)
+      setIsSubmitting(false);
     }
   };
 
@@ -399,7 +439,14 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
                       <h3 className="font-medium text-stone-900 mb-3 flex items-center gap-2">
                         <Clock className="w-4 h-4 text-emerald-600"/> 選擇時段
                       </h3>
-                      {availableTimeSlots.length > 0 ? (
+                      
+                      {/* 💡 修正 2：加入 loading 狀態 */}
+                      {loadingSlots ? (
+                        <div className="flex items-center justify-center p-8 text-stone-400 gap-2 bg-stone-50 rounded-xl">
+                          <Loader2 className="w-5 h-5 animate-spin" /> 
+                          <span className="text-sm">正在同步最新檔期...</span>
+                        </div>
+                      ) : availableTimeSlots.length > 0 ? (
                         <div className="grid grid-cols-3 gap-3">
                           {availableTimeSlots.map((time, i) => (
                             <button
