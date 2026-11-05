@@ -57,6 +57,6 @@ export async function POST(req: Request) {
       console.warn('收到結帳成功通知，但找不到 metadata 中的 orderId。');
     }
   }
-
+// 強制觸發 Vercel 重新讀取金鑰 20261105
   return NextResponse.json({ received: true }, { status: 200 });
 }
