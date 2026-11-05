@@ -21,7 +21,7 @@ export async function POST(request: Request) {
           price_data: {
             currency: 'hkd',
             product_data: {
-              // 💡 整理一下字串格式，讓它在 Stripe 結帳畫面上更好看
+              // 💡 修改：將多行字串改為單行，避免語法報錯
               name: `預約保留金：${masterName || '導師'} - ${serviceName || '諮詢服務'}`,
             },
             // 💡 防護機制：確保金額絕對是整數。這裡使用 deposit
