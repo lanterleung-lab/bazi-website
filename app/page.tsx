@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
 import MasterShowcase from './components/MasterShowcase';
@@ -148,546 +148,547 @@ export default function Home() {
     { id: 'healing', icon: <Sun className="w-8 h-8 mb-4 text-amber-400 group-hover:scale-110 transition-transform" />, title: '內在療癒', desc: '潛意識探索、OH卡、心理諮詢', keyword: '療癒' },
   ];
 
-  return (
-    <main className="min-h-screen bg-[#050508] text-zinc-200 font-sans selection:bg-amber-500 selection:text-zinc-950 overflow-x-hidden relative">
-      
-      {/* 🌟 1. 增強版琉璃環境光 */}
-      <div className="absolute top-[-10%] left-[-5%] w-[600px] h-[600px] bg-emerald-700/20 rounded-full blur-[120px] pointer-events-none mix-blend-screen"></div>
-      <div className="absolute bottom-[-10%] right-[-5%] w-[700px] h-[700px] bg-amber-600/20 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
-      <div className="absolute top-[40%] left-[50%] -translate-x-1/2 w-[800px] h-[400px] bg-indigo-700/15 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
+return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-white bg-[#050508]">載入中...</div>}>
+      <main className="min-h-screen bg-[#050508] text-zinc-200 font-sans selection:bg-amber-500 selection:text-zinc-950 overflow-x-hidden relative">
+        {/* 🌟 1. 增強版琉璃環境光 */}
+        <div className="absolute top-[-10%] left-[-5%] w-[600px] h-[600px] bg-emerald-700/20 rounded-full blur-[120px] pointer-events-none mix-blend-screen"></div>
+        <div className="absolute bottom-[-10%] right-[-5%] w-[700px] h-[700px] bg-amber-600/20 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
+        <div className="absolute top-[40%] left-[50%] -translate-x-1/2 w-[800px] h-[400px] bg-indigo-700/15 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
 
-    {/* 🌟 2. 左側獨立星空：北斗七星 (上移並恢復銳利冰藍光芒) */}
-      <div className="fixed top-0 left-0 w-full md:w-[60vw] h-screen pointer-events-none flex items-center justify-start z-0 mix-blend-screen opacity-80">
-        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_0_15px_rgba(199,210,254,0.3)]">
-          <defs>
-            <radialGradient id="dipper-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-              <stop offset="40%" stopColor="#c7d2fe" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
-            </radialGradient>
-          </defs>
+      {/* 🌟 2. 左側獨立星空：北斗七星 (上移並恢復銳利冰藍光芒) */}
+        <div className="fixed top-0 left-0 w-full md:w-[60vw] h-screen pointer-events-none flex items-center justify-start z-0 mix-blend-screen opacity-80">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_0_15px_rgba(199,210,254,0.3)]">
+            <defs>
+              <radialGradient id="dipper-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="40%" stopColor="#c7d2fe" stopOpacity="0.8" />
+                <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+              </radialGradient>
+            </defs>
 
-         {/* 北斗七星本體：大幅向上平移 (Y軸改為 -40) 並完全移除連線 */}
-          <g transform="translate(10, -40) scale(0.85)">
-            <animate attributeName="opacity" values="0.5;1;0.5" dur="7s" repeatCount="indefinite" />
-            
-            {/* 已經徹底刪除 <polyline> 連線，讓星體自然懸浮 */}
-            
-            {/* 1. 搖光 (Alkaid) */}
-            <circle cx="20" cy="120" r="3.5" fill="url(#dipper-glow)" />
-            <circle cx="20" cy="120" r="0.8" fill="#ffffff" />
-            
-            {/* 2. 開陽 (Mizar) */}
-            <circle cx="40" cy="110" r="3" fill="url(#dipper-glow)" />
-            <circle cx="40" cy="110" r="0.6" fill="#ffffff" />
-            
-            {/* 3. 玉衡 (Alioth) */}
-            <circle cx="65" cy="105" r="4" fill="url(#dipper-glow)" />
-            <circle cx="65" cy="105" r="1" fill="#ffffff" />
-            
-            {/* 4. 天權 (Megrez) */}
-            <circle cx="85" cy="110" r="2.5" fill="url(#dipper-glow)" />
-            <circle cx="85" cy="110" r="0.5" fill="#ffffff" />
-            
-            {/* 5. 天璣 (Phecda) */}
-            <circle cx="95" cy="135" r="3" fill="url(#dipper-glow)" />
-            <circle cx="95" cy="135" r="0.7" fill="#ffffff" />
-            
-            {/* 6. 天璇 (Merak) */}
-            <circle cx="125" cy="120" r="3.5" fill="url(#dipper-glow)" />
-            <circle cx="125" cy="120" r="0.8" fill="#ffffff" />
-            
-            {/* 7. 天樞 (Dubhe) */}
-            <circle cx="115" cy="95" r="4.5" fill="url(#dipper-glow)" />
-            <circle cx="115" cy="95" r="1.2" fill="#ffffff" />
-          </g>
-        </svg>
-      </div>
-
-      {/* 🌟 3. 右側深空宇宙與太陽系 (恢復星體銳利度，微調太陽耀光) */}
-      <div className="fixed top-0 right-0 translate-x-1/3 -translate-y-1/4 w-[150vw] min-w-[1200px] max-w-[2500px] aspect-square pointer-events-none flex items-center justify-center z-0 mix-blend-screen opacity-40 md:opacity-50">
-        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_0_8px_rgba(253,230,138,0.15)]">
-          <defs>
-            {/* 新增：灰白星體漸層 (解決圖1的廉價感) */}
-            <radialGradient id="grey-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
-              <stop offset="30%" stopColor="#a3a3a3" stopOpacity="0.5" />
-              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
-            </radialGradient>
-            
-            {/* 新增：紅核心星體漸層 (解決圖2的廉價感) */}
-            <radialGradient id="red-core-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-              <stop offset="20%" stopColor="#fca5a5" stopOpacity="0.8" />
-              <stop offset="60%" stopColor="#e11d48" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
-            </radialGradient>
-            {/* 只保留給太陽耀光的極輕微模糊 */}
-            <filter id="light-flare" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="0.4" />
-            </filter>
-
-            <radialGradient id="nebula-void" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#1e1b4b" stopOpacity="0.6" />
-              <stop offset="40%" stopColor="#064e3b" stopOpacity="0.2" />
-              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
-            </radialGradient>
-            <radialGradient id="center-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-              <stop offset="20%" stopColor="#fde68a" stopOpacity="0.9" />
-              <stop offset="100%" stopColor="#d97706" stopOpacity="0" />
-            </radialGradient>
-            <radialGradient id="blue-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#c7d2fe" stopOpacity="1" />
-              <stop offset="40%" stopColor="#4f46e5" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
-            </radialGradient>
-            <radialGradient id="red-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#fecdd3" stopOpacity="1" />
-              <stop offset="40%" stopColor="#e11d48" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
-            </radialGradient>
-            <radialGradient id="gold-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#fef3c7" stopOpacity="1" />
-              <stop offset="40%" stopColor="#d97706" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
-            </radialGradient>
-            <radialGradient id="green-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#a7f3d0" stopOpacity="1" />
-              <stop offset="40%" stopColor="#059669" stopOpacity="0.5" />
-              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
-            </radialGradient>
-            <radialGradient id="corona-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.8" />
-              <stop offset="50%" stopColor="#fde68a" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="#d97706" stopOpacity="0" />
-            </radialGradient>
-          </defs>
-
-          <circle cx="100" cy="100" r="120" fill="url(#nebula-void)" stroke="none" />
-
-          {/* ✨ 漫天繁星 */}
-          <g fill="#ffffff">
-            <g opacity="0.3">
-              <circle cx="20" cy="30" r="0.2" /> <circle cx="150" cy="10" r="0.15" /> <circle cx="180" cy="80" r="0.2" />
-              <circle cx="40" cy="160" r="0.15" /> <circle cx="160" cy="170" r="0.25" /> <circle cx="10" cy="90" r="0.1" />
-              <circle cx="80" cy="15" r="0.2" /> <circle cx="190" cy="140" r="0.15" /> <circle cx="50" cy="190" r="0.2" />
-            </g>
-            <g>
-              <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="-360 100 100" dur="600s" repeatCount="indefinite" />
-              <g opacity="0.6">
-                {/* 移除模糊濾鏡，恢復星體銳利度 */}
-                <circle cx="45" cy="45" r="0.4" fill="url(#blue-glow)" /> <circle cx="45" cy="45" r="0.1" />
-                <circle cx="165" cy="35" r="0.5" fill="url(#gold-glow)" /> <circle cx="165" cy="35" r="0.15" />
-                <circle cx="130" cy="185" r="0.3" fill="url(#red-glow)" /> <circle cx="130" cy="185" r="0.1" />
-                <circle cx="25" cy="135" r="0.4" fill="url(#blue-glow)" /> <circle cx="25" cy="135" r="0.1" />
-              </g>
-            </g>
-            <g opacity="0.15">
-              <path d="M -20 40 Q 100 90 220 20" stroke="url(#blue-glow)" strokeWidth="0.2" fill="none" />
-              <path d="M 0 180 Q 120 120 200 190" stroke="url(#gold-glow)" strokeWidth="0.15" fill="none" />
-            </g>
-          </g>
-
-          <g stroke="#fde68a" fill="none">
-            {/* 📍 外圍羅盤底座 */}
-            <g className="origin-center opacity-20">
-              <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="400s" repeatCount="indefinite" />
-              <circle cx="100" cy="100" r="95" strokeWidth="0.08" />
-              <circle cx="100" cy="100" r="93" strokeWidth="0.15" strokeDasharray="0.1 2.5" />
-              <circle cx="100" cy="100" r="88" strokeWidth="0.05" />
-              <circle cx="100" cy="100" r="86" strokeWidth="0.08" strokeDasharray="1 8" opacity="0.5" />
+           {/* 北斗七星本體：大幅向上平移 (Y軸改為 -40) 並完全移除連線 */}
+            <g transform="translate(10, -40) scale(0.85)">
+              <animate attributeName="opacity" values="0.5;1;0.5" dur="7s" repeatCount="indefinite" />
               
+              {/* 已經徹底刪除 <polyline> 連線，讓星體自然懸浮 */}
+              
+              {/* 1. 搖光 (Alkaid) */}
+              <circle cx="20" cy="120" r="3.5" fill="url(#dipper-glow)" />
+              <circle cx="20" cy="120" r="0.8" fill="#ffffff" />
+              
+              {/* 2. 開陽 (Mizar) */}
+              <circle cx="40" cy="110" r="3" fill="url(#dipper-glow)" />
+              <circle cx="40" cy="110" r="0.6" fill="#ffffff" />
+              
+              {/* 3. 玉衡 (Alioth) */}
+              <circle cx="65" cy="105" r="4" fill="url(#dipper-glow)" />
+              <circle cx="65" cy="105" r="1" fill="#ffffff" />
+              
+              {/* 4. 天權 (Megrez) */}
+              <circle cx="85" cy="110" r="2.5" fill="url(#dipper-glow)" />
+              <circle cx="85" cy="110" r="0.5" fill="#ffffff" />
+              
+              {/* 5. 天璣 (Phecda) */}
+              <circle cx="95" cy="135" r="3" fill="url(#dipper-glow)" />
+              <circle cx="95" cy="135" r="0.7" fill="#ffffff" />
+              
+              {/* 6. 天璇 (Merak) */}
+              <circle cx="125" cy="120" r="3.5" fill="url(#dipper-glow)" />
+              <circle cx="125" cy="120" r="0.8" fill="#ffffff" />
+              
+              {/* 7. 天樞 (Dubhe) */}
+              <circle cx="115" cy="95" r="4.5" fill="url(#dipper-glow)" />
+              <circle cx="115" cy="95" r="1.2" fill="#ffffff" />
+            </g>
+          </svg>
+        </div>
+
+        {/* 🌟 3. 右側深空宇宙與太陽系 (恢復星體銳利度，微調太陽耀光) */}
+        <div className="fixed top-0 right-0 translate-x-1/3 -translate-y-1/4 w-[150vw] min-w-[1200px] max-w-[2500px] aspect-square pointer-events-none flex items-center justify-center z-0 mix-blend-screen opacity-40 md:opacity-50">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_0_8px_rgba(253,230,138,0.15)]">
+            <defs>
+              {/* 新增：灰白星體漸層 (解決圖1的廉價感) */}
+              <radialGradient id="grey-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.9" />
+                <stop offset="30%" stopColor="#a3a3a3" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+              </radialGradient>
+              
+              {/* 新增：紅核心星體漸層 (解決圖2的廉價感) */}
+              <radialGradient id="red-core-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="20%" stopColor="#fca5a5" stopOpacity="0.8" />
+                <stop offset="60%" stopColor="#e11d48" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+              </radialGradient>
+              {/* 只保留給太陽耀光的極輕微模糊 */}
+              <filter id="light-flare" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="0.4" />
+              </filter>
+
+              <radialGradient id="nebula-void" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#1e1b4b" stopOpacity="0.6" />
+                <stop offset="40%" stopColor="#064e3b" stopOpacity="0.2" />
+                <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="center-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="20%" stopColor="#fde68a" stopOpacity="0.9" />
+                <stop offset="100%" stopColor="#d97706" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="blue-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#c7d2fe" stopOpacity="1" />
+                <stop offset="40%" stopColor="#4f46e5" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="red-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#fecdd3" stopOpacity="1" />
+                <stop offset="40%" stopColor="#e11d48" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="gold-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#fef3c7" stopOpacity="1" />
+                <stop offset="40%" stopColor="#d97706" stopOpacity="0.6" />
+                <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="green-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#a7f3d0" stopOpacity="1" />
+                <stop offset="40%" stopColor="#059669" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="corona-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.8" />
+                <stop offset="50%" stopColor="#fde68a" stopOpacity="0.3" />
+                <stop offset="100%" stopColor="#d97706" stopOpacity="0" />
+              </radialGradient>
+            </defs>
+
+            <circle cx="100" cy="100" r="120" fill="url(#nebula-void)" stroke="none" />
+
+            {/* ✨ 漫天繁星 */}
+            <g fill="#ffffff">
               <g opacity="0.3">
-                {Array.from({length: 12}).map((_, i) => (
-                  <line key={i} x1="100" y1="5" x2="100" y2="12" transform={`rotate(${i * 30} 100 100)`} strokeWidth="0.1" />
-                ))}
+                <circle cx="20" cy="30" r="0.2" /> <circle cx="150" cy="10" r="0.15" /> <circle cx="180" cy="80" r="0.2" />
+                <circle cx="40" cy="160" r="0.15" /> <circle cx="160" cy="170" r="0.25" /> <circle cx="10" cy="90" r="0.1" />
+                <circle cx="80" cy="15" r="0.2" /> <circle cx="190" cy="140" r="0.15" /> <circle cx="50" cy="190" r="0.2" />
               </g>
-
-              <polygon points="100,12 176.2,144 23.8,144" strokeWidth="0.05" opacity="0.2" />
-              <polygon points="100,188 23.8,56 176.2,56" strokeWidth="0.05" opacity="0.2" />
-              <polygon points="100,35 165,100 100,165 35,100" strokeWidth="0.05" opacity="0.1" />
-            </g>
-
-           {/* 🪐 最外層軌道 (極遠星系：升級冰晶透亮發光體) */}
-            <g className="origin-center opacity-80">
-              <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="200s" repeatCount="indefinite" />
-              <circle cx="100" cy="100" r="80" strokeWidth="0.08" strokeDasharray="0.2 5" opacity="0.15" />
-              
-              {/* 替換原本灰暗的星體，改用透亮的冰藍色光暈與純淨白心 */}
-              <g transform="translate(0, 0)">
-                <circle cx="100" cy="20" r="4.5" fill="url(#blue-glow)" stroke="none" opacity="0.85" />
-                <circle cx="100" cy="20" r="1.2" fill="#ffffff" stroke="none" opacity="0.9" />
-              </g>
-              
-              {/* 軌道另一側的微光伴星 */}
-              <circle cx="100" cy="180" r="2.5" fill="url(#gold-glow)" stroke="none" opacity="0.7" />
-              <circle cx="100" cy="180" r="0.6" fill="#ffffff" stroke="none" opacity="0.8" />
-            </g>
-
-            {/* 🪐 第四軌道 (緋紅行星與發光伴星) */}
-            <g className="origin-center opacity-90">
-              <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="150s" repeatCount="indefinite" />
-              <circle cx="100" cy="100" r="65" strokeWidth="0.08" strokeDasharray="0.5 3" opacity="0.15" />
-              
-              {/* 乾淨的紅色光暈與微透白心 */}
-              <circle cx="100" cy="35" r="5" fill="url(#red-glow)" stroke="none" />
-              <circle cx="100" cy="35" r="1.2" fill="#ffffff" stroke="none" opacity="0.85" />
-              
-              {/* 伴隨的小行星也加上漸層發光與微透白心 */}
-              <circle cx="92" cy="38" r="2" fill="url(#gold-glow)" stroke="none" opacity="0.8" />
-              <circle cx="92" cy="38" r="0.4" fill="#ffffff" stroke="none" opacity="0.9" />
-              
-              <circle cx="108" cy="32" r="1.5" fill="url(#gold-glow)" stroke="none" opacity="0.6" />
-              <circle cx="108" cy="32" r="0.3" fill="#ffffff" stroke="none" opacity="0.8" />
-            </g>
-
-           {/* 🪐 第三軌道 (帶星環巨行星：還原極簡星環，移除廉價粗線條) */}
-            <g className="origin-center">
-              <animateTransform attributeName="transform" type="rotate" from="45 100 100" to="405 100 100" dur="90s" repeatCount="indefinite" />
-              <circle cx="100" cy="100" r="50" strokeWidth="0.05" opacity="0.1" />
-              <g transform="translate(100, 50)">
-                {/* 簡單柔和的琥珀發光體 */}
-                <circle cx="0" cy="0" r="5" fill="url(#gold-glow)" stroke="none" />
-                <circle cx="0" cy="0" r="1.5" fill="#ffffff" stroke="none" opacity="0.9" />
-                
-                {/* 極簡高級的雙層微光星環，純粹的細線條 */}
-                <g transform="rotate(-20)">
-                  <ellipse cx="0" cy="0" rx="9.5" ry="2.2" fill="none" stroke="#fde68a" strokeWidth="0.15" opacity="0.7" />
-                  <ellipse cx="0" cy="0" rx="11" ry="2.8" fill="none" stroke="#d97706" strokeWidth="0.08" opacity="0.4" />
+              <g>
+                <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="-360 100 100" dur="600s" repeatCount="indefinite" />
+                <g opacity="0.6">
+                  {/* 移除模糊濾鏡，恢復星體銳利度 */}
+                  <circle cx="45" cy="45" r="0.4" fill="url(#blue-glow)" /> <circle cx="45" cy="45" r="0.1" />
+                  <circle cx="165" cy="35" r="0.5" fill="url(#gold-glow)" /> <circle cx="165" cy="35" r="0.15" />
+                  <circle cx="130" cy="185" r="0.3" fill="url(#red-glow)" /> <circle cx="130" cy="185" r="0.1" />
+                  <circle cx="25" cy="135" r="0.4" fill="url(#blue-glow)" /> <circle cx="25" cy="135" r="0.1" />
                 </g>
               </g>
-            </g>
-
-            {/* 🪐 第二軌道 (雙星系統：恢復冰藍與琥珀純淨光暈) */}
-            <g className="origin-center opacity-[0.95]">
-              <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="45s" repeatCount="indefinite" />
-              <circle cx="100" cy="100" r="35" strokeWidth="0.08" strokeDasharray="0.3 2" opacity="0.15" />
-              
-              {/* 冰藍主星 */}
-              <circle cx="100" cy="65" r="4" fill="url(#blue-glow)" stroke="none" />
-              <circle cx="100" cy="65" r="1" fill="#ffffff" stroke="none" opacity="0.9" />
-              
-              {/* 琥珀衛星 */}
-              <g transform="translate(100, 65)">
-                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="5s" repeatCount="indefinite" />
-                <circle cx="0" cy="-6.5" r="2.5" fill="url(#gold-glow)" stroke="none" opacity="0.9" />
-                <circle cx="0" cy="-6.5" r="0.6" fill="#ffffff" stroke="none" opacity="0.9" />
+              <g opacity="0.15">
+                <path d="M -20 40 Q 100 90 220 20" stroke="url(#blue-glow)" strokeWidth="0.2" fill="none" />
+                <path d="M 0 180 Q 120 120 200 190" stroke="url(#gold-glow)" strokeWidth="0.15" fill="none" />
               </g>
             </g>
 
-            {/* ☄️ 彗星軌跡 */}
-            <g className="origin-center opacity-60">
-              <animateTransform attributeName="transform" type="rotate" from="120 100 100" to="480 100 100" dur="25s" repeatCount="indefinite" />
-              <circle cx="100" cy="10" r="1.5" fill="#ffffff" stroke="none" />
-              <path d="M 100 10 Q 105 25 110 40" stroke="url(#blue-glow)" strokeWidth="0.6" fill="none" opacity="0.7" />
-              <path d="M 100 10 Q 108 25 115 45" stroke="url(#blue-glow)" strokeWidth="0.2" fill="none" opacity="0.3" />
-            </g>
+            <g stroke="#fde68a" fill="none">
+              {/* 📍 外圍羅盤底座 */}
+              <g className="origin-center opacity-20">
+                <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="400s" repeatCount="indefinite" />
+                <circle cx="100" cy="100" r="95" strokeWidth="0.08" />
+                <circle cx="100" cy="100" r="93" strokeWidth="0.15" strokeDasharray="0.1 2.5" />
+                <circle cx="100" cy="100" r="88" strokeWidth="0.05" />
+                <circle cx="100" cy="100" r="86" strokeWidth="0.08" strokeDasharray="1 8" opacity="0.5" />
+                
+                <g opacity="0.3">
+                  {Array.from({length: 12}).map((_, i) => (
+                    <line key={i} x1="100" y1="5" x2="100" y2="12" transform={`rotate(${i * 30} 100 100)`} strokeWidth="0.1" />
+                  ))}
+                </g>
 
-            {/* 🌟 極內圈軌道 1 */}
-            <g className="origin-center opacity-[0.95]">
-              <animateTransform attributeName="transform" type="rotate" from="90 100 100" to="450 100 100" dur="12s" repeatCount="indefinite" />
-              <circle cx="100" cy="100" r="12" strokeWidth="0.05" opacity="0.15" />
-              <circle cx="100" cy="88" r="1.5" fill="url(#gold-glow)" stroke="none" />
-              <circle cx="100" cy="88" r="0.6" fill="#ffffff" stroke="none" />
-            </g>
+                <polygon points="100,12 176.2,144 23.8,144" strokeWidth="0.05" opacity="0.2" />
+                <polygon points="100,188 23.8,56 176.2,56" strokeWidth="0.05" opacity="0.2" />
+                <polygon points="100,35 165,100 100,165 35,100" strokeWidth="0.05" opacity="0.1" />
+              </g>
 
-            {/* 🌟 極內圈軌道 2 */}
-            <g className="origin-center opacity-90">
-              <animateTransform attributeName="transform" type="rotate" from="270 100 100" to="-90 100 100" dur="20s" repeatCount="indefinite" />
-              <circle cx="100" cy="100" r="22" strokeWidth="0.08" strokeDasharray="0.5 3" opacity="0.15" />
-              <circle cx="100" cy="78" r="2.5" fill="url(#corona-glow)" stroke="none" />
-              <circle cx="100" cy="78" r="0.8" fill="#ffffff" stroke="none" />
-            </g>
+             {/* 🪐 最外層軌道 (極遠星系：升級冰晶透亮發光體) */}
+              <g className="origin-center opacity-80">
+                <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="200s" repeatCount="indefinite" />
+                <circle cx="100" cy="100" r="80" strokeWidth="0.08" strokeDasharray="0.2 5" opacity="0.15" />
+                
+                {/* 替換原本灰暗的星體，改用透亮的冰藍色光暈與純淨白心 */}
+                <g transform="translate(0, 0)">
+                  <circle cx="100" cy="20" r="4.5" fill="url(#blue-glow)" stroke="none" opacity="0.85" />
+                  <circle cx="100" cy="20" r="1.2" fill="#ffffff" stroke="none" opacity="0.9" />
+                </g>
+                
+                {/* 軌道另一側的微光伴星 */}
+                <circle cx="100" cy="180" r="2.5" fill="url(#gold-glow)" stroke="none" opacity="0.7" />
+                <circle cx="100" cy="180" r="0.6" fill="#ffffff" stroke="none" opacity="0.8" />
+              </g>
 
-            {/* ☀️ 太陽/恆星中心 (還原為純粹乾淨的發光圓體) */}
-            <circle cx="100" cy="100" r="28" strokeWidth="0.08" strokeDasharray="0.2 2" opacity="0.15" />
+              {/* 🪐 第四軌道 (緋紅行星與發光伴星) */}
+              <g className="origin-center opacity-90">
+                <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="150s" repeatCount="indefinite" />
+                <circle cx="100" cy="100" r="65" strokeWidth="0.08" strokeDasharray="0.5 3" opacity="0.15" />
+                
+                {/* 乾淨的紅色光暈與微透白心 */}
+                <circle cx="100" cy="35" r="5" fill="url(#red-glow)" stroke="none" />
+                <circle cx="100" cy="35" r="1.2" fill="#ffffff" stroke="none" opacity="0.85" />
+                
+                {/* 伴隨的小行星也加上漸層發光與微透白心 */}
+                <circle cx="92" cy="38" r="2" fill="url(#gold-glow)" stroke="none" opacity="0.8" />
+                <circle cx="92" cy="38" r="0.4" fill="#ffffff" stroke="none" opacity="0.9" />
+                
+                <circle cx="108" cy="32" r="1.5" fill="url(#gold-glow)" stroke="none" opacity="0.6" />
+                <circle cx="108" cy="32" r="0.3" fill="#ffffff" stroke="none" opacity="0.8" />
+              </g>
+
+             {/* 🪐 第三軌道 (帶星環巨行星：還原極簡星環，移除廉價粗線條) */}
+              <g className="origin-center">
+                <animateTransform attributeName="transform" type="rotate" from="45 100 100" to="405 100 100" dur="90s" repeatCount="indefinite" />
+                <circle cx="100" cy="100" r="50" strokeWidth="0.05" opacity="0.1" />
+                <g transform="translate(100, 50)">
+                  {/* 簡單柔和的琥珀發光體 */}
+                  <circle cx="0" cy="0" r="5" fill="url(#gold-glow)" stroke="none" />
+                  <circle cx="0" cy="0" r="1.5" fill="#ffffff" stroke="none" opacity="0.9" />
+                  
+                  {/* 極簡高級的雙層微光星環，純粹的細線條 */}
+                  <g transform="rotate(-20)">
+                    <ellipse cx="0" cy="0" rx="9.5" ry="2.2" fill="none" stroke="#fde68a" strokeWidth="0.15" opacity="0.7" />
+                    <ellipse cx="0" cy="0" rx="11" ry="2.8" fill="none" stroke="#d97706" strokeWidth="0.08" opacity="0.4" />
+                  </g>
+                </g>
+              </g>
+
+              {/* 🪐 第二軌道 (雙星系統：恢復冰藍與琥珀純淨光暈) */}
+              <g className="origin-center opacity-[0.95]">
+                <animateTransform attributeName="transform" type="rotate" from="360 100 100" to="0 100 100" dur="45s" repeatCount="indefinite" />
+                <circle cx="100" cy="100" r="35" strokeWidth="0.08" strokeDasharray="0.3 2" opacity="0.15" />
+                
+                {/* 冰藍主星 */}
+                <circle cx="100" cy="65" r="4" fill="url(#blue-glow)" stroke="none" />
+                <circle cx="100" cy="65" r="1" fill="#ffffff" stroke="none" opacity="0.9" />
+                
+                {/* 琥珀衛星 */}
+                <g transform="translate(100, 65)">
+                  <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="5s" repeatCount="indefinite" />
+                  <circle cx="0" cy="-6.5" r="2.5" fill="url(#gold-glow)" stroke="none" opacity="0.9" />
+                  <circle cx="0" cy="-6.5" r="0.6" fill="#ffffff" stroke="none" opacity="0.9" />
+                </g>
+              </g>
+
+              {/* ☄️ 彗星軌跡 */}
+              <g className="origin-center opacity-60">
+                <animateTransform attributeName="transform" type="rotate" from="120 100 100" to="480 100 100" dur="25s" repeatCount="indefinite" />
+                <circle cx="100" cy="10" r="1.5" fill="#ffffff" stroke="none" />
+                <path d="M 100 10 Q 105 25 110 40" stroke="url(#blue-glow)" strokeWidth="0.6" fill="none" opacity="0.7" />
+                <path d="M 100 10 Q 108 25 115 45" stroke="url(#blue-glow)" strokeWidth="0.2" fill="none" opacity="0.3" />
+              </g>
+
+              {/* 🌟 極內圈軌道 1 */}
+              <g className="origin-center opacity-[0.95]">
+                <animateTransform attributeName="transform" type="rotate" from="90 100 100" to="450 100 100" dur="12s" repeatCount="indefinite" />
+                <circle cx="100" cy="100" r="12" strokeWidth="0.05" opacity="0.15" />
+                <circle cx="100" cy="88" r="1.5" fill="url(#gold-glow)" stroke="none" />
+                <circle cx="100" cy="88" r="0.6" fill="#ffffff" stroke="none" />
+              </g>
+
+              {/* 🌟 極內圈軌道 2 */}
+              <g className="origin-center opacity-90">
+                <animateTransform attributeName="transform" type="rotate" from="270 100 100" to="-90 100 100" dur="20s" repeatCount="indefinite" />
+                <circle cx="100" cy="100" r="22" strokeWidth="0.08" strokeDasharray="0.5 3" opacity="0.15" />
+                <circle cx="100" cy="78" r="2.5" fill="url(#corona-glow)" stroke="none" />
+                <circle cx="100" cy="78" r="0.8" fill="#ffffff" stroke="none" />
+              </g>
+
+              {/* ☀️ 太陽/恆星中心 (還原為純粹乾淨的發光圓體) */}
+              <circle cx="100" cy="100" r="28" strokeWidth="0.08" strokeDasharray="0.2 2" opacity="0.15" />
+              
+              <g className="origin-center opacity-70">
+                <animateTransform attributeName="transform" type="scale" values="1; 1.05; 1" dur="4s" repeatCount="indefinite" />
+                <circle cx="100" cy="100" r="10" fill="url(#corona-glow)" stroke="none" />
+              </g>
+
+              <circle cx="100" cy="100" r="6" fill="url(#center-glow)" stroke="none" />
+              <circle cx="100" cy="100" r="2.5" fill="#ffffff" stroke="none" />
+              
+            </g>
+          </svg>
+        </div>
+        
+        {/* 🌟 星塵紋理疊加 */}
+        <div className="absolute inset-0 opacity-[0.4] bg-[url(https://www.transparenttextures.com/patterns/stardust.png)] pointer-events-none mix-blend-overlay"></div>
+
+        <section className="relative pt-32 pb-20 px-4 md:px-8 z-10 border-b border-zinc-900/50 min-h-[85vh] flex flex-col justify-center">
+          <div className="max-w-7xl mx-auto w-full">
             
-            <g className="origin-center opacity-70">
-              <animateTransform attributeName="transform" type="scale" values="1; 1.05; 1" dur="4s" repeatCount="indefinite" />
-              <circle cx="100" cy="100" r="10" fill="url(#corona-glow)" stroke="none" />
-            </g>
+            <div className="text-center mb-12">
+              <h1 className="text-4xl md:text-6xl font-serif text-stone-100 mb-6 tracking-wide drop-shadow-sm">俯瞰生命軌跡，鑒照真實自我</h1>
+              <p className="text-stone-400 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed">
+                匯聚東方命理、西方塔羅與現代心理學。<br className="hidden md:block" />在迷惘的十字路口，為您點亮前行的方向。
+              </p>
+            </div>
 
-            <circle cx="100" cy="100" r="6" fill="url(#center-glow)" stroke="none" />
-            <circle cx="100" cy="100" r="2.5" fill="#ffffff" stroke="none" />
-            
-          </g>
-        </svg>
-      </div>
-      
-      {/* 🌟 星塵紋理疊加 */}
-      <div className="absolute inset-0 opacity-[0.4] bg-[url(https://www.transparenttextures.com/patterns/stardust.png)] pointer-events-none mix-blend-overlay"></div>
+            <div className="flex justify-center gap-4 mb-12">
+              <button onClick={() => setActiveTab('guidance')} className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${activeTab === 'guidance' ? 'bg-stone-100 text-stone-900' : 'bg-stone-900/50 text-stone-400 hover:text-stone-200 border border-stone-800'}`}>
+                <Compass className="w-4 h-4" /> 我需要方向
+              </button>
+              <button onClick={() => setActiveTab('tools')} className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${activeTab === 'tools' ? 'bg-stone-100 text-stone-900' : 'bg-stone-900/50 text-stone-400 hover:text-stone-200 border border-stone-800'}`}>
+                <Sparkles className="w-4 h-4" /> 探索工具箱
+              </button>
+            </div>
 
-      <section className="relative pt-32 pb-20 px-4 md:px-8 z-10 border-b border-zinc-900/50 min-h-[85vh] flex flex-col justify-center">
-        <div className="max-w-7xl mx-auto w-full">
-          
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-6xl font-serif text-stone-100 mb-6 tracking-wide drop-shadow-sm">俯瞰生命軌跡，鑒照真實自我</h1>
-            <p className="text-stone-400 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed">
-              匯聚東方命理、西方塔羅與現代心理學。<br className="hidden md:block" />在迷惘的十字路口，為您點亮前行的方向。
-            </p>
-          </div>
-
-          <div className="flex justify-center gap-4 mb-12">
-            <button onClick={() => setActiveTab('guidance')} className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${activeTab === 'guidance' ? 'bg-stone-100 text-stone-900' : 'bg-stone-900/50 text-stone-400 hover:text-stone-200 border border-stone-800'}`}>
-              <Compass className="w-4 h-4" /> 我需要方向
-            </button>
-            <button onClick={() => setActiveTab('tools')} className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${activeTab === 'tools' ? 'bg-stone-100 text-stone-900' : 'bg-stone-900/50 text-stone-400 hover:text-stone-200 border border-stone-800'}`}>
-              <Sparkles className="w-4 h-4" /> 探索工具箱
-            </button>
-          </div>
-
-          <div className="max-w-5xl mx-auto transition-all duration-500">
-            {activeTab === 'guidance' ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4">
-                {guidanceTopics.map((topic) => (
-                  <div key={topic.id} onClick={() => handleGuidanceClick(topic.keyword)} className="group bg-stone-900/40 hover:bg-stone-800/80 border border-stone-800 hover:border-emerald-500/50 rounded-3xl p-8 text-center cursor-pointer transition-all duration-300 backdrop-blur-sm shadow-xl hover:-translate-y-1">
-                    <div className="flex justify-center">{topic.icon}</div>
-                    <h3 className="text-xl font-bold text-stone-200 mb-3">{topic.title}</h3>
-                    <p className="text-sm text-stone-500 leading-relaxed">{topic.desc}</p>
-                    <div className="mt-6 text-xs font-medium text-stone-400 group-hover:text-emerald-400 transition-colors flex items-center justify-center gap-1">尋找相關大師 <Compass className="w-3 h-3" /></div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="animate-in fade-in slide-in-from-bottom-4 max-w-4xl mx-auto">
-                <div className="flex flex-wrap justify-center gap-3 mb-10">
-                  <button onClick={() => setActiveTool('bazi')} className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${activeTool === 'bazi' ? 'bg-emerald-900/30 text-emerald-400 border border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.15)]' : 'bg-stone-900/50 text-stone-500 border border-stone-800 hover:text-stone-300'}`}>
-                    ☯️ 八字排盤
-                  </button>
-                  <button onClick={() => setActiveTool('tarot')} className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${activeTool === 'tarot' ? 'bg-indigo-900/30 text-indigo-400 border border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.15)]' : 'bg-stone-900/50 text-stone-500 border border-stone-800 hover:text-stone-300'}`}>
-                    🌙 每日塔羅
-                  </button>
-                  <button onClick={() => setActiveTool('numerology')} className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${activeTool === 'numerology' ? 'bg-amber-900/30 text-amber-400 border border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.15)]' : 'bg-stone-900/50 text-stone-500 border border-stone-800 hover:text-stone-300'}`}>
-                    🔢 生命靈數
-                  </button>
-                </div>
-
-                {activeTool === 'bazi' && (
-                  <div className="animate-in zoom-in-95 duration-300">
-                    <BaziCalculator onActionClick={() => handleGuidanceClick('八字')} actionText="尋找八字大師詳批" />
-                  </div>
-                )}
-
-                {activeTool === 'tarot' && (
-                  <div className="bg-stone-900/60 border border-stone-800 rounded-3xl p-8 md:p-12 text-center backdrop-blur-sm animate-in zoom-in-95 duration-300 relative overflow-hidden">
-                    <Moon className="w-12 h-12 text-indigo-400 mx-auto mb-4" />
-                    <h3 className="text-2xl font-serif text-stone-100 mb-2">塔羅潛意識指引</h3>
-                    <p className="text-stone-400 mb-8 max-w-md mx-auto text-sm">深呼吸，在心中默念你近期的困惑，然後憑直覺點擊一張牌。</p>
-                    
-                    {!drawnCard ? (
-                      <div className="flex justify-center gap-4 md:gap-8 mb-8">
-                        {[1, 2, 3].map(i => (
-                          <div 
-                            key={i} 
-                            onClick={isDrawingTarot ? undefined : handleDrawTarot}
-                            className={`w-24 h-36 md:w-32 md:h-48 bg-stone-800 border-2 border-stone-600 rounded-xl shadow-lg flex items-center justify-center cursor-pointer transition-all duration-500 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] ${isDrawingTarot ? 'animate-pulse scale-95 border-indigo-500' : 'hover:-translate-y-4 hover:shadow-indigo-500/30 hover:border-indigo-400'}`}
-                          >
-                            <Star className={`w-8 h-8 text-stone-600 ${isDrawingTarot ? 'animate-spin text-indigo-400' : ''}`} />
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
-                        <div className="flex flex-col md:flex-row gap-8 items-start bg-stone-800/50 border border-indigo-500/20 rounded-3xl p-6 md:p-8 text-left">
-                          
-                          <div className="w-full md:w-1/3 flex justify-center shrink-0">
-                            <Image 
-                              src={drawnCard.image} 
-                              alt={drawnCard.name} 
-                              width={200}
-                              height={350}
-                              priority={true}
-                              className="w-48 h-auto rounded-xl shadow-2xl shadow-indigo-900/30 border border-stone-700" 
-                            />
-                          </div>
-
-                          <div className="w-full md:w-2/3 space-y-5">
-                            <div>
-                              <div className="text-indigo-400 text-sm font-medium tracking-widest mb-1 uppercase">Today's Guidance</div>
-                              <h4 className="text-3xl font-bold text-stone-100 mb-2">{drawnCard.name}</h4>
-                              <p className="text-stone-400 italic text-sm border-l-2 border-indigo-500 pl-3 py-1">{drawnCard.quote}</p>
-                            </div>
-                            
-                            <div className="space-y-3 pt-2">
-                              <div>
-                                <h5 className="text-stone-300 font-medium flex items-center gap-2 mb-1"><Sparkles className="w-4 h-4 text-indigo-400"/> 牌面啟示</h5>
-                                <p className="text-stone-400 text-sm leading-relaxed">{drawnCard.meaning}</p>
-                              </div>
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                                <div className="bg-stone-900/50 p-4 rounded-xl border border-stone-800">
-                                  <h5 className="text-rose-400 text-xs font-bold mb-1 flex items-center gap-1"><Heart className="w-3 h-3"/> 感情指引</h5>
-                                  <p className="text-stone-400 text-xs leading-relaxed">{drawnCard.love}</p>
-                                </div>
-                                <div className="bg-stone-900/50 p-4 rounded-xl border border-stone-800">
-                                  <h5 className="text-blue-400 text-xs font-bold mb-1 flex items-center gap-1"><Briefcase className="w-3 h-3"/> 事業指引</h5>
-                                  <p className="text-stone-400 text-xs leading-relaxed">{drawnCard.career}</p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-                          <button onClick={handleDrawTarot} className="px-6 py-3 text-stone-400 hover:text-white bg-stone-800 hover:bg-stone-700 rounded-full transition-colors flex items-center justify-center gap-2 font-medium">
-                            <RefreshCcw className="w-4 h-4" /> 重新抽牌
-                          </button>
-                          <button onClick={() => handleGuidanceClick('塔羅')} className="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full font-medium transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2">
-                            <Moon className="w-4 h-4" /> 需要更針對性的解答？尋找專屬塔羅師
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {activeTool === 'numerology' && (
-                  <div className="bg-stone-900/60 border border-stone-800 rounded-3xl p-8 md:p-12 text-center backdrop-blur-sm animate-in zoom-in-95 duration-300">
-                    <h3 className="text-2xl font-serif text-stone-100 mb-2">生命靈數計算</h3>
-                    <p className="text-stone-400 mb-8 max-w-md mx-auto text-sm">輸入您的西元出生年月日，探索您靈魂的隱藏天賦與人生課題。</p>
-                    
-                    <div className="max-w-md mx-auto space-y-6 mb-8">
-                       <div className="grid grid-cols-3 gap-3">
-                          <select 
-                             value={birthDateStr.substring(0, 4) || '1990'} 
-                             onChange={(e) => {
-                               const year = e.target.value;
-                               const month = birthDateStr.substring(4, 6) || '01';
-                               const day = birthDateStr.substring(6, 8) || '01';
-                               setBirthDateStr(`${year}${month}${day}`);
-                             }}
-                             className="w-full px-3 py-3.5 bg-stone-800 border border-stone-700 hover:border-amber-500/50 rounded-xl focus:outline-none focus:border-amber-500 text-stone-200 text-sm text-center appearance-none cursor-pointer transition-all"
-                          >
-                             {Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i).map(y => <option key={y} value={y}>{y} 年</option>)}
-                          </select>
-                          <select 
-                             value={birthDateStr.substring(4, 6) || '01'} 
-                             onChange={(e) => {
-                               const year = birthDateStr.substring(0, 4) || '1990';
-                               const month = e.target.value.padStart(2, '0');
-                               const day = birthDateStr.substring(6, 8) || '01';
-                               setBirthDateStr(`${year}${month}${day}`);
-                             }}
-                             className="w-full px-3 py-3.5 bg-stone-800 border border-stone-700 hover:border-amber-500/50 rounded-xl focus:outline-none focus:border-amber-500 text-stone-200 text-sm text-center appearance-none cursor-pointer transition-all"
-                          >
-                             {Array.from({ length: 12 }, (_, i) => i + 1).map(m => <option key={m} value={String(m).padStart(2, '0')}>{m} 月</option>)}
-                          </select>
-                          <select 
-                             value={birthDateStr.substring(6, 8) || '01'} 
-                             onChange={(e) => {
-                               const year = birthDateStr.substring(0, 4) || '1990';
-                               const month = birthDateStr.substring(4, 6) || '01';
-                               const day = e.target.value.padStart(2, '0');
-                               setBirthDateStr(`${year}${month}${day}`);
-                             }}
-                             className="w-full px-3 py-3.5 bg-stone-800 border border-stone-700 hover:border-amber-500/50 rounded-xl focus:outline-none focus:border-amber-500 text-stone-200 text-sm text-center appearance-none cursor-pointer transition-all"
-                          >
-                             {Array.from({ length: 31 }, (_, i) => i + 1).map(d => <option key={d} value={String(d).padStart(2, '0')}>{d} 日</option>)}
-                          </select>
-                       </div>
-                      <button onClick={calculateLifePath} className="w-full py-3.5 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white rounded-xl font-medium transition-all shadow-[0_0_20px_rgba(245,158,11,0.2)] active:scale-95 flex items-center justify-center gap-2">
-                        <Sparkles className="w-4 h-4" /> 啟動靈魂密碼
-                      </button>
+            <div className="max-w-5xl mx-auto transition-all duration-500">
+              {activeTab === 'guidance' ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4">
+                  {guidanceTopics.map((topic) => (
+                    <div key={topic.id} onClick={() => handleGuidanceClick(topic.keyword)} className="group bg-stone-900/40 hover:bg-stone-800/80 border border-stone-800 hover:border-emerald-500/50 rounded-3xl p-8 text-center cursor-pointer transition-all duration-300 backdrop-blur-sm shadow-xl hover:-translate-y-1">
+                      <div className="flex justify-center">{topic.icon}</div>
+                      <h3 className="text-xl font-bold text-stone-200 mb-3">{topic.title}</h3>
+                      <p className="text-sm text-stone-500 leading-relaxed">{topic.desc}</p>
+                      <div className="mt-6 text-xs font-medium text-stone-400 group-hover:text-emerald-400 transition-colors flex items-center justify-center gap-1">尋找相關大師 <Compass className="w-3 h-3" /></div>
                     </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="animate-in fade-in slide-in-from-bottom-4 max-w-4xl mx-auto">
+                  <div className="flex flex-wrap justify-center gap-3 mb-10">
+                    <button onClick={() => setActiveTool('bazi')} className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${activeTool === 'bazi' ? 'bg-emerald-900/30 text-emerald-400 border border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.15)]' : 'bg-stone-900/50 text-stone-500 border border-stone-800 hover:text-stone-300'}`}>
+                      ☯️ 八字排盤
+                    </button>
+                    <button onClick={() => setActiveTool('tarot')} className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${activeTool === 'tarot' ? 'bg-indigo-900/30 text-indigo-400 border border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.15)]' : 'bg-stone-900/50 text-stone-500 border border-stone-800 hover:text-stone-300'}`}>
+                      🌙 每日塔羅
+                    </button>
+                    <button onClick={() => setActiveTool('numerology')} className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${activeTool === 'numerology' ? 'bg-amber-900/30 text-amber-400 border border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.15)]' : 'bg-stone-900/50 text-stone-500 border border-stone-800 hover:text-stone-300'}`}>
+                      🔢 生命靈數
+                    </button>
+                  </div>
 
-                    {lifePath && LIFE_PATH_DESC[lifePath] && (
-                      <div className="max-w-2xl mx-auto bg-stone-800/50 border border-amber-500/20 rounded-3xl p-6 md:p-8 text-left animate-in fade-in slide-in-from-bottom-8 duration-700 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
-                        
-                        <div className="flex items-center gap-6 mb-6 border-b border-stone-700/50 pb-6 relative z-10">
-                          <div className="w-20 h-20 rounded-full bg-stone-900 border-2 border-amber-500/40 shadow-[0_0_20px_rgba(245,158,11,0.2)] flex items-center justify-center shrink-0">
-                            <span className="text-4xl font-serif font-bold text-amber-400 drop-shadow-md">{lifePath}</span>
-                          </div>
-                          <div>
-                            <div className="text-amber-500 text-xs font-bold tracking-widest mb-1 uppercase">Your Life Path</div>
-                            <h4 className="text-2xl md:text-3xl font-bold text-stone-100 tracking-wide">{LIFE_PATH_DESC[lifePath].title}</h4>
-                          </div>
-                        </div>
+                  {activeTool === 'bazi' && (
+                    <div className="animate-in zoom-in-95 duration-300">
+                      <BaziCalculator onActionClick={() => handleGuidanceClick('八字')} actionText="尋找八字大師詳批" />
+                    </div>
+                  )}
 
-                        <div className="space-y-6 mb-8 relative z-10">
-                          <div className="bg-stone-900/40 p-5 rounded-2xl border border-stone-700/50">
-                            <h5 className="text-amber-400 font-medium flex items-center gap-2 mb-2"><Star className="w-4 h-4"/> 天賦特質</h5>
-                            <p className="text-stone-300 text-sm leading-relaxed">{LIFE_PATH_DESC[lifePath].traits}</p>
-                          </div>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="bg-stone-900/50 p-5 rounded-2xl border border-stone-700/50 hover:border-rose-500/30 transition-colors">
-                              <h5 className="text-rose-400 text-sm font-bold mb-2 flex items-center gap-1.5"><Heart className="w-4 h-4"/> 感情模式</h5>
-                              <p className="text-stone-400 text-xs leading-relaxed">{LIFE_PATH_DESC[lifePath].love}</p>
+                  {activeTool === 'tarot' && (
+                    <div className="bg-stone-900/60 border border-stone-800 rounded-3xl p-8 md:p-12 text-center backdrop-blur-sm animate-in zoom-in-95 duration-300 relative overflow-hidden">
+                      <Moon className="w-12 h-12 text-indigo-400 mx-auto mb-4" />
+                      <h3 className="text-2xl font-serif text-stone-100 mb-2">塔羅潛意識指引</h3>
+                      <p className="text-stone-400 mb-8 max-w-md mx-auto text-sm">深呼吸，在心中默念你近期的困惑，然後憑直覺點擊一張牌。</p>
+                      
+                      {!drawnCard ? (
+                        <div className="flex justify-center gap-4 md:gap-8 mb-8">
+                          {[1, 2, 3].map(i => (
+                            <div 
+                              key={i} 
+                              onClick={isDrawingTarot ? undefined : handleDrawTarot}
+                              className={`w-24 h-36 md:w-32 md:h-48 bg-stone-800 border-2 border-stone-600 rounded-xl shadow-lg flex items-center justify-center cursor-pointer transition-all duration-500 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] ${isDrawingTarot ? 'animate-pulse scale-95 border-indigo-500' : 'hover:-translate-y-4 hover:shadow-indigo-500/30 hover:border-indigo-400'}`}
+                            >
+                              <Star className={`w-8 h-8 text-stone-600 ${isDrawingTarot ? 'animate-spin text-indigo-400' : ''}`} />
                             </div>
-                            <div className="bg-stone-900/50 p-5 rounded-2xl border border-stone-700/50 hover:border-blue-500/30 transition-colors">
-                              <h5 className="text-blue-400 text-sm font-bold mb-2 flex items-center gap-1.5"><Briefcase className="w-4 h-4"/> 適合事業</h5>
-                              <p className="text-stone-400 text-xs leading-relaxed">{LIFE_PATH_DESC[lifePath].career}</p>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-700">
+                          <div className="flex flex-col md:flex-row gap-8 items-start bg-stone-800/50 border border-indigo-500/20 rounded-3xl p-6 md:p-8 text-left">
+                            
+                            <div className="w-full md:w-1/3 flex justify-center shrink-0">
+                              <Image 
+                                src={drawnCard.image} 
+                                alt={drawnCard.name} 
+                                width={200}
+                                height={350}
+                                priority={true}
+                                className="w-48 h-auto rounded-xl shadow-2xl shadow-indigo-900/30 border border-stone-700" 
+                              />
+                            </div>
+
+                            <div className="w-full md:w-2/3 space-y-5">
+                              <div>
+                                <div className="text-indigo-400 text-sm font-medium tracking-widest mb-1 uppercase">Today's Guidance</div>
+                                <h4 className="text-3xl font-bold text-stone-100 mb-2">{drawnCard.name}</h4>
+                                <p className="text-stone-400 italic text-sm border-l-2 border-indigo-500 pl-3 py-1">{drawnCard.quote}</p>
+                              </div>
+                              
+                              <div className="space-y-3 pt-2">
+                                <div>
+                                  <h5 className="text-stone-300 font-medium flex items-center gap-2 mb-1"><Sparkles className="w-4 h-4 text-indigo-400"/> 牌面啟示</h5>
+                                  <p className="text-stone-400 text-sm leading-relaxed">{drawnCard.meaning}</p>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                                  <div className="bg-stone-900/50 p-4 rounded-xl border border-stone-800">
+                                    <h5 className="text-rose-400 text-xs font-bold mb-1 flex items-center gap-1"><Heart className="w-3 h-3"/> 感情指引</h5>
+                                    <p className="text-stone-400 text-xs leading-relaxed">{drawnCard.love}</p>
+                                  </div>
+                                  <div className="bg-stone-900/50 p-4 rounded-xl border border-stone-800">
+                                    <h5 className="text-blue-400 text-xs font-bold mb-1 flex items-center gap-1"><Briefcase className="w-3 h-3"/> 事業指引</h5>
+                                    <p className="text-stone-400 text-xs leading-relaxed">{drawnCard.career}</p>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center relative z-10 mt-2">
-                          <button onClick={() => handleGuidanceClick('塔羅')} className="flex-1 py-3.5 bg-stone-900 border border-indigo-500/30 hover:border-indigo-500/60 hover:bg-stone-800 text-indigo-300 rounded-xl font-medium transition-all active:scale-95 flex items-center justify-center gap-2 text-sm">
-                            <Moon className="w-4 h-4" /> 感情困惑？尋找專屬塔羅師
-                          </button>
-                          <button onClick={() => handleGuidanceClick('八字')} className="flex-1 py-3.5 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white rounded-xl font-medium transition-all shadow-[0_0_15px_rgba(16,185,129,0.2)] active:scale-95 flex items-center justify-center gap-2 text-sm">
-                            <Compass className="w-4 h-4" /> 探索流年？尋找八字大師詳批
-                          </button>
+                          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+                            <button onClick={handleDrawTarot} className="px-6 py-3 text-stone-400 hover:text-white bg-stone-800 hover:bg-stone-700 rounded-full transition-colors flex items-center justify-center gap-2 font-medium">
+                              <RefreshCcw className="w-4 h-4" /> 重新抽牌
+                            </button>
+                            <button onClick={() => handleGuidanceClick('塔羅')} className="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full font-medium transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2">
+                              <Moon className="w-4 h-4" /> 需要更針對性的解答？尋找專屬塔羅師
+                            </button>
+                          </div>
                         </div>
+                      )}
+                    </div>
+                  )}
+
+                  {activeTool === 'numerology' && (
+                    <div className="bg-stone-900/60 border border-stone-800 rounded-3xl p-8 md:p-12 text-center backdrop-blur-sm animate-in zoom-in-95 duration-300">
+                      <h3 className="text-2xl font-serif text-stone-100 mb-2">生命靈數計算</h3>
+                      <p className="text-stone-400 mb-8 max-w-md mx-auto text-sm">輸入您的西元出生年月日，探索您靈魂的隱藏天賦與人生課題。</p>
+                      
+                      <div className="max-w-md mx-auto space-y-6 mb-8">
+                         <div className="grid grid-cols-3 gap-3">
+                            <select 
+                               value={birthDateStr.substring(0, 4) || '1990'} 
+                               onChange={(e) => {
+                                 const year = e.target.value;
+                                 const month = birthDateStr.substring(4, 6) || '01';
+                                 const day = birthDateStr.substring(6, 8) || '01';
+                                 setBirthDateStr(`${year}${month}${day}`);
+                               }}
+                               className="w-full px-3 py-3.5 bg-stone-800 border border-stone-700 hover:border-amber-500/50 rounded-xl focus:outline-none focus:border-amber-500 text-stone-200 text-sm text-center appearance-none cursor-pointer transition-all"
+                            >
+                               {Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i).map(y => <option key={y} value={y}>{y} 年</option>)}
+                            </select>
+                            <select 
+                               value={birthDateStr.substring(4, 6) || '01'} 
+                               onChange={(e) => {
+                                 const year = birthDateStr.substring(0, 4) || '1990';
+                                 const month = e.target.value.padStart(2, '0');
+                                 const day = birthDateStr.substring(6, 8) || '01';
+                                 setBirthDateStr(`${year}${month}${day}`);
+                               }}
+                               className="w-full px-3 py-3.5 bg-stone-800 border border-stone-700 hover:border-amber-500/50 rounded-xl focus:outline-none focus:border-amber-500 text-stone-200 text-sm text-center appearance-none cursor-pointer transition-all"
+                            >
+                               {Array.from({ length: 12 }, (_, i) => i + 1).map(m => <option key={m} value={String(m).padStart(2, '0')}>{m} 月</option>)}
+                            </select>
+                            <select 
+                               value={birthDateStr.substring(6, 8) || '01'} 
+                               onChange={(e) => {
+                                 const year = birthDateStr.substring(0, 4) || '1990';
+                                 const month = birthDateStr.substring(4, 6) || '01';
+                                 const day = e.target.value.padStart(2, '0');
+                                 setBirthDateStr(`${year}${month}${day}`);
+                               }}
+                               className="w-full px-3 py-3.5 bg-stone-800 border border-stone-700 hover:border-amber-500/50 rounded-xl focus:outline-none focus:border-amber-500 text-stone-200 text-sm text-center appearance-none cursor-pointer transition-all"
+                            >
+                               {Array.from({ length: 31 }, (_, i) => i + 1).map(d => <option key={d} value={String(d).padStart(2, '0')}>{d} 日</option>)}
+                            </select>
+                         </div>
+                        <button onClick={calculateLifePath} className="w-full py-3.5 bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white rounded-xl font-medium transition-all shadow-[0_0_20px_rgba(245,158,11,0.2)] active:scale-95 flex items-center justify-center gap-2">
+                          <Sparkles className="w-4 h-4" /> 啟動靈魂密碼
+                        </button>
                       </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
 
-      <section className="py-12 border-b border-stone-800/50 bg-stone-900/40 relative z-10 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-stone-800/80">
-          <div><div className="text-3xl font-bold text-emerald-400 font-serif mb-1">10k+</div><div className="text-sm text-stone-500">累積諮詢人次</div></div>
-          <div><div className="text-3xl font-bold text-emerald-400 font-serif mb-1">98%</div><div className="text-sm text-stone-500">客戶好評率</div></div>
-          <div><div className="text-3xl font-bold text-emerald-400 font-serif mb-1">10+</div><div className="text-sm text-stone-500">年專業諮詢經驗</div></div>
-          <div><div className="text-3xl font-bold text-emerald-400 font-serif mb-1 flex items-center justify-center gap-1">4.9 <Star className="w-5 h-5 fill-emerald-400 text-emerald-400" /></div><div className="text-sm text-stone-500">綜合評分</div></div>
-        </div>
-      </section>
-      
-      <div id="masters-section" className="bg-stone-50 text-stone-900 relative z-10 scroll-mt-0">
-        <MasterShowcase externalFilter={selectedKeyword} onClearFilter={() => setSelectedKeyword('ALL')} />
-      </div>
+                      {lifePath && LIFE_PATH_DESC[lifePath] && (
+                        <div className="max-w-2xl mx-auto bg-stone-800/50 border border-amber-500/20 rounded-3xl p-6 md:p-8 text-left animate-in fade-in slide-in-from-bottom-8 duration-700 relative overflow-hidden">
+                          <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
+                          
+                          <div className="flex items-center gap-6 mb-6 border-b border-stone-700/50 pb-6 relative z-10">
+                            <div className="w-20 h-20 rounded-full bg-stone-900 border-2 border-amber-500/40 shadow-[0_0_20px_rgba(245,158,11,0.2)] flex items-center justify-center shrink-0">
+                              <span className="text-4xl font-serif font-bold text-amber-400 drop-shadow-md">{lifePath}</span>
+                            </div>
+                            <div>
+                              <div className="text-amber-500 text-xs font-bold tracking-widest mb-1 uppercase">Your Life Path</div>
+                              <h4 className="text-2xl md:text-3xl font-bold text-stone-100 tracking-wide">{LIFE_PATH_DESC[lifePath].title}</h4>
+                            </div>
+                          </div>
 
-      <section className="py-24 px-6 bg-stone-950 relative z-10 border-t border-stone-800">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-serif text-stone-100 mb-4">改變人生的指引</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-            {reviews.map((review) => (
-              <div key={review.id} className="bg-stone-900/60 p-6 md:p-8 rounded-3xl border border-stone-800 relative hover:border-emerald-500/30 transition-all duration-300">
-                <Quote className="absolute top-6 right-6 w-8 h-8 text-stone-800/50 z-0" />
-                <div className="flex gap-1 mb-5 relative z-10">
-                  {[...Array(review.rating || 5)].map((_, j) => <Star key={j} className="w-4 h-4 fill-emerald-500 text-emerald-500" />)}
+                          <div className="space-y-6 mb-8 relative z-10">
+                            <div className="bg-stone-900/40 p-5 rounded-2xl border border-stone-700/50">
+                              <h5 className="text-amber-400 font-medium flex items-center gap-2 mb-2"><Star className="w-4 h-4"/> 天賦特質</h5>
+                              <p className="text-stone-300 text-sm leading-relaxed">{LIFE_PATH_DESC[lifePath].traits}</p>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="bg-stone-900/50 p-5 rounded-2xl border border-stone-700/50 hover:border-rose-500/30 transition-colors">
+                                <h5 className="text-rose-400 text-sm font-bold mb-2 flex items-center gap-1.5"><Heart className="w-4 h-4"/> 感情模式</h5>
+                                <p className="text-stone-400 text-xs leading-relaxed">{LIFE_PATH_DESC[lifePath].love}</p>
+                              </div>
+                              <div className="bg-stone-900/50 p-5 rounded-2xl border border-stone-700/50 hover:border-blue-500/30 transition-colors">
+                                <h5 className="text-blue-400 text-sm font-bold mb-2 flex items-center gap-1.5"><Briefcase className="w-4 h-4"/> 適合事業</h5>
+                                <p className="text-stone-400 text-xs leading-relaxed">{LIFE_PATH_DESC[lifePath].career}</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-col sm:flex-row gap-4 justify-center relative z-10 mt-2">
+                            <button onClick={() => handleGuidanceClick('塔羅')} className="flex-1 py-3.5 bg-stone-900 border border-indigo-500/30 hover:border-indigo-500/60 hover:bg-stone-800 text-indigo-300 rounded-xl font-medium transition-all active:scale-95 flex items-center justify-center gap-2 text-sm">
+                              <Moon className="w-4 h-4" /> 感情困惑？尋找專屬塔羅師
+                            </button>
+                            <button onClick={() => handleGuidanceClick('八字')} className="flex-1 py-3.5 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white rounded-xl font-medium transition-all shadow-[0_0_15px_rgba(16,185,129,0.2)] active:scale-95 flex items-center justify-center gap-2 text-sm">
+                              <Compass className="w-4 h-4" /> 探索流年？尋找八字大師詳批
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
-                {review.image_url && (
-                  <div onClick={() => setSelectedImage(review.image_url)} className="w-full relative mb-6 rounded-xl overflow-hidden border border-stone-700/50 cursor-zoom-in">
-                    <img src={review.image_url} alt="Review" className="w-full object-cover" style={{ maxHeight: '350px', objectPosition: 'top' }} />
-                  </div>
-                )}
-                {(!review.image_url || (review.content && review.content !== '見截圖對話')) && (
-                  <p className="text-stone-300 leading-relaxed mb-6 flex-grow relative z-10">"{review.content}"</p>
-                )}
-                <div className="font-medium text-emerald-400 text-sm mt-auto relative z-10 pt-5 border-t border-stone-800/50">
-                  — {review.client_name} {review.role && <span className="text-stone-500">({review.role})</span>}
-                </div>
-              </div>
-            ))}
+              )}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {selectedImage && (
-        <div className="fixed inset-0 z-[200] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out animate-in fade-in duration-300" onClick={() => setSelectedImage(null)}>
-          <div className="relative max-w-4xl max-h-[90vh] w-full flex justify-center">
-            <img src={selectedImage} alt="Enlarged" className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl" />
+        <section className="py-12 border-b border-stone-800/50 bg-stone-900/40 relative z-10 backdrop-blur-sm">
+          <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-stone-800/80">
+            <div><div className="text-3xl font-bold text-emerald-400 font-serif mb-1">10k+</div><div className="text-sm text-stone-500">累積諮詢人次</div></div>
+            <div><div className="text-3xl font-bold text-emerald-400 font-serif mb-1">98%</div><div className="text-sm text-stone-500">客戶好評率</div></div>
+            <div><div className="text-3xl font-bold text-emerald-400 font-serif mb-1">10+</div><div className="text-sm text-stone-500">年專業諮詢經驗</div></div>
+            <div><div className="text-3xl font-bold text-emerald-400 font-serif mb-1 flex items-center justify-center gap-1">4.9 <Star className="w-5 h-5 fill-emerald-400 text-emerald-400" /></div><div className="text-sm text-stone-500">綜合評分</div></div>
           </div>
+        </section>
+        
+        <div id="masters-section" className="bg-stone-50 text-stone-900 relative z-10 scroll-mt-0">
+          <MasterShowcase externalFilter={selectedKeyword} onClearFilter={() => setSelectedKeyword('ALL')} />
         </div>
-      )}
-    </main>
+
+        <section className="py-24 px-6 bg-stone-950 relative z-10 border-t border-stone-800">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold font-serif text-stone-100 mb-4">改變人生的指引</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+              {reviews.map((review) => (
+                <div key={review.id} className="bg-stone-900/60 p-6 md:p-8 rounded-3xl border border-stone-800 relative hover:border-emerald-500/30 transition-all duration-300">
+                  <Quote className="absolute top-6 right-6 w-8 h-8 text-stone-800/50 z-0" />
+                  <div className="flex gap-1 mb-5 relative z-10">
+                    {[...Array(review.rating || 5)].map((_, j) => <Star key={j} className="w-4 h-4 fill-emerald-500 text-emerald-500" />)}
+                  </div>
+                  {review.image_url && (
+                    <div onClick={() => setSelectedImage(review.image_url)} className="w-full relative mb-6 rounded-xl overflow-hidden border border-stone-700/50 cursor-zoom-in">
+                      <img src={review.image_url} alt="Review" className="w-full object-cover" style={{ maxHeight: '350px', objectPosition: 'top' }} />
+                    </div>
+                  )}
+                  {(!review.image_url || (review.content && review.content !== '見截圖對話')) && (
+                    <p className="text-stone-300 leading-relaxed mb-6 flex-grow relative z-10">"{review.content}"</p>
+                  )}
+                  <div className="font-medium text-emerald-400 text-sm mt-auto relative z-10 pt-5 border-t border-stone-800/50">
+                    — {review.client_name} {review.role && <span className="text-stone-500">({review.role})</span>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {selectedImage && (
+          <div className="fixed inset-0 z-[200] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out animate-in fade-in duration-300" onClick={() => setSelectedImage(null)}>
+            <div className="relative max-w-4xl max-h-[90vh] w-full flex justify-center">
+              <img src={selectedImage} alt="Enlarged" className="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl" />
+            </div>
+          </div>
+        )}
+      </main>
+    </Suspense>
   );
 }
