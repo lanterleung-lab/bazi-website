@@ -8,11 +8,10 @@ import BaziCalculator from './components/BaziCalculator';
 import { Star, Quote, Compass, Sparkles, Heart, Briefcase, MapIcon, Sun, Moon, RefreshCcw } from 'lucide-react';
 import { supabase } from '../lib/supabase'; 
 
-
-export default function Home() {
-  // 👇 新增這兩行來獲取網址參數與路由功能
+function HomeContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  
   const [reviews, setReviews] = useState<any[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   
@@ -26,7 +25,7 @@ export default function Home() {
   const [birthDateStr, setBirthDateStr] = useState('');
   const [lifePath, setLifePath] = useState<number | null>(null);
 
-  // 👇 新增這段查帳專用的 useEffect
+  // 查帳專用的 useEffect
   useEffect(() => {
     // 從網址上抓取 checkout 和 session_id 的值
     const checkoutStatus = searchParams.get('checkout');
@@ -56,7 +55,8 @@ export default function Home() {
         console.error('查帳 API 呼叫失敗:', err);
       });
     }
-  }, [searchParams, router]); // 依賴陣列加上這兩個變數
+  }, [searchParams, router]); 
+
   useEffect(() => {
     const fetchReviews = async () => {
       const { data, error } = await supabase.from('reviews').select('*').eq('is_published', true).order('created_at', { ascending: false }).limit(3);
@@ -148,9 +148,8 @@ export default function Home() {
     { id: 'healing', icon: <Sun className="w-8 h-8 mb-4 text-amber-400 group-hover:scale-110 transition-transform" />, title: '內在療癒', desc: '潛意識探索、OH卡、心理諮詢', keyword: '療癒' },
   ];
 
-return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-white bg-[#050508]">載入中...</div>}>
-      <main className="min-h-screen bg-[#050508] text-zinc-200 font-sans selection:bg-amber-500 selection:text-zinc-950 overflow-x-hidden relative">
+  return (
+    <main className="min-h-screen bg-[#050508] text-zinc-200 font-sans selection:bg-amber-500 selection:text-zinc-950 overflow-x-hidden relative">
         {/* 🌟 1. 增強版琉璃環境光 */}
         <div className="absolute top-[-10%] left-[-5%] w-[600px] h-[600px] bg-emerald-700/20 rounded-full blur-[120px] pointer-events-none mix-blend-screen"></div>
         <div className="absolute bottom-[-10%] right-[-5%] w-[700px] h-[700px] bg-amber-600/20 rounded-full blur-[150px] pointer-events-none mix-blend-screen"></div>
@@ -689,6 +688,13 @@ return (
           </div>
         )}
       </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-white bg-[#050508]">載入中...</div>}>
+      <HomeContent />
     </Suspense>
   );
 }
