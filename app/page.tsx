@@ -2,12 +2,17 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useSearchParams, useRouter } from 'next/navigation';
 import MasterShowcase from './components/MasterShowcase';
 import BaziCalculator from './components/BaziCalculator';
 import { Star, Quote, Compass, Sparkles, Heart, Briefcase, MapIcon, Sun, Moon, RefreshCcw } from 'lucide-react';
 import { supabase } from '../lib/supabase'; 
 
+
 export default function Home() {
+  // 👇 新增這兩行來獲取網址參數與路由功能
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [reviews, setReviews] = useState<any[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   
@@ -21,6 +26,37 @@ export default function Home() {
   const [birthDateStr, setBirthDateStr] = useState('');
   const [lifePath, setLifePath] = useState<number | null>(null);
 
+  // 👇 新增這段查帳專用的 useEffect
+  useEffect(() => {
+    // 從網址上抓取 checkout 和 session_id 的值
+    const checkoutStatus = searchParams.get('checkout');
+    const sessionId = searchParams.get('session_id');
+
+    if (checkoutStatus === 'success' && sessionId) {
+      // 呼叫我們剛剛建立的查帳 API
+      fetch('/api/verify-payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ session_id: sessionId }),
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          console.log('✅ 訂單已確認付款！');
+          alert('付款成功！您的預約已確認。');
+          // 驗證成功後，把網址上的參數清掉，保持網址乾淨，避免重新整理時重複驗證
+          router.replace('/'); 
+        } else {
+          console.error('付款驗證失敗:', data.message);
+        }
+      })
+      .catch(err => {
+        console.error('查帳 API 呼叫失敗:', err);
+      });
+    }
+  }, [searchParams, router]); // 依賴陣列加上這兩個變數
   useEffect(() => {
     const fetchReviews = async () => {
       const { data, error } = await supabase.from('reviews').select('*').eq('is_published', true).order('created_at', { ascending: false }).limit(3);
