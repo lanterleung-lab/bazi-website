@@ -296,7 +296,7 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
               <h2 className="font-bold text-stone-900">預約 {masterName}</h2>
               {!isSuccess && (
                 <p className="text-xs text-stone-500 font-medium tracking-wide">
-                  步驟 {step} / 3：{step === 1 ? '選擇服務' : step === 2 ? '選擇檔期' : '確認與支付'}
+                  步驟 {step} / 3：{step === 1 ? '選擇服務' : step === 2 ? '選擇時段' : '確認與支付'}
                 </p>
               )}
             </div>
@@ -365,7 +365,7 @@ export default function BookingModal({ isOpen, onClose, master }: BookingModalPr
                           
                           {/* 線上/線下標籤 */}
                           {service.serviceType === 'offline' ? (
-                            <span className="text-xs px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-md">🏠 線下面測</span>
+                            <span className="text-xs px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 rounded-md">🏠 實體面談</span>
                           ) : service.serviceType === 'both' ? (
                             <span className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-md">🔄 線上/線下皆可</span>
                           ) : (

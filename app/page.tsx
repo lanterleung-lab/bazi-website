@@ -429,10 +429,10 @@ function HomeContent() {
 
             <div className="flex justify-center gap-4 mb-12">
               <button onClick={() => setActiveTab('guidance')} className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${activeTab === 'guidance' ? 'bg-stone-100 text-stone-900' : 'bg-stone-900/50 text-stone-400 hover:text-stone-200 border border-stone-800'}`}>
-                <Compass className="w-4 h-4" /> 我需要方向
+                <Compass className="w-4 h-4" /> 尋求專業指引
               </button>
               <button onClick={() => setActiveTab('tools')} className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${activeTab === 'tools' ? 'bg-stone-100 text-stone-900' : 'bg-stone-900/50 text-stone-400 hover:text-stone-200 border border-stone-800'}`}>
-                <Sparkles className="w-4 h-4" /> 探索工具箱
+                <Sparkles className="w-4 h-4" /> 自助分析工具
               </button>
             </div>
 
@@ -532,7 +532,7 @@ function HomeContent() {
                               <RefreshCcw className="w-4 h-4" /> 重新抽牌
                             </button>
                             <button onClick={() => handleGuidanceClick('塔羅')} className="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full font-medium transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2">
-                              <Moon className="w-4 h-4" /> 需要更針對性的解答？尋找專屬塔羅師
+                              <Moon className="w-4 h-4" /> 需要更針對性的解答？預約心理與塔羅諮詢
                             </button>
                           </div>
                         </div>
@@ -622,10 +622,10 @@ function HomeContent() {
 
                           <div className="flex flex-col sm:flex-row gap-4 justify-center relative z-10 mt-2">
                             <button onClick={() => handleGuidanceClick('塔羅')} className="flex-1 py-3.5 bg-stone-900 border border-indigo-500/30 hover:border-indigo-500/60 hover:bg-stone-800 text-indigo-300 rounded-xl font-medium transition-all active:scale-95 flex items-center justify-center gap-2 text-sm">
-                              <Moon className="w-4 h-4" /> 感情困惑？尋找專屬塔羅師
+                              <Moon className="w-4 h-4" /> 感情困惑？預約專業諮詢
                             </button>
                             <button onClick={() => handleGuidanceClick('八字')} className="flex-1 py-3.5 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white rounded-xl font-medium transition-all shadow-[0_0_15px_rgba(16,185,129,0.2)] active:scale-95 flex items-center justify-center gap-2 text-sm">
-                              <Compass className="w-4 h-4" /> 探索流年？尋找八字大師詳批
+                              <Compass className="w-4 h-4" /> 規劃未來發展？預約命理導師
                             </button>
                           </div>
                         </div>
@@ -654,7 +654,7 @@ function HomeContent() {
         <section className="py-24 px-6 bg-stone-950 relative z-10 border-t border-stone-800">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold font-serif text-stone-100 mb-4">改變人生的指引</h2>
+              <h2 className="text-3xl md:text-4xl font-bold font-serif text-stone-100 mb-4">決策與療癒的真實見證</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
               {reviews.map((review) => (
